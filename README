@@ -1,8 +1,8 @@
 Description
 ===========
 
-gdatapkg is a Graphical frontend for the datapkg tool (http://packages.python.org/datapkg/manual.html). It is aiming
-to become the standard CKAN graphical tool for searching, fetching and distributing open data sets.
+datapkg-gui is a graphical frontend for the datapkg tool (http://okfn.org/projects/datapkg/). It is aiming
+to become the standard CKAN (http://ckan.net/) graphical tool for searching, fetching and distributing open data sets.
 
 It is a 10 weeks project started on 2011-09-26 and developed by
 Daniel Graziotin <d@danielgraziotin.it> (http://task3.cc) during a stage
@@ -12,5 +12,5 @@ performed at the Fondazione Bruno Kessler (http://fbk.eu).
 Website
 =======
 
-The official website of the project is http://task3.cc/projects/gdatapkg.
-The source code is hosted on GitHub (http://github.com/dgraziotin/gdatapkg)
+The official website of the project is http://task3.cc/projects/datapkg-gui.
+The source code is hosted on GitHub (http://github.com/dgraziotin/datapkg-gui)

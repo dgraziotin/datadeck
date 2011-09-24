@@ -1,0 +1,3 @@
+datapkg-gui depends on the following software:
+* datapkg (http://packages.python.org/datapkg/manual.html)
+* wxPython (http://www.wxpython.org/)
