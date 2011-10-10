@@ -30,7 +30,7 @@ def download(package_spec, destination_path): #still have to understand this: fi
     True if the operation succeeds
     The actual datapkg design does not let us to specify other values. Must fix this
     """
-    #FIXME better return values
+    #TODO better return values
 
     pkg_downloader = datapkg.download.PackageDownloader(verbose=True)
 
@@ -150,7 +150,7 @@ def search(index_spec, query):
         for package in index.search(query):
             packages.append(package)
     except ckanclient.CkanApiNotAuthorizedError:
-        pass #FIXME: just a workaround now
+        pass #TODO: just a workaround now
     return packages
 
 
