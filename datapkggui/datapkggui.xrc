@@ -2,7 +2,7 @@
 <resource xmlns="http://www.wxwindows.org/wxxrc" version="2.3.0.1">
 	<object class="wxFrame" name="DatapkgFrame">
 		<style>wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL</style>
-		<size>800,600</size>
+		<size>800,800</size>
 		<title></title>
 		<centered>1</centered>
 		<object class="wxNotebook" name="notebook">
@@ -43,6 +43,24 @@
 										<default>0</default>
 									</object>
 								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxButton" name="info_button">
+										<label>Get Info</label>
+										<default>0</default>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxButton" name="download_button">
+										<label>Download</label>
+										<default>0</default>
+									</object>
+								</object>
 							</object>
 						</object>
 						<object class="spacer">
@@ -55,14 +73,15 @@
 							<option>1</option>
 							<flag>wxEXPAND</flag>
 							<border>5</border>
-							<object class="wxBoxSizer">
+							<object class="wxStaticBoxSizer">
 								<orient>wxHORIZONTAL</orient>
+								<label>Packages</label>
 								<object class="sizeritem">
 									<option>0</option>
 									<flag>wxALL</flag>
 									<border>5</border>
 									<object class="wxListBox" name="search_list">
-										<size>250,480</size>
+										<size>250,450</size>
 										<content />
 									</object>
 								</object>
@@ -72,10 +91,46 @@
 									<border>5</border>
 									<object class="wxTextCtrl" name="search_label">
 										<style>wxTE_MULTILINE|wxTE_READONLY</style>
-										<size>500,480</size>
+										<size>500,450</size>
 										<bg>#d6d2d0</bg>
 										<value></value>
 										<maxlength>0</maxlength>
+									</object>
+								</object>
+							</object>
+						</object>
+						<object class="spacer">
+							<option>1</option>
+							<flag>wxEXPAND</flag>
+							<border>5</border>
+							<size>0,0</size>
+						</object>
+						<object class="sizeritem">
+							<option>1</option>
+							<flag>wxEXPAND</flag>
+							<border>5</border>
+							<object class="wxStaticBoxSizer">
+								<orient>wxVERTICAL</orient>
+								<label>Console Output</label>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL|wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxTextCtrl" name="console_text">
+										<style>wxTE_MULTILINE|wxTE_READONLY</style>
+										<size>-1,160</size>
+										<bg>#d6d2d0</bg>
+										<value></value>
+										<maxlength>0</maxlength>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALIGN_RIGHT|wxALL</flag>
+									<border>5</border>
+									<object class="wxButton" name="console_clear_button">
+										<label>Clear</label>
+										<default>0</default>
 									</object>
 								</object>
 							</object>
