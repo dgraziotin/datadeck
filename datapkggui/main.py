@@ -9,8 +9,7 @@ import lib
 import datapkg
 import os
 import console
-import sys
-
+import package
 class MainGUI(object):
     def __init__(self, xml):
         self.m_xml = xml
@@ -30,16 +29,18 @@ class MainGUI(object):
         self.m_search_results_list.InsertColumn(2, "License")
         self.m_search_results_list.InsertColumn(3, "Author")
         # panel_main bindings
-        self.m_frame_main.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnSearchResultsListItemSelected,
+        self.m_frame_main.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnItemSelectedSearchResultsList,
                              id=xrc.XRCID('search_results_list'))
-        self.m_frame_main.Bind(wx.EVT_BUTTON, self.OnSearchButtonClick, id=xrc.XRCID('search_button'))
-        self.m_frame_main.Bind(wx.EVT_BUTTON, self.OnDownloadButtonClick, id=xrc.XRCID('download_button'))
-        self.m_frame_main.Bind(wx.EVT_BUTTON, self.OnInfoButtonClick, id=xrc.XRCID('info_button'))
+        self.m_frame_main.Bind(wx.EVT_BUTTON, self.OnButtonClickSearch, id=xrc.XRCID('search_button'))
+        self.m_frame_main.Bind(wx.EVT_BUTTON, self.OnButtonClickDownload, id=xrc.XRCID('download_button'))
+        self.m_frame_main.Bind(wx.EVT_BUTTON, self.OnButtonClickInfo, id=xrc.XRCID('info_button'))
+
+        self.m_search_text.Bind(wx.EVT_KEY_DOWN, self.OnKeyDownSearchText)
 
         self.m_frame_main.Show()
         self.m_console.Show()
 
-        self.Disable_Info_Download()
+        self.DisableButtonInfoDownload()
 
         # status bar
         self.m_status_bar = self.m_frame_main.CreateStatusBar()
@@ -48,22 +49,28 @@ class MainGUI(object):
         self.m_search_results = {}
         self.m_search_results_index = 0
 
-    def OnSearchResultsListItemSelected( self, event ):
+    def OnKeyDownSearchText(self, event):
+        keycode = event.GetKeyCode()
+        if keycode == wx.WXK_RETURN:
+            self.OnButtonClickSearch(event)
+        event.Skip()
+
+    def OnItemSelectedSearchResultsList( self, event ):
         selected_item = event.m_itemIndex
         package_selected = self.m_search_results[selected_item]
         if package_selected:
-            self.Enable_Info_Download()
+            self.EnableButtonInfoDownload()
             self.m_search_label.SetValue(package_selected.pretty_print())
         else:
-            self.Disable_Info_Download()
+            self.DisableButtonInfoDownload()
 
-    def OnSearchButtonClick( self, event ):
+    def OnButtonClickSearch( self, event ):
         searched_value = self.m_search_text.GetValue()
 
         if not searched_value:
             return
 
-        self.Disable_Info_Download()
+        self.DisableButtonInfoDownload()
         self.SetStatusBarMessage("Searching for " + searched_value)
 
         self.m_search_results_list.DeleteAllItems()
@@ -81,9 +88,9 @@ class MainGUI(object):
             package.name = "Not Found"
             self.InsertSearchResultsList(package)
             self.SetStatusBarMessage("No results.")
-            pass
+            
 
-    def OnDownloadButtonClick(self, event):
+    def OnButtonClickDownload(self, event):
         package_selected_index = self.m_search_results_list.GetNextSelected(-1)
         if package_selected_index == -1:
             return
@@ -103,19 +110,27 @@ class MainGUI(object):
             return download_dir
         dialog.Destroy()
 
-    def OnInfoButtonClick(self, event):
-        #TODO implement a nicer graphical way to analyze a package
-        pass
+    def OnButtonClickInfo(self, event):
+        package_selected_index = self.m_search_results_list.GetNextSelected(-1)
+        if package_selected_index == -1:
+            return
+
+        package_selected = self.m_search_results[package_selected_index]
+
+        if package_selected:
+            package_info = package.PackageGUI(self.m_xml, package_selected)
+            package_info.Show()
+        return
 
     def SetStatusBarMessage(self, message):
         self.m_status_bar.SetStatusText(message)
 
-    def Disable_Info_Download(self):
+    def DisableButtonInfoDownload(self):
         self.m_info_button.Disable()
         self.m_download_button.Disable()
 
-    def Enable_Info_Download(self):
-        #self.m_info_button.Enable()
+    def EnableButtonInfoDownload(self):
+        self.m_info_button.Enable()
         self.m_download_button.Enable()
 
     def InsertSearchResultsList(self, package):

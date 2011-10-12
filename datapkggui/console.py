@@ -1,13 +1,10 @@
 __author__ = 'dgraziotin'
 """
-Main module holding the GUI
+Module holding the Console Log
 Coding standard: http://www.wxpython.org/codeguidelines.php
 """
 import wx
 from wx import xrc
-import lib
-import datapkg
-import os
 import sys
 
 class ConsoleGUI(object):
@@ -42,7 +39,6 @@ class RedirectText(object):
     Helper object to redirect stdout and stderr to a wx.TextCtrl
     credits: http://www.blog.pythonlibrary.org/2009/01/01/wxpython-redirecting-stdout-stderr/
     """
-
     def __init__(self, aWxTextCtrl):
         self.out = aWxTextCtrl
 
@@ -51,20 +47,3 @@ class RedirectText(object):
 
     def flush(self):
         pass
-
-
-class DatapkgGUI(wx.App):
-    def __init__(self, redirect=True, filename=None):
-        wx.App.__init__(self, redirect, filename)
-
-    def OnInit(self, ):
-        xml = xrc.XmlResource('datapkggui.xrc')
-        self.MainFrame = MainFrame(xml)
-        return True
-
-
-if __name__ == '__main__':
-    app = DatapkgGUI(0)
-    app.SetAppName("Datapkg")
-    app.MainLoop()
-
