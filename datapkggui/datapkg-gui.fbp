@@ -21,7 +21,7 @@
         <property name="skip_python_events">1</property>
         <property name="use_enum">0</property>
         <property name="use_microsoft_bom">0</property>
-        <object class="Frame" expanded="0">
+        <object class="Frame" expanded="1">
             <property name="bg"></property>
             <property name="center">wxBOTH</property>
             <property name="context_help"></property>
@@ -37,7 +37,7 @@
             <property name="minimum_size"></property>
             <property name="name">DatapkgFrame</property>
             <property name="pos"></property>
-            <property name="size">-1,-1</property>
+            <property name="size">673,495</property>
             <property name="style">wxDEFAULT_FRAME_STYLE</property>
             <property name="subclass"></property>
             <property name="title"></property>
@@ -79,16 +79,16 @@
             <event name="OnSetFocus"></event>
             <event name="OnSize"></event>
             <event name="OnUpdateUI"></event>
-            <object class="wxBoxSizer" expanded="0">
+            <object class="wxBoxSizer" expanded="1">
                 <property name="minimum_size"></property>
                 <property name="name">box_princ</property>
                 <property name="orient">wxVERTICAL</property>
                 <property name="permission">none</property>
-                <object class="sizeritem" expanded="0">
+                <object class="sizeritem" expanded="1">
                     <property name="border">5</property>
-                    <property name="flag">wxEXPAND | wxALL</property>
+                    <property name="flag">wxALL|wxEXPAND</property>
                     <property name="proportion">1</property>
-                    <object class="wxNotebook" expanded="0">
+                    <object class="wxNotebook" expanded="1">
                         <property name="bg"></property>
                         <property name="bitmapsize"></property>
                         <property name="context_help"></property>
@@ -139,11 +139,11 @@
                         <event name="OnSetFocus"></event>
                         <event name="OnSize"></event>
                         <event name="OnUpdateUI"></event>
-                        <object class="notebookpage" expanded="0">
+                        <object class="notebookpage" expanded="1">
                             <property name="bitmap"></property>
                             <property name="label">Search</property>
                             <property name="select">0</property>
-                            <object class="wxPanel" expanded="0">
+                            <object class="wxPanel" expanded="1">
                                 <property name="bg"></property>
                                 <property name="context_help"></property>
                                 <property name="context_menu">1</property>
@@ -190,22 +190,15 @@
                                 <event name="OnSetFocus"></event>
                                 <event name="OnSize"></event>
                                 <event name="OnUpdateUI"></event>
-                                <object class="wxFlexGridSizer" expanded="0">
-                                    <property name="cols">2</property>
-                                    <property name="flexible_direction">wxBOTH</property>
-                                    <property name="growablecols"></property>
-                                    <property name="growablerows"></property>
-                                    <property name="hgap">0</property>
+                                <object class="wxBoxSizer" expanded="1">
                                     <property name="minimum_size"></property>
-                                    <property name="name">fgSizer4</property>
-                                    <property name="non_flexible_grow_mode">wxFLEX_GROWMODE_SPECIFIED</property>
+                                    <property name="name">bSizer5</property>
+                                    <property name="orient">wxVERTICAL</property>
                                     <property name="permission">none</property>
-                                    <property name="rows">2</property>
-                                    <property name="vgap">0</property>
                                     <object class="sizeritem" expanded="0">
                                         <property name="border">5</property>
-                                        <property name="flag"></property>
-                                        <property name="proportion">1</property>
+                                        <property name="flag">wxALL|wxEXPAND</property>
+                                        <property name="proportion">0</property>
                                         <object class="wxBoxSizer" expanded="0">
                                             <property name="minimum_size"></property>
                                             <property name="name">bSizer4</property>
@@ -213,8 +206,8 @@
                                             <property name="permission">none</property>
                                             <object class="sizeritem" expanded="0">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxALL</property>
-                                                <property name="proportion">0</property>
+                                                <property name="flag">wxEXPAND|wxRIGHT</property>
+                                                <property name="proportion">4</property>
                                                 <object class="wxTextCtrl" expanded="0">
                                                     <property name="bg"></property>
                                                     <property name="context_help"></property>
@@ -230,7 +223,7 @@
                                                     <property name="name">search_text</property>
                                                     <property name="permission">protected</property>
                                                     <property name="pos"></property>
-                                                    <property name="size">480,-1</property>
+                                                    <property name="size">-1,-1</property>
                                                     <property name="style"></property>
                                                     <property name="subclass"></property>
                                                     <property name="tooltip"></property>
@@ -273,8 +266,8 @@
                                             </object>
                                             <object class="sizeritem" expanded="0">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxALL</property>
-                                                <property name="proportion">0</property>
+                                                <property name="flag"></property>
+                                                <property name="proportion">1</property>
                                                 <object class="wxButton" expanded="0">
                                                     <property name="bg"></property>
                                                     <property name="context_help"></property>
@@ -330,8 +323,8 @@
                                             </object>
                                             <object class="sizeritem" expanded="0">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxALL</property>
-                                                <property name="proportion">0</property>
+                                                <property name="flag"></property>
+                                                <property name="proportion">1</property>
                                                 <object class="wxButton" expanded="0">
                                                     <property name="bg"></property>
                                                     <property name="context_help"></property>
@@ -387,8 +380,8 @@
                                             </object>
                                             <object class="sizeritem" expanded="0">
                                                 <property name="border">5</property>
-                                                <property name="flag">wxALL</property>
-                                                <property name="proportion">0</property>
+                                                <property name="flag"></property>
+                                                <property name="proportion">1</property>
                                                 <object class="wxButton" expanded="0">
                                                     <property name="bg"></property>
                                                     <property name="context_help"></property>
@@ -446,17 +439,7 @@
                                     </object>
                                     <object class="sizeritem" expanded="0">
                                         <property name="border">5</property>
-                                        <property name="flag">wxEXPAND</property>
-                                        <property name="proportion">1</property>
-                                        <object class="spacer" expanded="0">
-                                            <property name="height">0</property>
-                                            <property name="permission">protected</property>
-                                            <property name="width">0</property>
-                                        </object>
-                                    </object>
-                                    <object class="sizeritem" expanded="0">
-                                        <property name="border">5</property>
-                                        <property name="flag">wxEXPAND</property>
+                                        <property name="flag">wxALL|wxEXPAND</property>
                                         <property name="proportion">1</property>
                                         <object class="wxStaticBoxSizer" expanded="0">
                                             <property name="id">wxID_ANY</property>
@@ -469,7 +452,7 @@
                                             <object class="sizeritem" expanded="0">
                                                 <property name="border">5</property>
                                                 <property name="flag">wxALL|wxEXPAND</property>
-                                                <property name="proportion">0</property>
+                                                <property name="proportion">1</property>
                                                 <object class="wxListCtrl" expanded="0">
                                                     <property name="bg"></property>
                                                     <property name="context_help"></property>
@@ -543,7 +526,7 @@
                                             <object class="sizeritem" expanded="0">
                                                 <property name="border">5</property>
                                                 <property name="flag">wxALL|wxEXPAND</property>
-                                                <property name="proportion">0</property>
+                                                <property name="proportion">2</property>
                                                 <object class="wxTextCtrl" expanded="0">
                                                     <property name="bg">wxSYS_COLOUR_BACKGROUND</property>
                                                     <property name="context_help"></property>
@@ -602,16 +585,6 @@
                                             </object>
                                         </object>
                                     </object>
-                                    <object class="sizeritem" expanded="0">
-                                        <property name="border">5</property>
-                                        <property name="flag">wxEXPAND</property>
-                                        <property name="proportion">1</property>
-                                        <object class="spacer" expanded="0">
-                                            <property name="height">0</property>
-                                            <property name="permission">protected</property>
-                                            <property name="width">0</property>
-                                        </object>
-                                    </object>
                                 </object>
                             </object>
                         </object>
@@ -619,7 +592,7 @@
                 </object>
             </object>
         </object>
-        <object class="Frame" expanded="1">
+        <object class="Frame" expanded="0">
             <property name="bg"></property>
             <property name="center">wxBOTH</property>
             <property name="context_help"></property>
@@ -682,11 +655,11 @@
                 <property name="name">bSizer4</property>
                 <property name="orient">wxVERTICAL</property>
                 <property name="permission">none</property>
-                <object class="sizeritem" expanded="1">
+                <object class="sizeritem" expanded="0">
                     <property name="border">5</property>
                     <property name="flag">wxEXPAND | wxALL</property>
                     <property name="proportion">1</property>
-                    <object class="wxPanel" expanded="1">
+                    <object class="wxPanel" expanded="0">
                         <property name="bg"></property>
                         <property name="context_help"></property>
                         <property name="context_menu">1</property>

@@ -2,6 +2,7 @@
 <resource xmlns="http://www.wxwindows.org/wxxrc" version="2.3.0.1">
 	<object class="wxFrame" name="DatapkgFrame">
 		<style>wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL</style>
+		<size>673,495</size>
 		<title></title>
 		<centered>1</centered>
 		<object class="wxNotebook" name="notebook">
@@ -10,32 +11,26 @@
 				<selected>0</selected>
 				<object class="wxPanel" name="search_panel">
 					<style>wxTAB_TRAVERSAL</style>
-					<object class="wxFlexGridSizer">
-						<rows>2</rows>
-						<cols>2</cols>
-						<vgap>0</vgap>
-						<hgap>0</hgap>
-						<growablecols></growablecols>
-						<growablerows></growablerows>
+					<object class="wxBoxSizer">
+						<orient>wxVERTICAL</orient>
 						<object class="sizeritem">
-							<option>1</option>
-							<flag></flag>
+							<option>0</option>
+							<flag>wxALL|wxEXPAND</flag>
 							<border>5</border>
 							<object class="wxBoxSizer">
 								<orient>wxHORIZONTAL</orient>
 								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
+									<option>4</option>
+									<flag>wxEXPAND|wxRIGHT</flag>
 									<border>5</border>
 									<object class="wxTextCtrl" name="search_text">
-										<size>480,-1</size>
 										<value></value>
 										<maxlength>0</maxlength>
 									</object>
 								</object>
 								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
+									<option>1</option>
+									<flag></flag>
 									<border>5</border>
 									<object class="wxButton" name="search_button">
 										<label>Search</label>
@@ -43,8 +38,8 @@
 									</object>
 								</object>
 								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
+									<option>1</option>
+									<flag></flag>
 									<border>5</border>
 									<object class="wxButton" name="info_button">
 										<label>Get Info</label>
@@ -52,8 +47,8 @@
 									</object>
 								</object>
 								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
+									<option>1</option>
+									<flag></flag>
 									<border>5</border>
 									<object class="wxButton" name="download_button">
 										<label>Download</label>
@@ -62,21 +57,15 @@
 								</object>
 							</object>
 						</object>
-						<object class="spacer">
-							<option>1</option>
-							<flag>wxEXPAND</flag>
-							<border>5</border>
-							<size>0,0</size>
-						</object>
 						<object class="sizeritem">
 							<option>1</option>
-							<flag>wxEXPAND</flag>
+							<flag>wxALL|wxEXPAND</flag>
 							<border>5</border>
 							<object class="wxStaticBoxSizer">
 								<orient>wxVERTICAL</orient>
 								<label>Packages</label>
 								<object class="sizeritem">
-									<option>0</option>
+									<option>1</option>
 									<flag>wxALL|wxEXPAND</flag>
 									<border>5</border>
 									<object class="wxListCtrl" name="search_results_list">
@@ -84,7 +73,7 @@
 									</object>
 								</object>
 								<object class="sizeritem">
-									<option>0</option>
+									<option>2</option>
 									<flag>wxALL|wxEXPAND</flag>
 									<border>5</border>
 									<object class="wxTextCtrl" name="search_label">
@@ -95,12 +84,6 @@
 									</object>
 								</object>
 							</object>
-						</object>
-						<object class="spacer">
-							<option>1</option>
-							<flag>wxEXPAND</flag>
-							<border>5</border>
-							<size>0,0</size>
 						</object>
 					</object>
 				</object>
