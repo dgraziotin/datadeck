@@ -8,28 +8,22 @@ from wx import xrc
 import sys
 
 class ConsoleGUI(object):
-    def __init__(self, xml, show=False):
+    def __init__(self, xml):
         self.xml = xml
-        self.frame_log = xml.LoadFrame(None, 'LogFrame')
-        self.panel_log = xrc.XRCCTRL(self.frame_log, 'panel')
+        self.m_frame_main = xml.LoadFrame(None, 'DatapkgFrame')
+        self.m_panel_main = xrc.XRCCTRL(self.m_frame_main, 'notebook')
 
         # panel_log retrieving
-        self.console_text = xrc.XRCCTRL(self.panel_log, 'console_text')
-        self.console_clear_button = xrc.XRCCTRL(self.panel_log, 'console_clear_button')
+        self.console_text = xrc.XRCCTRL(self.m_panel_main, 'console_text')
+        self.console_clear_button = xrc.XRCCTRL(self.m_panel_main, 'console_clear_button')
         # panel_log bindings
-        self.frame_log.Bind(wx.EVT_BUTTON, self.OnConsoleClearButtonClick, id=xrc.XRCID('console_clear_button'))
-
-        if show:
-            self.frame_log.Show()
+        self.m_panel_main.Bind(wx.EVT_BUTTON, self.OnConsoleClearButtonClick, id=xrc.XRCID('console_clear_button'))
 
         # redirect text here
-        self.redir = RedirectText(self.console_text)
-        sys.stdout = self.redir
-        sys.stderr = self.redir
-
-    def Show(self):
-        self.frame_log.Show()
-
+        #self.redir = RedirectText(self.console_text)
+        #sys.stdout = self.redir
+        #sys.stderr = self.redir
+        
     def OnConsoleClearButtonClick(self, event):
         self.console_text.Clear()
 

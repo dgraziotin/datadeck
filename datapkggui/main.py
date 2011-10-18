@@ -8,18 +8,25 @@ from wx import xrc
 import lib
 import datapkg
 import os
-import console
+import sys
 import package
+
 class MainGUI(object):
+
     def __init__(self, xml):
         self.m_xml = xml
-        self.m_console = console.ConsoleGUI(xml)
         self.m_frame_main = xml.LoadFrame(None, 'DatapkgFrame')
         self.m_panel_main = xrc.XRCCTRL(self.m_frame_main, 'notebook')
 
-       
+        self.m_frame_main.SetSize(wx.Size(600, 625))
+        # panel_log retrieving
+        self.m_console_text = xrc.XRCCTRL(self.m_panel_main, 'console_text')
+        self.m_console_clear_button = xrc.XRCCTRL(self.m_panel_main, 'console_clear_button')
+
+        # panel_log bindings
+        self.m_panel_main.Bind(wx.EVT_BUTTON, self.OnConsoleClearButtonClick, id=xrc.XRCID('console_clear_button'))
+
         # panel_main retrieving
-        self.m_search_label = xrc.XRCCTRL(self.m_panel_main, 'search_label')
         self.m_search_text = xrc.XRCCTRL(self.m_panel_main, 'search_text')
         self.m_download_button = xrc.XRCCTRL(self.m_panel_main, 'download_button')
         self.m_info_button = xrc.XRCCTRL(self.m_panel_main, 'info_button')
@@ -37,8 +44,12 @@ class MainGUI(object):
 
         self.m_search_text.Bind(wx.EVT_KEY_DOWN, self.OnKeyDownSearchText)
 
+        # redirect text here
+        self.m_redir = RedirectText(self.m_console_text)
+        sys.stdout = self.m_redir
+        sys.stderr = self.m_redir
+
         self.m_frame_main.Show()
-        self.m_console.Show()
 
         self.DisableButtonInfoDownload()
 
@@ -60,7 +71,6 @@ class MainGUI(object):
         package_selected = self.m_search_results[selected_item]
         if package_selected:
             self.EnableButtonInfoDownload()
-            self.m_search_label.SetValue(package_selected.pretty_print())
         else:
             self.DisableButtonInfoDownload()
 
@@ -122,6 +132,9 @@ class MainGUI(object):
             package_info.Show()
         return
 
+    def OnConsoleClearButtonClick(self, event):
+        self.m_console_text.Clear()
+
     def SetStatusBarMessage(self, message):
         self.m_status_bar.SetStatusText(message)
 
@@ -150,6 +163,20 @@ class MainGUI(object):
         self.m_search_results_list.SetColumnWidth(1, wx.LIST_AUTOSIZE)
         self.m_search_results_list.SetColumnWidth(2, wx.LIST_AUTOSIZE)
         self.m_search_results_list.SetColumnWidth(3, wx.LIST_AUTOSIZE)
+
+class RedirectText(object):
+    """
+    Helper object to redirect stdout and stderr to a wx.TextCtrl
+    credits: http://www.blog.pythonlibrary.org/2009/01/01/wxpython-redirecting-stdout-stderr/
+    """
+    def __init__(self, aWxTextCtrl):
+        self.out = aWxTextCtrl
+
+    def write(self, string):
+        self.out.WriteText(string)
+
+    def flush(self):
+        pass
 
 
 class Datapkg(wx.App):
