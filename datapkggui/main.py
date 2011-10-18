@@ -10,6 +10,7 @@ import datapkg
 import os
 import sys
 import package
+import download
 
 class MainGUI(object):
 
@@ -108,17 +109,8 @@ class MainGUI(object):
         package_selected = self.m_search_results[package_selected_index]
 
         if package_selected:
-            download_dir = self.DownloadDialog()
-            if download_dir:
-                lib.download("ckan://" + package_selected.name, download_dir)
+            download.Download.Download(package_selected)
 
-
-    def DownloadDialog(self):
-        dialog = wx.DirDialog(self.m_frame_main, "Choose a Download Directory", os.getcwd())
-        if dialog.ShowModal() == wx.ID_OK:
-            download_dir = dialog.GetPath()
-            return download_dir
-        dialog.Destroy()
 
     def OnButtonClickInfo(self, event):
         package_selected_index = self.m_search_results_list.GetNextSelected(-1)
