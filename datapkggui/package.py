@@ -1,13 +1,13 @@
 __author__ = 'dgraziotin'
 import wx
-from wx import xrc
+import wx.xrc
 import datapkg
 class PackageGUI(object):
     def __init__(self, xml, package=None):
 
         self.xml = xml
         self.frame_info = xml.LoadFrame(None, 'InfoFrame')
-        self.panel_frame = xrc.XRCCTRL(self.frame_info, 'panel')
+        self.panel_frame = wx.xrc.XRCCTRL(self.frame_info, 'panel')
 
         # minimum size
         self.frame_info.SetSize(wx.Size(500, 500))
@@ -21,7 +21,7 @@ class PackageGUI(object):
         # WARNING: this only works because we defined the Widget names with the same
         # names of those defined in datapkg.metadata.Metadata. It's a sort of Reflection.
         for key, value in package.metadata.iteritems():
-            setattr(self, key+"_text", xrc.XRCCTRL(self.panel_frame, key+"_text") )
+            setattr(self, key+"_text", wx.xrc.XRCCTRL(self.panel_frame, key+"_text") )
 
         self.UpdateWidgets(package)
         
