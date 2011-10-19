@@ -15,6 +15,7 @@ def index_from_spec(spec_str, all_index=False):
 def create():
     pass
 
+
 def download(package_spec, destination_path): #still have to understand this: filter_resources=["*"]):
     """Download a Package and the connected Resources
 
@@ -82,6 +83,7 @@ def download(package_spec, destination_path): #still have to understand this: fi
     pkg_downloader.download(package, os_destination_path, filterfunc)
     return True
 
+
 def info(package_spec, request_for='metadata'):
     #TODO: a better argument instead of request_for?
     """Retrieve info on Package
@@ -111,6 +113,7 @@ def info(package_spec, request_for='metadata'):
         else: # fallback
             return package.metadata
 
+
 def list(index_spec=""):
     """Returns the Packages (not the resources) pointed by an index
 
@@ -129,6 +132,7 @@ def list(index_spec=""):
 
 def register():
     pass
+
 
 def search(index_spec, query):
     """Search a Package
@@ -154,16 +158,8 @@ def search(index_spec, query):
     return packages
 
 
-
 def update():
     pass
-
-
-
-
-
-
-
 
 
 if __name__ == "__main__":

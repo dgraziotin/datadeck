@@ -23,7 +23,7 @@ class ConsoleGUI(object):
         #self.redir = RedirectText(self.console_text)
         #sys.stdout = self.redir
         #sys.stderr = self.redir
-        
+
     def OnConsoleClearButtonClick(self, event):
         self.console_text.Clear()
 
@@ -33,6 +33,7 @@ class RedirectText(object):
     Helper object to redirect stdout and stderr to a wx.TextCtrl
     credits: http://www.blog.pythonlibrary.org/2009/01/01/wxpython-redirecting-stdout-stderr/
     """
+
     def __init__(self, aWxTextCtrl):
         self.out = aWxTextCtrl
 

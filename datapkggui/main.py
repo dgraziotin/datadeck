@@ -1,6 +1,7 @@
 __author__ = 'dgraziotin'
 """
-Main module holding the GUI
+Main Application. Implements a custom stdout/stderr listener.
+Class the Main GUI.
 Coding standard: http://www.wxpython.org/codeguidelines.php
 """
 import sys
@@ -18,6 +19,7 @@ class Datapkg(wx.App):
         self.MainGUI = maingui.MainGUI(xml)
         return True
 
+
 class SysOutListener:
     def write(self, string):
         sys.__stdout__.write(string)
@@ -28,7 +30,6 @@ class SysOutListener:
         sys.__stdout__.flush()
         #evt = WX_STDOUT(text="clean")
         #wx.PostEvent(wx.GetApp().MainGUI.m_console_text, evt)
-
 
 
 if __name__ == '__main__':
