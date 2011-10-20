@@ -1,3 +1,6 @@
-datapkg-gui depends on the following software:
+datapkggui depends on the following software.
 * datapkg (http://packages.python.org/datapkg/manual.html)
 * wxPython (http://www.wxpython.org/)
+
+setup.py should automatically retrieve datapkg when installing datapkggui.
+You MUST manually install wxPython - see http://wxpython.org

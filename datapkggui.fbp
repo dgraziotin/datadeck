@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <wxFormBuilder_Project>
     <FileVersion major="1" minor="10" />
-    <object class="Project" expanded="1">
+    <object class="Project" expanded="0">
         <property name="class_decoration"></property>
         <property name="code_generation">XRC</property>
         <property name="disconnect_events">1</property>
@@ -15,13 +15,13 @@
         <property name="internationalize">0</property>
         <property name="name">datapkggui</property>
         <property name="namespace"></property>
-        <property name="path">.</property>
+        <property name="path">./datapkggui/</property>
         <property name="precompiled_header"></property>
         <property name="relative_path">1</property>
         <property name="skip_python_events">1</property>
         <property name="use_enum">0</property>
         <property name="use_microsoft_bom">0</property>
-        <object class="Frame" expanded="1">
+        <object class="Frame" expanded="0">
             <property name="bg"></property>
             <property name="center">wxBOTH</property>
             <property name="context_help"></property>
@@ -79,16 +79,16 @@
             <event name="OnSetFocus"></event>
             <event name="OnSize"></event>
             <event name="OnUpdateUI"></event>
-            <object class="wxBoxSizer" expanded="1">
+            <object class="wxBoxSizer" expanded="0">
                 <property name="minimum_size"></property>
                 <property name="name">bSizer1</property>
                 <property name="orient">wxVERTICAL</property>
                 <property name="permission">none</property>
-                <object class="sizeritem" expanded="1">
+                <object class="sizeritem" expanded="0">
                     <property name="border">5</property>
                     <property name="flag">wxEXPAND | wxALL</property>
                     <property name="proportion">1</property>
-                    <object class="wxNotebook" expanded="1">
+                    <object class="wxNotebook" expanded="0">
                         <property name="bg"></property>
                         <property name="bitmapsize"></property>
                         <property name="context_help"></property>
@@ -139,11 +139,11 @@
                         <event name="OnSetFocus"></event>
                         <event name="OnSize"></event>
                         <event name="OnUpdateUI"></event>
-                        <object class="notebookpage" expanded="1">
+                        <object class="notebookpage" expanded="0">
                             <property name="bitmap"></property>
                             <property name="label">Search</property>
                             <property name="select">0</property>
-                            <object class="wxPanel" expanded="1">
+                            <object class="wxPanel" expanded="0">
                                 <property name="bg"></property>
                                 <property name="context_help"></property>
                                 <property name="context_menu">1</property>
@@ -190,16 +190,16 @@
                                 <event name="OnSetFocus"></event>
                                 <event name="OnSize"></event>
                                 <event name="OnUpdateUI"></event>
-                                <object class="wxBoxSizer" expanded="1">
+                                <object class="wxBoxSizer" expanded="0">
                                     <property name="minimum_size"></property>
                                     <property name="name">bSizer2</property>
                                     <property name="orient">wxVERTICAL</property>
                                     <property name="permission">none</property>
-                                    <object class="sizeritem" expanded="1">
+                                    <object class="sizeritem" expanded="0">
                                         <property name="border">5</property>
                                         <property name="flag">wxALL|wxEXPAND</property>
                                         <property name="proportion">0</property>
-                                        <object class="wxBoxSizer" expanded="1">
+                                        <object class="wxBoxSizer" expanded="0">
                                             <property name="minimum_size"></property>
                                             <property name="name">bSizer3</property>
                                             <property name="orient">wxHORIZONTAL</property>
@@ -437,11 +437,11 @@
                                             </object>
                                         </object>
                                     </object>
-                                    <object class="sizeritem" expanded="1">
+                                    <object class="sizeritem" expanded="0">
                                         <property name="border">5</property>
                                         <property name="flag">wxALL|wxEXPAND</property>
                                         <property name="proportion">3</property>
-                                        <object class="wxStaticBoxSizer" expanded="1">
+                                        <object class="wxStaticBoxSizer" expanded="0">
                                             <property name="id">wxID_ANY</property>
                                             <property name="label">Packages</property>
                                             <property name="minimum_size"></property>
@@ -663,7 +663,7 @@
                 </object>
             </object>
         </object>
-        <object class="Frame" expanded="1">
+        <object class="Frame" expanded="0">
             <property name="bg"></property>
             <property name="center">wxBOTH</property>
             <property name="context_help"></property>
@@ -721,16 +721,16 @@
             <event name="OnSetFocus"></event>
             <event name="OnSize"></event>
             <event name="OnUpdateUI"></event>
-            <object class="wxBoxSizer" expanded="1">
+            <object class="wxBoxSizer" expanded="0">
                 <property name="minimum_size"></property>
                 <property name="name">bSizer4</property>
                 <property name="orient">wxVERTICAL</property>
                 <property name="permission">none</property>
-                <object class="sizeritem" expanded="1">
+                <object class="sizeritem" expanded="0">
                     <property name="border">5</property>
                     <property name="flag">wxEXPAND | wxALL</property>
                     <property name="proportion">1</property>
-                    <object class="wxPanel" expanded="1">
+                    <object class="wxPanel" expanded="0">
                         <property name="bg"></property>
                         <property name="context_help"></property>
                         <property name="context_menu">1</property>
@@ -777,7 +777,7 @@
                         <event name="OnSetFocus"></event>
                         <event name="OnSize"></event>
                         <event name="OnUpdateUI"></event>
-                        <object class="wxBoxSizer" expanded="1">
+                        <object class="wxBoxSizer" expanded="0">
                             <property name="minimum_size"></property>
                             <property name="name">bSizer5</property>
                             <property name="orient">wxVERTICAL</property>
@@ -1676,7 +1676,7 @@
                 </object>
             </object>
         </object>
-        <object class="Panel" expanded="1">
+        <object class="Panel" expanded="0">
             <property name="bg"></property>
             <property name="context_help"></property>
             <property name="context_menu">1</property>

@@ -53,47 +53,29 @@ class Operation(threading.Thread):
 
 class DownloadOperation(Operation):
     """
-    Hybrid thread. It creates a DirDialog in the main thread for selecting a download directory.
-    Then, calls lib.download in a separate thread for retrieving the package.
+    It calls lib.download in a separate thread for retrieving the package and its resources.
     """
-    def __init__(self, linked_wxobject, package):
+    def __init__(self, linked_wxobject, package, download_dir):
         Operation.__init__(self, linked_wxobject)
         self.package = package
-        self.download_dir = self.DirDialog()
+        self.download_dir = download_dir
         self.start()
 
-    #TODO: maybe we should move it to maingui.py and add a download_dir parameter to Download()
-    def DirDialog(self):
-        dialog = wx.DirDialog(self.m_wxobject, "Choose a Download Directory", os.getcwd())
-        if dialog.ShowModal() == wx.ID_OK:
-            download_dir = dialog.GetPath()
-            return download_dir
-        else:
-            return None
-
-    def Download(self, package):
-        if self.download_dir:
-            wx.PostEvent(self.m_wxobject,
-                         OperationMessage(self.__class__, OPERATION_STATUS_ID["started"], None))
-            lib.download("ckan://" + package.name, self.download_dir)
-            return True
-        else:
-            return False
-
     def run(self):
+        wx.PostEvent(self.m_wxobject, OperationMessage(self.__class__, OPERATION_STATUS_ID["started"]))
         try:
-            result = self.Download(self.package)
+            result = lib.download("ckan://" + self.package.name, self.download_dir)
         except Exception, e:
             wx.PostEvent(self.m_wxobject, OperationMessage(self.__class__, OPERATION_STATUS_ID["error"], str(e)))
             return
-        if result:
-            wx.PostEvent(self.m_wxobject, OperationMessage(self.__class__, OPERATION_STATUS_ID["finished"], None))
-        else:
-            wx.PostEvent(self.m_wxobject,
-                         OperationMessage(self.__class__, OPERATION_STATUS_ID["error"], None))
-
+        wx.PostEvent(self.m_wxobject, OperationMessage(self.__class__, OPERATION_STATUS_ID["finished"]))
 
 class SearchOperation(Operation):
+    """
+    Given a query, it searches in Ckan using the query. If there are no exceptions,
+    it communicates to the main GUI that the the search was finished, returning the retrieved Packages
+    in an OperationMessage object.
+    """
     def __init__(self, linked_wxobject, query):
         self.query = query
         Operation.__init__(self, linked_wxobject)
@@ -101,7 +83,7 @@ class SearchOperation(Operation):
 
     def run(self):
         wx.PostEvent(self.m_wxobject,
-                     OperationMessage(self.__class__, OPERATION_STATUS_ID["started"], None))
+                     OperationMessage(self.__class__, OPERATION_STATUS_ID["started"]))
         try:
             results = lib.search("ckan://", self.query)
         except Exception, e:

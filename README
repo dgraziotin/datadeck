@@ -1,7 +1,7 @@
 Description
 ===========
 
-datapkg-gui is a graphical frontend for the datapkg tool (http://okfn.org/projects/datapkg/). It is aiming
+datapkggui is a graphical frontend for the datapkg tool (http://okfn.org/projects/datapkg/). It is aiming
 to become the standard CKAN (http://ckan.net/) graphical tool for searching, fetching and distributing open data sets.
 
 It is a 10 weeks project started on 2011-09-26 and developed by
@@ -13,5 +13,7 @@ Please take a look at docs/report.{odt, pdf} for many other info.
 Website
 =======
 
-The official website of the project is http://task3.cc/projects/datapkg-gui.
-The source code is hosted on GitHub (http://github.com/dgraziotin/datapkg-gui)
+The official website of the project is http://task3.cc/projects/datapkggui.
+The source code is hosted on GitHub (http://github.com/dgraziotin/datapkggui)
+
+

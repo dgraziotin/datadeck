@@ -1,7 +1,12 @@
 __author__ = 'dgraziotin'
+"""
+This module holds the GUI for representing a Package. Currently it is used only for showing
+relevant information about a Package. It will also be used for creating a Package.
+"""
 import wx
 import wx.xrc
 import datapkg
+import lib
 
 class PackageGUI(object):
     def __init__(self, xml, package=None):
@@ -20,14 +25,15 @@ class PackageGUI(object):
         # frame_info retrieving
         # WARNING: this only works because we defined the Widget names with the same
         # names of those defined in datapkg.metadata.Metadata. It's a sort of Reflection.
-        for key, value in package.metadata.iteritems():
+        for key, value in lib.info(package, request_for="metadata").iteritems():
             setattr(self, key + "_text", wx.xrc.XRCCTRL(self.panel_frame, key + "_text"))
 
         self.UpdateWidgets(package)
 
     def UpdateWidgets(self, package):
         # sets TextCtrl values by iterating Package Metadata
-        for key, value in package.metadata.iteritems():
+        #TODO use the lib!
+        for key, value in lib.info(package, request_for="metadata").iteritems():
             try:
                 text_ctrl = getattr(self, key + "_text")
                 # special case for tags list

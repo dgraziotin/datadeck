@@ -1,4 +1,9 @@
 __author__ = 'dgraziotin'
+"""
+This module holds what we hope will become the future standard library for datapkg, to be used
+by both the command line, the GUI and other projects.
+APIs are documented in each function.
+"""
 import datapkg
 import datapkg.spec
 import datapkg.index
@@ -89,10 +94,12 @@ def info(package_spec, request_for='metadata'):
     """Retrieve info on Package
 
     Keyword arguments:
-    package_spec -- a string Spec in the form of <scheme>://<package name>, where:
+    package_spec -- either:
+                    * a string Spec in the form of <scheme>://<package name>, where:
                     <scheme> identifies the type of index to be used
                     <package name> identifies the name of the package
-                    Ex: ckan://iso-codes
+                    Ex: ckan://iso-codes.
+                    * an object of type Package
     request_for -- a string specifying what to retrieve. Up to know we let choose either for 'metadata'
                    or for 'manifest'. Default is 'manifest'
 
@@ -101,16 +108,19 @@ def info(package_spec, request_for='metadata'):
     The package Metadata (or the Manifest)
     None elsewhere
     """
-    index, path = index_from_spec(package_spec)
-    package = index.get(path)
-    if not package:
+    if type(package_spec) == str:
+        index, path = index_from_spec(package_spec)
+        package = index.get(path)
+    else: # assume package_spec is of type Package, will check for it next
+        package = package_spec
+        
+    if not type(package) == datapkg.package.Package:
         return None
-    else:
-        if request_for == 'metadata':
-            return package.metadata
-        elif request_for == 'manifest':
-            return package.manifest
-        else: # fallback
+    if request_for == 'metadata':
+        return package.metadata
+    elif request_for == 'manifest':
+        return package.manifest
+    else: # fallback
             return package.metadata
 
 
@@ -161,9 +171,4 @@ def search(index_spec, query):
 def update():
     pass
 
-
-if __name__ == "__main__":
-    metadata = info("ckan://datapkg-gui-test")
-    print type(metadata)
-    print metadata
 

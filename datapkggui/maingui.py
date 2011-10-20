@@ -1,7 +1,7 @@
 __author__ = 'dgraziotin'
 """
 Main GUI module. Implements search and download of packages.
-Calls package.py for displaying information about a package.
+Calls packagegui.py for displaying information about a package.
 Manages Operations (~threads, see operations.py) and their messages.
 Coding standard: http://www.wxpython.org/codeguidelines.php
 """
@@ -9,8 +9,9 @@ import wx
 import wx.xrc
 import wx.lib.newevent
 import datapkg
-import package
+import packagegui
 import operations
+import os
 
 # for handling stdout and stderr on a TextCtrl
 WX_STDOUT, EVT_STDOUT = wx.lib.newevent.NewEvent()
@@ -177,9 +178,20 @@ class MainGUI(object):
             return
 
         package_selected = self.m_search_results[package_selected_index]
+        download_dir = self.DownloadDirDialog()
+        if package_selected and download_dir:
+            operations.DownloadOperation(self.m_frame_main, package_selected, download_dir)
 
-        if package_selected:
-            operations.DownloadOperation(self.m_frame_main, package_selected)
+    def DownloadDirDialog(self):
+        """
+        Create a DirDialog for choosing the directory in which we save the Package
+        """
+        dialog = wx.DirDialog(self.m_frame_main, "Choose a Download Directory", os.getcwd())
+        if dialog.ShowModal() == wx.ID_OK:
+            download_dir = dialog.GetPath()
+            return download_dir
+        else:
+            return None
 
 
     def OnButtonClickInfo(self, event):
@@ -194,7 +206,7 @@ class MainGUI(object):
         package_selected = self.m_search_results[package_selected_index]
 
         if package_selected:
-            package_info = package.PackageGUI(self.m_xml, package_selected)
+            package_info = packagegui.PackageGUI(self.m_xml, package_selected)
             package_info.Show()
         return
 

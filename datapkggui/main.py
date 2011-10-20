@@ -8,14 +8,15 @@ import sys
 import wx
 import wx.xrc
 import maingui
-
+import pkg_resources
 
 class Datapkg(wx.App):
     def __init__(self, redirect=True, filename=None):
         wx.App.__init__(self, redirect, filename)
 
     def OnInit(self, ):
-        xml = wx.xrc.XmlResource('datapkggui.xrc')
+        
+        xml = wx.xrc.XmlResource(pkg_resources.resource_filename('datapkggui', 'datapkggui.xrc'))
         self.MainGUI = maingui.MainGUI(xml)
         return True
 
@@ -32,11 +33,15 @@ class SysOutListener:
         #wx.PostEvent(wx.GetApp().MainGUI.m_console_text, evt)
 
 
-if __name__ == '__main__':
+
+def run():
     sysout_listener = SysOutListener()
     app = Datapkg(0)
     app.SetAppName("Datapkg")
     sys.stdout = sysout_listener
     sys.stderr = sysout_listener
     app.MainLoop()
+
+if __name__ == '__main__':
+    run()
 

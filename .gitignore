@@ -1,3 +1,4 @@
 .idea
+*~
 *.pyc
 datapkg_gui.egg-info/

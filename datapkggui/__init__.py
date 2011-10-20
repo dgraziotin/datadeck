@@ -1,14 +1,14 @@
-"""datapkg-gui is a graphical frontend for the datapkg tool (http://okfn.org/projects/datapkg/). It is aiming
+"""datapkggui is a graphical frontend for the datapkg tool (http://okfn.org/projects/datapkg/). It is aiming
 to become the standard CKAN (http://ckan.net/) graphical tool for searching, fetching and distributing open data sets.
 
 For more information visit the official website at:
-http://task3.cc/projects/datapkg-gui
+http://task3.cc/projects/datapkggui
 
 .. _Data Packages: http://wiki.ckan.net/Data_Package
 .. _CKAN: http://ckan.org/
 """
 __version__ = '0.1.0'
-__description__ = 'datapkg-gui (data package GUI): wxPython GUI for datapkg: data packaging system and utilities'
+__description__ = 'datapkggui (data package GUI): wxPython GUI for datapkg: data packaging system and utilities'
 __license__ = 'BSD 2-Clause'
 __license_full__ =\
 """Copyright 2011 Daniel Graziotin. All rights reserved.
@@ -37,3 +37,5 @@ The views and conclusions contained in the software and documentation are those 
 authors and should not be interpreted as representing official policies, either expressed
 or implied, of Daniel Graziotin.
 """
+
+
