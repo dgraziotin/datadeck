@@ -12,6 +12,8 @@ import datapkg
 import packagegui
 import operations
 import os
+import threading
+import time
 
 # for handling stdout and stderr on a TextCtrl
 WX_STDOUT, EVT_STDOUT = wx.lib.newevent.NewEvent()
@@ -33,6 +35,7 @@ class MainGUI(object):
         # search results
         self.m_search_results = {}
         self.m_search_results_index = 0
+        self.killing_operations = False
 
         # Main Panel retrieving and bindings
         self.m_search_text = wx.xrc.XRCCTRL(self.m_panel_main, 'search_text')
@@ -42,7 +45,6 @@ class MainGUI(object):
         self.m_search_results_list.InsertColumn(0, "Name")
         self.m_search_results_list.InsertColumn(1, "Short Description")
         self.m_search_results_list.InsertColumn(2, "License")
-        self.m_search_results_list.InsertColumn(3, "Author")
 
         self.m_frame_main.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnItemSelectedSearchResultsList,
                                id=wx.xrc.XRCID('search_results_list'))
@@ -54,12 +56,14 @@ class MainGUI(object):
         # Console retrieving and bindings
         self.m_console_text = wx.xrc.XRCCTRL(self.m_panel_main, 'console_text')
         self.m_console_clear_button = wx.xrc.XRCCTRL(self.m_panel_main, 'console_clear_button')
+        self.m_console_kill_button = wx.xrc.XRCCTRL(self.m_panel_main, 'console_kill_button')
+
         self.m_console_text_timer = wx.Timer(self.m_console_text, -1)
 
         self.m_console_text.Bind(EVT_STDOUT, self.OnUpdateConsole)
         self.m_console_text.Bind(wx.EVT_TIMER, self.OnProcessPendingEventsConsole)
         self.m_panel_main.Bind(wx.EVT_BUTTON, self.OnConsoleClearButtonClick, id=wx.xrc.XRCID('console_clear_button'))
-
+        self.m_panel_main.Bind(wx.EVT_BUTTON, self.OnConsoleKillButtonClick, id=wx.xrc.XRCID('console_kill_button'))
         # status bar
         self.m_status_bar = self.m_frame_main.CreateStatusBar()
 
@@ -69,8 +73,22 @@ class MainGUI(object):
         # disable Download and Info buttons
         self.EnableButtons(False)
         self.m_frame_main.SetSize(wx.Size(600, 625))
+        self.m_frame_main.Centre()
         self.m_frame_main.Show()
 
+
+
+    def OnConsoleKillButtonClick(self, event):
+        """
+        Kill all the currently running Operations
+        """
+        for thread in  threading.enumerate():
+            # check if the first super class is an Operation
+            if thread.__class__.mro()[1] == operations.Operation:
+                self.killing_operations = True
+                while thread.isAlive():
+                    thread.RaiseException(operations.KillOperationException)
+        
     def OnUpdateConsole(self, event):
         """
         Update the Console text
@@ -93,6 +111,10 @@ class MainGUI(object):
         """
         #TODO needs refactoring
         #TODO block downloads if there is already one in downloading
+        if operation_message.status == operations.OPERATION_STATUS_ID["error"] and self.killing_operations:
+            self.killing_operations = False
+            self.SetStatusBarMessage("Operation Killed")
+            return
         if operation_message.type == operations.DownloadOperation:
             if operation_message.status == operations.OPERATION_STATUS_ID["started"]:
                 self.SetStatusBarMessage("Download Started")
@@ -237,14 +259,11 @@ class MainGUI(object):
         name = package.metadata['name'] if package.metadata['name'] else "N/A"
         notes = package.metadata['notes'] if package.metadata['notes'] else "N/A"
         license = package.metadata['license'] if package.metadata['license'] else "N/A"
-        author = package.metadata['author'] if package.metadata['author'] else "N/A"
 
         self.m_search_results_list.InsertStringItem(self.m_search_results_index, name)
-        self.m_search_results_list.SetStringItem(self.m_search_results_index, 1, notes[:30].replace("\n","").replace("\r",""))
+        self.m_search_results_list.SetStringItem(self.m_search_results_index, 1, notes[:30].replace("\n"," ").replace("\r"," "))
         self.m_search_results_list.SetStringItem(self.m_search_results_index, 2, license)
-        self.m_search_results_list.SetStringItem(self.m_search_results_index, 3, author)
 
         self.m_search_results_list.SetColumnWidth(0, wx.LIST_AUTOSIZE)
         self.m_search_results_list.SetColumnWidth(1, wx.LIST_AUTOSIZE)
         self.m_search_results_list.SetColumnWidth(2, wx.LIST_AUTOSIZE)
-        self.m_search_results_list.SetColumnWidth(3, wx.LIST_AUTOSIZE)

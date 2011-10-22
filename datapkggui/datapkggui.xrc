@@ -91,11 +91,28 @@
 										</object>
 										<object class="sizeritem">
 											<option>1</option>
-											<flag>wxALIGN_RIGHT|wxALL</flag>
+											<flag>wxEXPAND</flag>
 											<border>5</border>
-											<object class="wxButton" name="console_clear_button">
-												<label>Clear</label>
-												<default>0</default>
+											<object class="wxBoxSizer">
+												<orient>wxHORIZONTAL</orient>
+												<object class="sizeritem">
+													<option>1</option>
+													<flag>wxALIGN_RIGHT|wxALL</flag>
+													<border>5</border>
+													<object class="wxButton" name="console_clear_button">
+														<label>Clear Console</label>
+														<default>0</default>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxButton" name="console_kill_button">
+														<label>Kill Operations</label>
+														<default>0</default>
+													</object>
+												</object>
 											</object>
 										</object>
 									</object>
