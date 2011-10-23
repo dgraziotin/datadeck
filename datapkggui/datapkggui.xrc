@@ -4,6 +4,20 @@
 		<style>wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL</style>
 		<title>Datapkg</title>
 		<centered>1</centered>
+		<object class="wxMenuBar" name="menubar">
+			<label>MyMenuBar</label>
+			<object class="wxMenu" name="menu">
+				<label>File</label>
+				<object class="wxMenuItem" name="menu_about">
+					<label>About</label>
+					<help></help>
+				</object>
+				<object class="wxMenuItem" name="menu_exit">
+					<label>Exit</label>
+					<help></help>
+				</object>
+			</object>
+		</object>
 		<object class="wxNotebook" name="notebook">
 			<object class="notebookpage">
 				<label>Search</label>
@@ -126,6 +140,7 @@
 	</object>
 	<object class="wxFrame" name="InfoFrame">
 		<style>wxDEFAULT_FRAME_STYLE|wxSTAY_ON_TOP|wxTAB_TRAVERSAL</style>
+		<size>194,320</size>
 		<title>Package</title>
 		<centered>1</centered>
 		<object class="wxPanel" name="panel">
@@ -327,5 +342,26 @@
 	<object class="wxPanel" name="panel">
 		<style>wxTAB_TRAVERSAL</style>
 		<size>500,300</size>
+	</object>
+	<object class="wxFrame" name="AboutFrame">
+		<style>wxCLOSE_BOX|wxRESIZE_BORDER|wxSTAY_ON_TOP|wxTAB_TRAVERSAL</style>
+		<size>500,300</size>
+		<title>About</title>
+		<centered>1</centered>
+		<object class="wxPanel" name="panel">
+			<style>wxTAB_TRAVERSAL</style>
+			<object class="wxBoxSizer">
+				<orient>wxVERTICAL</orient>
+				<object class="sizeritem">
+					<option>5</option>
+					<flag>wxALL|wxEXPAND</flag>
+					<border>5</border>
+					<object class="wxStaticText" name="about_label">
+						<label>MyLabel</label>
+						<wrap>-1</wrap>
+					</object>
+				</object>
+			</object>
+		</object>
 	</object>
 </resource>

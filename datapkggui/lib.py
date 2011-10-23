@@ -10,6 +10,7 @@ import datapkg.index
 import datapkg.download
 import ckanclient
 import os
+import shutil
 
 #TODO should we really export this functionality? can be useful.
 def index_from_spec(spec_str, all_index=False):
@@ -84,7 +85,6 @@ def download(package_spec, destination_path): #still have to understand this: fi
     package = index.get(path)
 
     os_destination_path = os.path.join(destination_path, package.name)
-
     pkg_downloader.download(package, os_destination_path, filterfunc)
     return True
 

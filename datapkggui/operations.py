@@ -11,6 +11,7 @@ import wx
 import lib
 import inspect
 import ctypes
+import shutil
 
 # Define notification event for thread completion
 OPERATION_MESSAGE_ID = wx.NewId()
@@ -55,6 +56,7 @@ class Operation(threading.Thread):
     def __init__(self, linked_wxobject):
         threading.Thread.__init__(self)
         self.m_wxobject = linked_wxobject
+        self.setDaemon(True)
 
     def run(self):
         raise NotImplementedError
@@ -112,12 +114,10 @@ class DownloadOperation(Operation):
         wx.PostEvent(self.m_wxobject, OperationMessage(self.__class__, OPERATION_STATUS_ID["started"]))
         try:
             result = lib.download("ckan://" + self.package.name, self.download_dir)
-        except OperationException:
-            wx.PostEvent(self.m_wxobject, OperationMessage(self.__class__, OPERATION_STATUS_ID["killed"]))
+        except Exception, e:
+            shutil.rmtree(self.download_dir+os.sep+self.package.name,ignore_errors=True)
+            wx.PostEvent(self.m_wxobject, OperationMessage(self.__class__, OPERATION_STATUS_ID["error"], str(e)))
             return
-        #except Exception, e:
-        #    wx.PostEvent(self.m_wxobject, OperationMessage(self.__class__, OPERATION_STATUS_ID["error"], str(e)))
-        #    return
         wx.PostEvent(self.m_wxobject, OperationMessage(self.__class__, OPERATION_STATUS_ID["finished"]))
 
 

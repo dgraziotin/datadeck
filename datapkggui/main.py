@@ -39,7 +39,7 @@ def run():
     app = Datapkg(0)
     app.SetAppName("Datapkg")
     sys.stdout = sysout_listener
-    sys.stderr = sysout_listener
+    #sys.stderr = sysout_listener
     app.MainLoop()
 
 if __name__ == '__main__':

@@ -13,70 +13,58 @@ import packagegui
 import operations
 import os
 import threading
+import gui
 import time
 
 # for handling stdout and stderr on a TextCtrl
 WX_STDOUT, EVT_STDOUT = wx.lib.newevent.NewEvent()
 
-class MainGUI(object):
+class MainGUI(gui.GUI):
     """
     The first GUI displayed when the program starts up.
     """
-
     def __init__(self, xml):
         """
         Loads resources from XRC file, prepares internal structures representing search results,
         binds events, prepares the Console for receiving stdout and stderr.
         """
-        self.m_xml = xml
-        self.m_frame_main = xml.LoadFrame(None, 'DatapkgFrame')
-        self.m_panel_main = wx.xrc.XRCCTRL(self.m_frame_main, 'notebook')
+        gui.GUI.__init__(self, xml, frame_name="DatapkgFrame", panel_name="notebook")
 
         # search results
         self.m_search_results = {}
         self.m_search_results_index = 0
-        self.killing_operations = False
+        self.m_killing_operations = False
 
         # Main Panel retrieving and bindings
-        self.m_search_text = wx.xrc.XRCCTRL(self.m_panel_main, 'search_text')
-        self.m_download_button = wx.xrc.XRCCTRL(self.m_panel_main, 'download_button')
-        self.m_info_button = wx.xrc.XRCCTRL(self.m_panel_main, 'info_button')
-        self.m_search_results_list = wx.xrc.XRCCTRL(self.m_panel_main, 'search_results_list')
+        self.m_search_text = self.GetWidget('search_text')
+        self.m_download_button = self.GetWidget('download_button')
+        self.m_info_button = self.GetWidget('info_button')
+        self.m_search_results_list =self.GetWidget('search_results_list')
         self.m_search_results_list.InsertColumn(0, "Name")
         self.m_search_results_list.InsertColumn(1, "Short Description")
         self.m_search_results_list.InsertColumn(2, "License")
 
-        self.m_frame_main.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnItemSelectedSearchResultsList,
-                               id=wx.xrc.XRCID('search_results_list'))
-        self.m_frame_main.Bind(wx.EVT_BUTTON, self.OnButtonClickSearch, id=wx.xrc.XRCID('search_button'))
-        self.m_frame_main.Bind(wx.EVT_BUTTON, self.OnButtonClickDownload, id=wx.xrc.XRCID('download_button'))
-        self.m_frame_main.Bind(wx.EVT_BUTTON, self.OnButtonClickInfo, id=wx.xrc.XRCID('info_button'))
-        self.m_search_text.Bind(wx.EVT_KEY_DOWN, self.OnKeyDownSearchText)
+        self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnSearchResultsListItemSelected,'search_results_list')
+        self.Bind(wx.EVT_BUTTON, self.OnButtonSearchClick, 'search_button')
+        self.Bind(wx.EVT_BUTTON, self.OnButtonDownloadClick, 'download_button')
+        self.Bind(wx.EVT_BUTTON, self.OnButtonInfoClick, 'info_button')
+        self.m_search_text.Bind(wx.EVT_KEY_DOWN, self.OnSearchTextKeyDown)
 
         # Console retrieving and bindings
-        self.m_console_text = wx.xrc.XRCCTRL(self.m_panel_main, 'console_text')
-        self.m_console_clear_button = wx.xrc.XRCCTRL(self.m_panel_main, 'console_clear_button')
-        self.m_console_kill_button = wx.xrc.XRCCTRL(self.m_panel_main, 'console_kill_button')
-
+        self.m_console_text = self.GetWidget('console_text')
+        self.m_console_clear_button = self.GetWidget('console_clear_button')
+        self.m_console_kill_button = self.GetWidget('console_kill_button')
         self.m_console_text_timer = wx.Timer(self.m_console_text, -1)
-
         self.m_console_text.Bind(EVT_STDOUT, self.OnUpdateConsole)
         self.m_console_text.Bind(wx.EVT_TIMER, self.OnProcessPendingEventsConsole)
-        self.m_panel_main.Bind(wx.EVT_BUTTON, self.OnConsoleClearButtonClick, id=wx.xrc.XRCID('console_clear_button'))
-        self.m_panel_main.Bind(wx.EVT_BUTTON, self.OnConsoleKillButtonClick, id=wx.xrc.XRCID('console_kill_button'))
-        # status bar
-        self.m_status_bar = self.m_frame_main.CreateStatusBar()
+        self.Bind(wx.EVT_BUTTON, self.OnConsoleClearButtonClick, 'console_clear_button')
+        self.Bind(wx.EVT_BUTTON, self.OnConsoleKillButtonClick, 'console_kill_button')
 
         # Set up event handler for any worker thread results
-        operations.OPERATION_MESSAGE_HANDLER(self.m_frame_main, self.OnOperationMessageReceived)
+        operations.OPERATION_MESSAGE_HANDLER(self.m_frame, self.OnOperationMessageReceived)
 
         # disable Download and Info buttons
         self.EnableButtons(False)
-        self.m_frame_main.SetSize(wx.Size(600, 625))
-        self.m_frame_main.Centre()
-        self.m_frame_main.Show()
-
-
 
     def OnConsoleKillButtonClick(self, event):
         """
@@ -111,10 +99,14 @@ class MainGUI(object):
         """
         #TODO needs refactoring
         #TODO block downloads if there is already one in downloading
+
+        operation_type_str = operation_message.type.__name__
+
         if operation_message.status == operations.OPERATION_STATUS_ID["error"] and self.killing_operations:
             self.killing_operations = False
-            self.SetStatusBarMessage("Operation Killed")
+            self.SetStatusBarMessage(operation_type_str + " Killed")
             return
+
         if operation_message.type == operations.DownloadOperation:
             if operation_message.status == operations.OPERATION_STATUS_ID["started"]:
                 self.SetStatusBarMessage("Download Started")
@@ -147,16 +139,16 @@ class MainGUI(object):
         else:
             pass
 
-    def OnKeyDownSearchText(self, event):
+    def OnSearchTextKeyDown(self, event):
         """
         Simulate a click on Search button when Return is pressed
         """
         key_code = event.GetKeyCode()
         if key_code == wx.WXK_RETURN:
-            self.OnButtonClickSearch(event)
+            self.OnButtonSearchClick(event)
         event.Skip()
 
-    def OnItemSelectedSearchResultsList( self, event ):
+    def OnSearchResultsListItemSelected( self, event ):
         """
         If the user selects a package in the search result list,
         enable the Info and Download buttons, for processing it.
@@ -174,7 +166,7 @@ class MainGUI(object):
         self.m_search_results_index = 0
         self.m_search_results = {}
 
-    def OnButtonClickSearch( self, event ):
+    def OnButtonSearchClick( self, event ):
         """
         If there is text in the search text, launch a SearchOperation.
         """
@@ -187,10 +179,10 @@ class MainGUI(object):
         self.EnableButtons(False)
         self.CleanSearchResults()
 
-        operations.SearchOperation(self.m_frame_main, searched_value)
+        operations.SearchOperation(self.m_frame, searched_value)
 
 
-    def OnButtonClickDownload(self, event):
+    def OnButtonDownloadClick(self, event):
         """
         Retrieve the currently selected package in the results list and launch a DownloadOperation
         for downloading it.
@@ -202,13 +194,13 @@ class MainGUI(object):
         package_selected = self.m_search_results[package_selected_index]
         download_dir = self.DownloadDirDialog()
         if package_selected and download_dir:
-            operations.DownloadOperation(self.m_frame_main, package_selected, download_dir)
+            operations.DownloadOperation(self.m_frame, package_selected, download_dir)
 
     def DownloadDirDialog(self):
         """
         Create a DirDialog for choosing the directory in which we save the Package
         """
-        dialog = wx.DirDialog(self.m_frame_main, "Choose a Download Directory", os.getcwd())
+        dialog = wx.DirDialog(self.m_frame, "Choose a Download Directory", os.getcwd())
         if dialog.ShowModal() == wx.ID_OK:
             download_dir = dialog.GetPath()
             return download_dir
@@ -216,7 +208,7 @@ class MainGUI(object):
             return None
 
 
-    def OnButtonClickInfo(self, event):
+    def OnButtonInfoClick(self, event):
         """
         Retrieve the currently selected package in the results list and invoke the Package GUI
         for displaying information about it.
@@ -234,9 +226,6 @@ class MainGUI(object):
 
     def OnConsoleClearButtonClick(self, event):
         self.m_console_text.Clear()
-
-    def SetStatusBarMessage(self, message):
-        self.m_status_bar.SetStatusText(message)
 
     def EnableButtons(self, enable):
         """
