@@ -7,28 +7,34 @@ import wx
 import wx.xrc
 import datapkg
 import lib
+import abstractgui
+import operations
 
-class PackageGUI(object):
+class PackageGUI(abstractgui.GUI):
     def __init__(self, xml, package=None):
-        self.xml = xml
-        self.frame_info = xml.LoadFrame(None, 'InfoFrame')
-        self.panel_frame = wx.xrc.XRCCTRL(self.frame_info, 'panel')
+        abstractgui.GUI.__init__(self, xml, frame_name="InfoFrame", panel_name="panel")
 
         # minimum size
-        self.frame_info.SetSize(wx.Size(500, 500))
+        self.m_frame.SetSize(wx.Size(500, 500))
+
+        self.m_download_button = self.GetWidget('download_button')
+        self.Bind(wx.EVT_BUTTON, self.OnButtonDownloadClick, 'download_button')
 
         if not package:
             # we instantiate an empty package for obtaining its metadata
             # attributes
             package = datapkg.package.Package()
 
+        self.m_package = package
+
         # frame_info retrieving
         # WARNING: this only works because we defined the Widget names with the same
         # names of those defined in datapkg.metadata.Metadata. It's a sort of Reflection.
         for key, value in lib.info(package, request_for="metadata").iteritems():
-            setattr(self, key + "_text", wx.xrc.XRCCTRL(self.panel_frame, key + "_text"))
+            setattr(self, key + "_text", wx.xrc.XRCCTRL(self.m_frame, key + "_text"))
 
         self.UpdateWidgets(package)
+        self.m_status_bar.Hide()
 
     def UpdateWidgets(self, package):
         # sets TextCtrl values by iterating Package Metadata
@@ -51,6 +57,12 @@ class PackageGUI(object):
             except AttributeError:
                 continue
 
-
-    def Show(self):
-        self.frame_info.Show()
+    def OnButtonDownloadClick(self, event):
+        """
+        Retrieve the currently selected package in the results list and launch a DownloadOperation
+        for downloading it.
+        """
+        download_dir = self.DownloadDirDialog()
+        if self.m_package and download_dir:
+            operations.DownloadOperation(self.m_frame, self.m_package, download_dir)
+            self.Show(False)

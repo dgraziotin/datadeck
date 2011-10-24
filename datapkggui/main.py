@@ -15,7 +15,6 @@ class Datapkg(wx.App):
         wx.App.__init__(self, redirect, filename)
 
     def OnInit(self, ):
-        
         xml = wx.xrc.XmlResource(pkg_resources.resource_filename('datapkggui', 'datapkggui.xrc'))
         self.MainGUI = maingui.MainGUI(xml)
         return True
@@ -31,7 +30,6 @@ class SysOutListener:
         sys.__stdout__.flush()
         #evt = WX_STDOUT(text="clean")
         #wx.PostEvent(wx.GetApp().MainGUI.m_console_text, evt)
-
 
 
 def run():

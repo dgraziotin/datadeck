@@ -13,13 +13,13 @@ import packagegui
 import operations
 import os
 import threading
-import gui
+import abstractgui
 import time
 
 # for handling stdout and stderr on a TextCtrl
 WX_STDOUT, EVT_STDOUT = wx.lib.newevent.NewEvent()
 
-class MainGUI(gui.GUI):
+class MainGUI(abstractgui.GUI):
     """
     The first GUI displayed when the program starts up.
     """
@@ -28,7 +28,7 @@ class MainGUI(gui.GUI):
         Loads resources from XRC file, prepares internal structures representing search results,
         binds events, prepares the Console for receiving stdout and stderr.
         """
-        gui.GUI.__init__(self, xml, frame_name="DatapkgFrame", panel_name="notebook")
+        abstractgui.GUI.__init__(self, xml, frame_name="DatapkgFrame", panel_name="notebook")
 
         # search results
         self.m_search_results = {}
@@ -39,12 +39,12 @@ class MainGUI(gui.GUI):
         self.m_search_text = self.GetWidget('search_text')
         self.m_download_button = self.GetWidget('download_button')
         self.m_info_button = self.GetWidget('info_button')
-        self.m_search_results_list =self.GetWidget('search_results_list')
+        self.m_search_results_list = self.GetWidget('search_results_list')
         self.m_search_results_list.InsertColumn(0, "Name")
         self.m_search_results_list.InsertColumn(1, "Short Description")
         self.m_search_results_list.InsertColumn(2, "License")
 
-        self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnSearchResultsListItemSelected,'search_results_list')
+        self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnSearchResultsListItemSelected, 'search_results_list')
         self.Bind(wx.EVT_BUTTON, self.OnButtonSearchClick, 'search_button')
         self.Bind(wx.EVT_BUTTON, self.OnButtonDownloadClick, 'download_button')
         self.Bind(wx.EVT_BUTTON, self.OnButtonInfoClick, 'info_button')
@@ -73,10 +73,10 @@ class MainGUI(gui.GUI):
         for thread in  threading.enumerate():
             # check if the first super class is an Operation
             if thread.__class__.mro()[1] == operations.Operation:
-                self.killing_operations = True
+                self.m_killing_operations = True
                 while thread.isAlive():
                     thread.RaiseException(operations.KillOperationException)
-        
+
     def OnUpdateConsole(self, event):
         """
         Update the Console text
@@ -97,31 +97,20 @@ class MainGUI(gui.GUI):
         According to the status of the Message, inform the user and update the GUI.
         See operations.py
         """
-        #TODO needs refactoring
-        #TODO block downloads if there is already one in downloading
-
         operation_type_str = operation_message.type.__name__
 
-        if operation_message.status == operations.OPERATION_STATUS_ID["error"] and self.killing_operations:
-            self.killing_operations = False
+        if operation_message.status == operations.OPERATION_STATUS_ID["error"] and self.m_killing_operations:
+            self.m_killing_operations = False
             self.SetStatusBarMessage(operation_type_str + " Killed")
             return
-
-        if operation_message.type == operations.DownloadOperation:
-            if operation_message.status == operations.OPERATION_STATUS_ID["started"]:
-                self.SetStatusBarMessage("Download Started")
-            elif operation_message.status == operations.OPERATION_STATUS_ID["finished"]:
-                self.SetStatusBarMessage("Download Finished")
-            elif operation_message.status == operations.OPERATION_STATUS_ID["error"]:
-                if operation_message.data:
-                    self.SetStatusBarMessage("ERROR: " + operation_message.data)
-            else:
-                pass
-        elif operation_message.type == operations.SearchOperation:
-            if operation_message.status == operations.OPERATION_STATUS_ID["started"]:
-                self.SetStatusBarMessage("Search Started")
-            elif operation_message.status == operations.OPERATION_STATUS_ID["finished"]:
-                self.SetStatusBarMessage("Search Finished")
+        elif operation_message.status == (operations.OPERATION_STATUS_ID["error"]
+                                          and not self.m_killing_operations and operation_message.data):
+            self.SetStatusBarMessage(operation_type_str + " ERROR: " + operation_message.data)
+        elif operation_message.status == operations.OPERATION_STATUS_ID["started"]:
+            self.SetStatusBarMessage(operation_type_str + " Started")
+        elif operation_message.status == operations.OPERATION_STATUS_ID["finished"]:
+            self.SetStatusBarMessage(operation_type_str + " Finished")
+            if operation_message.type == operations.SearchOperation:
                 self.CleanSearchResults()
                 results = operation_message.data
                 if results:
@@ -132,10 +121,6 @@ class MainGUI(gui.GUI):
                     package = datapkg.package.Package()
                     package.name = "Not Found"
                     self.InsertSearchResultsList(package)
-            elif operation_message.status == operations.OPERATION_STATUS_ID["error"]:
-                self.SetStatusBarMessage("ERROR: " + operation_message.data)
-            else:
-                pass
         else:
             pass
 
@@ -187,6 +172,7 @@ class MainGUI(gui.GUI):
         Retrieve the currently selected package in the results list and launch a DownloadOperation
         for downloading it.
         """
+        #TODO block downloads if there is already one in downloading
         package_selected_index = self.m_search_results_list.GetNextSelected(-1)
         if package_selected_index == -1:
             return
@@ -195,17 +181,6 @@ class MainGUI(gui.GUI):
         download_dir = self.DownloadDirDialog()
         if package_selected and download_dir:
             operations.DownloadOperation(self.m_frame, package_selected, download_dir)
-
-    def DownloadDirDialog(self):
-        """
-        Create a DirDialog for choosing the directory in which we save the Package
-        """
-        dialog = wx.DirDialog(self.m_frame, "Choose a Download Directory", os.getcwd())
-        if dialog.ShowModal() == wx.ID_OK:
-            download_dir = dialog.GetPath()
-            return download_dir
-        else:
-            return None
 
 
     def OnButtonInfoClick(self, event):
@@ -221,7 +196,7 @@ class MainGUI(gui.GUI):
 
         if package_selected:
             package_info = packagegui.PackageGUI(self.m_xml, package_selected)
-            package_info.Show()
+            package_info.Show(True)
         return
 
     def OnConsoleClearButtonClick(self, event):
@@ -250,7 +225,8 @@ class MainGUI(gui.GUI):
         license = package.metadata['license'] if package.metadata['license'] else "N/A"
 
         self.m_search_results_list.InsertStringItem(self.m_search_results_index, name)
-        self.m_search_results_list.SetStringItem(self.m_search_results_index, 1, notes[:30].replace("\n"," ").replace("\r"," "))
+        self.m_search_results_list.SetStringItem(self.m_search_results_index, 1,
+                                                 notes[:30].replace("\n", " ").replace("\r", " "))
         self.m_search_results_list.SetStringItem(self.m_search_results_index, 2, license)
 
         self.m_search_results_list.SetColumnWidth(0, wx.LIST_AUTOSIZE)

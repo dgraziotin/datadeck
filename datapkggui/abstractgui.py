@@ -1,6 +1,11 @@
+__author__ = 'dgraziotin'
+"""
+General GUI module. it contains the base class for datapkggui GUIs, that should not be instantiated.
+"""
 import wx
 import wx.xrc
 import datapkggui
+import os
 
 class GUI(object):
     """
@@ -9,6 +14,12 @@ class GUI(object):
     """
 
     def __init__(self, xml, frame_name, panel_name="panel"):
+        """
+        Constructor of our "abstract" class.
+        Datapkggui windows have one frame and one panel, so they must be passed as arguments.
+        The xml XRC file must be passed, too.
+        Shared objects such as the status bar and the menu bar are created here.
+        """
         self.m_xml = xml
 
         self.m_frame = xml.LoadFrame(None, frame_name)
@@ -29,23 +40,40 @@ class GUI(object):
         self.m_status_bar.SetStatusText(message)
 
     def OnMenuClickAbout(self, event):
+        """
+        Creates the About window.
+        """
         about_frame = self.m_xml.LoadFrame(None, "AboutFrame")
-        about_label = self.GetWidget('about_label', about_frame)
+        about_text = self.GetWidget('about_text', about_frame)
         label = "datapkggui version %s.\n%s\nWebsite: %s\nLicense:\n%s" % (
             datapkggui.__version__, datapkggui.__description__, "http://task3.cc/projects/datapkggui",
             datapkggui.__license_full__)
 
-        about_label.SetLabel(label)
+        about_text.AppendText(label)
         about_frame.SetSize(wx.Size(694, 447))
         about_frame.Centre()
         about_frame.Show()
 
+    def Show(self, show):
+        self.m_frame.Show(show)
+
     def OnMenuClickExit(self, event):
         self.m_frame.Close()
 
+    def DownloadDirDialog(self):
+        """
+        Create a DirDialog for choosing the directory in which we save the Package
+        """
+        dialog = wx.DirDialog(self.m_frame, "Choose a Download Directory", os.getcwd())
+        if dialog.ShowModal() == wx.ID_OK:
+            download_dir = dialog.GetPath()
+            return download_dir
+        else:
+            return None
+
     def GetWidget(self, name, window=None):
         """
-        Wrapper around wx.xrc.XRCCTRL with window = self.m_frame set as default
+        Wrapper around wx.xrc.XRCCTRL with window = self.m_frame set as default.
         """
         if not window:
             window = self.m_frame
@@ -53,6 +81,6 @@ class GUI(object):
 
     def Bind(self, event, method, name):
         """
-        Wrapper around Bind
+        Wrapper around Bind method.
         """
         self.m_frame.Bind(event, method, id=wx.xrc.XRCID(name))

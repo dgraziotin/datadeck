@@ -22,13 +22,17 @@ OPERATION_STATUS_ID = {
     "finished": wx.NewId(),
     "error": wx.NewId(),
     "info": wx.NewId(),
-}
+    }
 
 def OPERATION_MESSAGE_HANDLER(frame, method):
     frame.Connect(-1, -1, OPERATION_MESSAGE_ID, method)
 
 
 class KillOperationException(Exception):
+    """
+    An exception used to Kill an Operation
+    """
+
     def __init__(self, message):
         Exception.__init__(self, message)
 
@@ -115,7 +119,7 @@ class DownloadOperation(Operation):
         try:
             result = lib.download("ckan://" + self.package.name, self.download_dir)
         except Exception, e:
-            shutil.rmtree(self.download_dir+os.sep+self.package.name,ignore_errors=True)
+            shutil.rmtree(self.download_dir + os.sep + self.package.name, ignore_errors=True)
             wx.PostEvent(self.m_wxobject, OperationMessage(self.__class__, OPERATION_STATUS_ID["error"], str(e)))
             return
         wx.PostEvent(self.m_wxobject, OperationMessage(self.__class__, OPERATION_STATUS_ID["finished"]))
@@ -141,8 +145,5 @@ class SearchOperation(Operation):
         except Exception, e:
             wx.PostEvent(self.m_wxobject, OperationMessage(self.__class__, OPERATION_STATUS_ID["error"], str(e)))
             return
-        #except Exception, e:
-        #    wx.PostEvent(self.m_wxobject, OperationMessage(self.__class__, OPERATION_STATUS_ID["error"], str(e)))
-        #    return
         wx.PostEvent(self.m_wxobject, OperationMessage(self.__class__, OPERATION_STATUS_ID["finished"], results))
         

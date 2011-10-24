@@ -113,7 +113,7 @@ def info(package_spec, request_for='metadata'):
         package = index.get(path)
     else: # assume package_spec is of type Package, will check for it next
         package = package_spec
-        
+
     if not type(package) == datapkg.package.Package:
         return None
     if request_for == 'metadata':
@@ -121,7 +121,7 @@ def info(package_spec, request_for='metadata'):
     elif request_for == 'manifest':
         return package.manifest
     else: # fallback
-            return package.metadata
+        return package.metadata
 
 
 def list(index_spec=""):
