@@ -5,21 +5,20 @@ Calls packagegui.py for displaying information about a package.
 Manages Operations (~threads, see operations.py) and their messages.
 Coding standard: http://www.wxpython.org/codeguidelines.php
 """
+import threading
 import wx
 import wx.xrc
 import wx.lib.newevent
 import datapkg
+import datapkggui.operations as operations
 import packagegui
-import operations
-import os
-import threading
-import abstractgui
-import time
 
+
+import base
 # for handling stdout and stderr on a TextCtrl
 WX_STDOUT, EVT_STDOUT = wx.lib.newevent.NewEvent()
 
-class MainGUI(abstractgui.GUI):
+class MainGUI(base.GUI):
     """
     The first GUI displayed when the program starts up.
     """
@@ -28,7 +27,7 @@ class MainGUI(abstractgui.GUI):
         Loads resources from XRC file, prepares internal structures representing search results,
         binds events, prepares the Console for receiving stdout and stderr.
         """
-        abstractgui.GUI.__init__(self, xml, frame_name="DatapkgFrame", panel_name="notebook")
+        base.GUI.__init__(self, xml, frame_name="DatapkgFrame", panel_name="notebook")
 
         # search results
         self.m_search_results = {}

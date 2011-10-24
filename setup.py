@@ -20,7 +20,7 @@ setup(
 
     packages = find_packages(),  # include all packages under src
     package_data={
-      'datapkggui': ['*.xrc']
+      'datapkggui.res': ['*.xrc']
     },
     include_package_data=True,
     install_requires=[

@@ -7,7 +7,7 @@ Coding standard: http://www.wxpython.org/codeguidelines.php
 import sys
 import wx
 import wx.xrc
-import maingui
+import gui.maingui
 import pkg_resources
 
 class Datapkg(wx.App):
@@ -15,15 +15,15 @@ class Datapkg(wx.App):
         wx.App.__init__(self, redirect, filename)
 
     def OnInit(self, ):
-        xml = wx.xrc.XmlResource(pkg_resources.resource_filename('datapkggui', 'datapkggui.xrc'))
-        self.MainGUI = maingui.MainGUI(xml)
+        xml = wx.xrc.XmlResource(pkg_resources.resource_filename('datapkggui.res', 'datapkggui.xrc'))
+        self.MainGUI = gui.maingui.MainGUI(xml)
         return True
 
 
 class SysOutListener:
     def write(self, string):
         sys.__stdout__.write(string)
-        evt = maingui.WX_STDOUT(text=string)
+        evt = gui.maingui.WX_STDOUT(text=string)
         wx.PostEvent(wx.GetApp().MainGUI.m_console_text, evt)
 
     def flush(self):

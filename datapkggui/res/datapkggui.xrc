@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<resource xmlns="http://www.wxwindows.org/wxxrc" version="2.3.0.1">
+	<object class="wxFrame" name="DatapkgFrame">
+		<style>wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL</style>
+		<title>Datapkg</title>
+		<centered>1</centered>
+		<object class="wxMenuBar" name="menubar">
+			<label>MyMenuBar</label>
+			<object class="wxMenu" name="menu">
+				<label>File</label>
+				<object class="wxMenuItem" name="menu_about">
+					<label>About</label>
+					<help></help>
+				</object>
+				<object class="wxMenuItem" name="menu_exit">
+					<label>Exit</label>
+					<help></help>
+				</object>
+			</object>
+		</object>
+		<object class="wxNotebook" name="notebook">
+			<object class="notebookpage">
+				<label>Search</label>
+				<selected>0</selected>
+				<object class="wxPanel" name="search_panel">
+					<style>wxTAB_TRAVERSAL</style>
+					<object class="wxBoxSizer">
+						<orient>wxVERTICAL</orient>
+						<object class="sizeritem">
+							<option>0</option>
+							<flag>wxALL|wxEXPAND</flag>
+							<border>5</border>
+							<object class="wxBoxSizer">
+								<orient>wxHORIZONTAL</orient>
+								<object class="sizeritem">
+									<option>4</option>
+									<flag>wxEXPAND|wxRIGHT</flag>
+									<border>5</border>
+									<object class="wxTextCtrl" name="search_text">
+										<value></value>
+										<maxlength>0</maxlength>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>1</option>
+									<flag></flag>
+									<border>5</border>
+									<object class="wxButton" name="search_button">
+										<label>Search</label>
+										<default>0</default>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>1</option>
+									<flag></flag>
+									<border>5</border>
+									<object class="wxButton" name="info_button">
+										<label>Get Info</label>
+										<default>0</default>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>1</option>
+									<flag></flag>
+									<border>5</border>
+									<object class="wxButton" name="download_button">
+										<label>Download</label>
+										<default>0</default>
+									</object>
+								</object>
+							</object>
+						</object>
+						<object class="sizeritem">
+							<option>3</option>
+							<flag>wxALL|wxEXPAND</flag>
+							<border>5</border>
+							<object class="wxStaticBoxSizer">
+								<orient>wxVERTICAL</orient>
+								<label>Packages</label>
+								<object class="sizeritem">
+									<option>2</option>
+									<flag>wxALL|wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxListCtrl" name="search_results_list">
+										<style>wxLC_HRULES|wxLC_REPORT|wxLC_SINGLE_SEL</style>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>2</option>
+									<flag>wxALL|wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxStaticBoxSizer">
+										<orient>wxVERTICAL</orient>
+										<label>Console Info</label>
+										<object class="sizeritem">
+											<option>3</option>
+											<flag>wxALL|wxEXPAND</flag>
+											<border>5</border>
+											<object class="wxTextCtrl" name="console_text">
+												<style>wxTE_MULTILINE|wxTE_READONLY</style>
+												<bg>#f6f6f5</bg>
+												<value></value>
+												<maxlength>0</maxlength>
+											</object>
+										</object>
+										<object class="sizeritem">
+											<option>1</option>
+											<flag>wxEXPAND</flag>
+											<border>5</border>
+											<object class="wxBoxSizer">
+												<orient>wxHORIZONTAL</orient>
+												<object class="sizeritem">
+													<option>1</option>
+													<flag>wxALIGN_RIGHT|wxALL</flag>
+													<border>5</border>
+													<object class="wxButton" name="console_clear_button">
+														<label>Clear Console</label>
+														<default>0</default>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxButton" name="console_kill_button">
+														<label>Kill Operations</label>
+														<default>0</default>
+													</object>
+												</object>
+											</object>
+										</object>
+									</object>
+								</object>
+							</object>
+						</object>
+					</object>
+				</object>
+			</object>
+		</object>
+	</object>
+	<object class="wxFrame" name="InfoFrame">
+		<style>wxDEFAULT_FRAME_STYLE|wxSTAY_ON_TOP|wxTAB_TRAVERSAL</style>
+		<title>Package</title>
+		<centered>1</centered>
+		<object class="wxPanel" name="panel">
+			<style>wxTAB_TRAVERSAL</style>
+			<object class="wxBoxSizer">
+				<orient>wxVERTICAL</orient>
+				<object class="sizeritem">
+					<option>1</option>
+					<flag>wxEXPAND</flag>
+					<border>5</border>
+					<object class="wxBoxSizer">
+						<orient>wxHORIZONTAL</orient>
+						<object class="sizeritem">
+							<option>1</option>
+							<flag>wxALL|wxEXPAND</flag>
+							<border>5</border>
+							<object class="wxStaticText" name="name_label">
+								<label>Name</label>
+								<wrap>-1</wrap>
+							</object>
+						</object>
+						<object class="sizeritem">
+							<option>2</option>
+							<flag>wxALL</flag>
+							<border>5</border>
+							<object class="wxTextCtrl" name="name_text">
+								<style>wxTE_READONLY</style>
+								<value></value>
+								<maxlength>0</maxlength>
+							</object>
+						</object>
+					</object>
+				</object>
+				<object class="sizeritem">
+					<option>1</option>
+					<flag>wxEXPAND</flag>
+					<border>5</border>
+					<object class="wxBoxSizer">
+						<orient>wxHORIZONTAL</orient>
+						<object class="sizeritem">
+							<option>1</option>
+							<flag>wxALL|wxEXPAND</flag>
+							<border>5</border>
+							<object class="wxStaticText" name="url_label">
+								<label>URL</label>
+								<wrap>-1</wrap>
+							</object>
+						</object>
+						<object class="sizeritem">
+							<option>2</option>
+							<flag>wxALL</flag>
+							<border>5</border>
+							<object class="wxTextCtrl" name="url_text">
+								<style>wxTE_READONLY</style>
+								<value></value>
+								<maxlength>0</maxlength>
+							</object>
+						</object>
+					</object>
+				</object>
+				<object class="sizeritem">
+					<option>1</option>
+					<flag>wxEXPAND</flag>
+					<border>5</border>
+					<object class="wxBoxSizer">
+						<orient>wxHORIZONTAL</orient>
+						<object class="sizeritem">
+							<option>1</option>
+							<flag>wxALL|wxEXPAND</flag>
+							<border>5</border>
+							<object class="wxStaticText" name="license_label">
+								<label>License</label>
+								<wrap>-1</wrap>
+							</object>
+						</object>
+						<object class="sizeritem">
+							<option>2</option>
+							<flag>wxALL</flag>
+							<border>5</border>
+							<object class="wxTextCtrl" name="license_text">
+								<style>wxTE_READONLY</style>
+								<value></value>
+								<maxlength>0</maxlength>
+							</object>
+						</object>
+					</object>
+				</object>
+				<object class="sizeritem">
+					<option>1</option>
+					<flag>wxEXPAND</flag>
+					<border>5</border>
+					<object class="wxBoxSizer">
+						<orient>wxHORIZONTAL</orient>
+						<object class="sizeritem">
+							<option>1</option>
+							<flag>wxALL|wxEXPAND</flag>
+							<border>5</border>
+							<object class="wxStaticText" name="author_label">
+								<label>Author</label>
+								<wrap>-1</wrap>
+							</object>
+						</object>
+						<object class="sizeritem">
+							<option>2</option>
+							<flag>wxALL</flag>
+							<border>5</border>
+							<object class="wxTextCtrl" name="author_text">
+								<style>wxTE_READONLY</style>
+								<value></value>
+								<maxlength>0</maxlength>
+							</object>
+						</object>
+					</object>
+				</object>
+				<object class="sizeritem">
+					<option>1</option>
+					<flag>wxEXPAND</flag>
+					<border>5</border>
+					<object class="wxBoxSizer">
+						<orient>wxHORIZONTAL</orient>
+						<object class="sizeritem">
+							<option>1</option>
+							<flag>wxALL|wxEXPAND</flag>
+							<border>5</border>
+							<object class="wxStaticText" name="author_email_label">
+								<label>Email</label>
+								<wrap>-1</wrap>
+							</object>
+						</object>
+						<object class="sizeritem">
+							<option>2</option>
+							<flag>wxALL</flag>
+							<border>5</border>
+							<object class="wxTextCtrl" name="author_email_text">
+								<style>wxTE_READONLY</style>
+								<value></value>
+								<maxlength>0</maxlength>
+							</object>
+						</object>
+					</object>
+				</object>
+				<object class="sizeritem">
+					<option>3</option>
+					<flag>wxEXPAND</flag>
+					<border>5</border>
+					<object class="wxBoxSizer">
+						<orient>wxHORIZONTAL</orient>
+						<object class="sizeritem">
+							<option>1</option>
+							<flag>wxALL|wxEXPAND</flag>
+							<border>5</border>
+							<object class="wxStaticText" name="notes_label">
+								<label>Notes</label>
+								<wrap>-1</wrap>
+							</object>
+						</object>
+						<object class="sizeritem">
+							<option>2</option>
+							<flag>wxALL|wxEXPAND</flag>
+							<border>5</border>
+							<object class="wxTextCtrl" name="notes_text">
+								<style>wxTE_MULTILINE|wxTE_READONLY</style>
+								<value></value>
+								<maxlength>0</maxlength>
+							</object>
+						</object>
+					</object>
+				</object>
+				<object class="sizeritem">
+					<option>1</option>
+					<flag>wxEXPAND</flag>
+					<border>5</border>
+					<object class="wxBoxSizer">
+						<orient>wxHORIZONTAL</orient>
+						<object class="sizeritem">
+							<option>1</option>
+							<flag>wxALL|wxEXPAND</flag>
+							<border>5</border>
+							<object class="wxStaticText" name="tags_label">
+								<label>Tags</label>
+								<wrap>-1</wrap>
+							</object>
+						</object>
+						<object class="sizeritem">
+							<option>2</option>
+							<flag>wxALL</flag>
+							<border>5</border>
+							<object class="wxTextCtrl" name="tags_text">
+								<style>wxTE_READONLY</style>
+								<value></value>
+								<maxlength>0</maxlength>
+							</object>
+						</object>
+					</object>
+				</object>
+				<object class="sizeritem">
+					<option>0</option>
+					<flag>wxALL|wxEXPAND</flag>
+					<border>5</border>
+					<object class="wxButton" name="download_button">
+						<label>Download</label>
+						<default>0</default>
+					</object>
+				</object>
+			</object>
+		</object>
+	</object>
+	<object class="wxPanel" name="panel">
+		<style>wxTAB_TRAVERSAL</style>
+		<size>500,300</size>
+	</object>
+	<object class="wxFrame" name="AboutFrame">
+		<style>wxCLOSE_BOX|wxRESIZE_BORDER|wxSTAY_ON_TOP|wxTAB_TRAVERSAL</style>
+		<title>About</title>
+		<centered>1</centered>
+		<object class="wxPanel" name="panel">
+			<style>wxTAB_TRAVERSAL</style>
+			<object class="wxBoxSizer">
+				<orient>wxVERTICAL</orient>
+				<object class="sizeritem">
+					<option>1</option>
+					<flag>wxALL|wxEXPAND</flag>
+					<border>5</border>
+					<object class="wxTextCtrl" name="about_text">
+						<style>wxTE_MULTILINE</style>
+						<value></value>
+						<maxlength>0</maxlength>
+					</object>
+				</object>
+			</object>
+		</object>
+	</object>
+</resource>

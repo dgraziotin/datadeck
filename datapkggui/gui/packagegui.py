@@ -6,13 +6,14 @@ relevant information about a Package. It will also be used for creating a Packag
 import wx
 import wx.xrc
 import datapkg
-import lib
-import abstractgui
-import operations
+import datapkggui.lib as lib
+import datapkggui.operations as operations
+import base
 
-class PackageGUI(abstractgui.GUI):
+
+class PackageGUI(base.GUI):
     def __init__(self, xml, package=None):
-        abstractgui.GUI.__init__(self, xml, frame_name="InfoFrame", panel_name="panel")
+        base.GUI.__init__(self, xml, frame_name="InfoFrame", panel_name="panel")
 
         # minimum size
         self.m_frame.SetSize(wx.Size(500, 500))
