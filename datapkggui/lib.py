@@ -8,6 +8,7 @@ import datapkg
 import datapkg.spec
 import datapkg.index
 import datapkg.download
+import datapkg.config
 import ckanclient
 import os
 import shutil
@@ -21,6 +22,15 @@ def index_from_spec(spec_str, all_index=False):
 def create():
     pass
 
+def get_config():
+    """
+    Returns datapkg configuration
+
+    Return values:
+    None if the configuration does not exist.
+    a datapkg.config.Config object on success
+    """
+    return datapkg.CONFIG
 
 def download(package_spec, destination_path): #still have to understand this: filter_resources=["*"]):
     """Download a Package and the connected Resources

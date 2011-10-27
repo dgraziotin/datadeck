@@ -5,8 +5,9 @@ General GUI module. it contains the base class for datapkggui GUIs, that should 
 import wx
 import wx.xrc
 import datapkggui
+import datapkg.config
 import os
-
+import datapkggui.lib
 class GUI(object):
     """
     Generic GUI class, holds the common shared properties and methods.
@@ -35,6 +36,8 @@ class GUI(object):
         self.m_frame.SetSize(wx.Size(600, 625))
         self.m_frame.Centre()
         self.m_frame.Show()
+
+        self.CheckConfig()
 
     def SetStatusBarMessage(self, message):
         self.m_status_bar.SetStatusText(message)
@@ -84,3 +87,20 @@ class GUI(object):
         Wrapper around Bind method.
         """
         self.m_frame.Bind(event, method, id=wx.xrc.XRCID(name))
+
+    def CheckConfig(self):
+        configuration = datapkg.CONFIG
+        if configuration.get("index:ckan","ckan.url").find('ckan.net') > -1:
+            configuration.set("index:ckan","ckan.url","http://thedatahub.org/api/")
+            configuration.write(open(datapkg.config.default_config_path,'w'))
+
+            configuration_path = datapkg.config.default_config_path
+            message = ("A datapkg configuration file has been created on %s\n"+
+                        "Please restart the program.") %(configuration_path)
+            box = wx.MessageDialog(self.m_frame, message, "datapkg Configuration",wx.OK)
+            box.ShowModal()
+            box.Destroy()
+            self.m_frame.Close()
+
+
+        

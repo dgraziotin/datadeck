@@ -162,7 +162,7 @@ class MainGUI(base.GUI):
         # clean eventual previous results
         self.EnableButtons(False)
         self.CleanSearchResults()
-
+        
         operations.SearchOperation(self.m_frame, searched_value)
 
 
