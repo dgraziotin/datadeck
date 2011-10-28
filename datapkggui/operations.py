@@ -107,7 +107,6 @@ class DownloadOperation(Operation):
     """
     It calls lib.download in a separate thread for retrieving the package and its resources.
     """
-
     def __init__(self, linked_wxobject, package, download_dir):
         Operation.__init__(self, linked_wxobject)
         self.package = package

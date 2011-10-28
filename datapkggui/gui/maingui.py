@@ -9,9 +9,10 @@ import threading
 import wx
 import wx.xrc
 import wx.lib.newevent
-import datapkg
 import datapkggui.operations as operations
 import packagegui
+import shutil
+import os
 
 
 import base
@@ -113,13 +114,12 @@ class MainGUI(base.GUI):
                 self.CleanSearchResults()
                 results = operation_message.data
                 if results:
+                    print "Results found."
                     for package in results:
                         self.InsertSearchResultsList(package)
                         self.m_search_results_index += 1
                 else:
-                    package = datapkg.package.Package()
-                    package.name = "Not Found"
-                    self.InsertSearchResultsList(package)
+                    print "No Results."
         else:
             pass
 
@@ -162,6 +162,8 @@ class MainGUI(base.GUI):
         # clean eventual previous results
         self.EnableButtons(False)
         self.CleanSearchResults()
+
+        print "Please wait..."
         
         operations.SearchOperation(self.m_frame, searched_value)
 
@@ -178,6 +180,17 @@ class MainGUI(base.GUI):
 
         package_selected = self.m_search_results[package_selected_index]
         download_dir = self.DownloadDirDialog()
+        package_path = download_dir + os.sep + package_selected.name
+
+        if os.path.exists(package_path):
+            message = "Overwrite " + package_selected.name + "?"
+            box = wx.MessageDialog(self.m_frame, message, "Overwrite?",wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION)
+            overwrite = box.ShowModal()
+            if overwrite == wx.ID_YES:
+                shutil.rmtree(package_path, ignore_errors=True)
+            else:
+                return
+
         if package_selected and download_dir:
             operations.DownloadOperation(self.m_frame, package_selected, download_dir)
 

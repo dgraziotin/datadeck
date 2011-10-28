@@ -7,7 +7,7 @@ http://task3.cc/projects/datapkggui
 .. _Data Packages: http://wiki.ckan.net/Data_Package
 .. _CKAN: http://ckan.org/
 """
-__version__ = '0.2.1'
+__version__ = '0.2.2'
 __description__ = 'datapkggui (data package GUI): wxPython GUI for datapkg: data packaging system and utilities'
 __license__ = 'BSD 2-Clause'
 __license_full__ =\
