@@ -1,3 +1,8 @@
+Warning:
+This is the old datapkggui project, before it was renamed to DataDek.
+It supports datapkg <= 0.9.
+Please note that also datapkg changed name: it is now know as dpm
+
 Description
 ===========
 
