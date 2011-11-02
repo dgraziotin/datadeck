@@ -6,7 +6,12 @@ relevant information about a Package. It will also be used for creating a Packag
 import wx
 import wx.xrc
 import dpm
-import datadeck.lib as lib
+
+try:
+    import dpm.lib as lib
+except ImportError:
+    import datadeck.lib as lib
+
 import datadeck.operations as operations
 import base
 
@@ -35,7 +40,6 @@ class PackageGUI(base.GUI):
             setattr(self, key + "_text", wx.xrc.XRCCTRL(self.m_frame, key + "_text"))
 
         self.UpdateWidgets(package)
-        self.m_status_bar.Hide()
 
     def UpdateWidgets(self, package):
         # sets TextCtrl values by iterating Package Metadata

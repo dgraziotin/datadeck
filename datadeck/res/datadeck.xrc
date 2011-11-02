@@ -6,7 +6,7 @@
 		<centered>1</centered>
 		<aui_managed>0</aui_managed>
 		<object class="wxMenuBar" name="menubar">
-			<label>MyMenuBar</label>
+			<label>Menu</label>
 			<object class="wxMenu" name="menu">
 				<label>File</label>
 				<object class="wxMenuItem" name="menu_about">
@@ -354,7 +354,7 @@
 		<size>500,300</size>
 	</object>
 	<object class="wxFrame" name="AboutFrame">
-		<style>wxCLOSE_BOX|wxRESIZE_BORDER|wxSTAY_ON_TOP|wxTAB_TRAVERSAL</style>
+		<style>wxCAPTION|wxCLOSE_BOX|wxRESIZE_BORDER|wxSTAY_ON_TOP|wxTAB_TRAVERSAL</style>
 		<title>About</title>
 		<centered>1</centered>
 		<aui_managed>0</aui_managed>

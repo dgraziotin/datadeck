@@ -73,9 +73,11 @@ class MainGUI(base.GUI):
         for thread in  threading.enumerate():
             # check if the first super class is an Operation
             if thread.__class__.mro()[1] == operations.Operation:
+                print "Killing active operations, please wait."
                 self.m_killing_operations = True
                 while thread.isAlive():
                     thread.RaiseException(operations.KillOperationException)
+                print "Operations Killed."
 
     def OnUpdateConsole(self, event):
         """
@@ -99,27 +101,23 @@ class MainGUI(base.GUI):
         """
         operation_type_str = operation_message.type.__name__
 
-        if operation_message.status == operations.OPERATION_STATUS_ID["error"] and self.m_killing_operations:
-            self.m_killing_operations = False
-            self.SetStatusBarMessage(operation_type_str + " Killed")
-            return
-        elif operation_message.status == (operations.OPERATION_STATUS_ID["error"]
+        if operation_message.status == (operations.OPERATION_STATUS_ID["error"]
                                           and not self.m_killing_operations and operation_message.data):
-            self.SetStatusBarMessage(operation_type_str + " ERROR: " + operation_message.data)
+            print operation_type_str + " ERROR: " + operation_message.data
         elif operation_message.status == operations.OPERATION_STATUS_ID["started"]:
-            self.SetStatusBarMessage(operation_type_str + " Started")
+            print operation_type_str + " Started, please wait"
         elif operation_message.status == operations.OPERATION_STATUS_ID["finished"]:
-            self.SetStatusBarMessage(operation_type_str + " Finished")
+            print operation_type_str + " Finished"
             if operation_message.type == operations.SearchOperation:
                 self.CleanSearchResults()
                 results = operation_message.data
                 if results:
-                    print "Results found."
+                    print "\tResults found."
                     for package in results:
                         self.InsertSearchResultsList(package)
                         self.m_search_results_index += 1
                 else:
-                    print "No Results."
+                    print "\tNo Results."
         else:
             pass
 
@@ -162,8 +160,6 @@ class MainGUI(base.GUI):
         # clean eventual previous results
         self.EnableButtons(False)
         self.CleanSearchResults()
-
-        print "Please wait..."
         
         operations.SearchOperation(self.m_frame, searched_value)
 

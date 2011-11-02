@@ -8,10 +8,15 @@ http://www.blog.pythonlibrary.org/2010/05/22/wxpython-and-threads/
 import os
 import threading
 import wx
-import lib
 import inspect
 import ctypes
 import shutil
+
+try:
+    import dpm.lib as lib
+except ImportError:
+    import datadeck.lib as lib
+
 
 # Define notification event for thread completion
 OPERATION_MESSAGE_ID = wx.NewId()

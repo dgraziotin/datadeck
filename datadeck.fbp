@@ -22,7 +22,7 @@
         <property name="skip_python_events">1</property>
         <property name="use_enum">0</property>
         <property name="use_microsoft_bom">0</property>
-        <object class="Frame" expanded="0">
+        <object class="Frame" expanded="1">
             <property name="BottomDockable">1</property>
             <property name="LeftDockable">1</property>
             <property name="RightDockable">1</property>
@@ -143,7 +143,7 @@
                 <property name="gripper">0</property>
                 <property name="hidden">0</property>
                 <property name="id">wxID_ANY</property>
-                <property name="label">MyMenuBar</property>
+                <property name="label">Menu</property>
                 <property name="layer"></property>
                 <property name="max_size"></property>
                 <property name="maximize_button">0</property>
@@ -2935,7 +2935,7 @@
             <property name="row"></property>
             <property name="show">1</property>
             <property name="size">-1,-1</property>
-            <property name="style">wxCLOSE_BOX|wxRESIZE_BORDER|wxSTAY_ON_TOP</property>
+            <property name="style">wxCAPTION|wxCLOSE_BOX|wxRESIZE_BORDER|wxSTAY_ON_TOP</property>
             <property name="subclass"></property>
             <property name="title">About</property>
             <property name="toolbar_pane">0</property>
