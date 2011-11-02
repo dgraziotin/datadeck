@@ -1,13 +1,13 @@
 __author__ = 'dgraziotin'
 """
-General GUI module. it contains the base class for datapkggui GUIs, that should not be instantiated.
+General GUI module. it contains the base class for DataDeck GUIs, that should not be instantiated.
 """
 import wx
 import wx.xrc
-import datapkggui
-import datapkg.config
+import datadeck
+import dpm.config
 import os
-import datapkggui.lib
+import datadeck.lib
 class GUI(object):
     """
     Generic GUI class, holds the common shared properties and methods.
@@ -17,7 +17,7 @@ class GUI(object):
     def __init__(self, xml, frame_name, panel_name="panel"):
         """
         Constructor of our "abstract" class.
-        Datapkggui windows have one frame and one panel, so they must be passed as arguments.
+        DataDeck windows have one frame and one panel, so they must be passed as arguments.
         The xml XRC file must be passed, too.
         Shared objects such as the status bar and the menu bar are created here.
         """
@@ -48,9 +48,9 @@ class GUI(object):
         """
         about_frame = self.m_xml.LoadFrame(None, "AboutFrame")
         about_text = self.GetWidget('about_text', about_frame)
-        label = "datapkggui version %s.\n%s\nWebsite: %s\nLicense:\n%s" % (
-            datapkggui.__version__, datapkggui.__description__, "http://task3.cc/projects/datapkggui",
-            datapkggui.__license_full__)
+        label = "DataDeck version %s.\n%s\nWebsite: %s\nLicense:\n%s" % (
+            datadeck.__version__, datadeck.__description__, "http://task3.cc/projects/datadeck",
+            datadeck.__license_full__)
 
         about_text.AppendText(label)
         about_frame.SetSize(wx.Size(694, 447))
@@ -89,15 +89,15 @@ class GUI(object):
         self.m_frame.Bind(event, method, id=wx.xrc.XRCID(name))
 
     def CheckConfig(self):
-        configuration = datapkg.CONFIG
+        configuration = dpm.CONFIG
         if configuration.get("index:ckan","ckan.url").find('ckan.net') > -1:
             configuration.set("index:ckan","ckan.url","http://thedatahub.org/api/")
-            configuration.write(open(datapkg.config.default_config_path,'w'))
+            configuration.write(open(dpm.config.default_config_path,'w'))
 
-            configuration_path = datapkg.config.default_config_path
-            message = ("A datapkg configuration file has been created on %s\n"+
+            configuration_path = dpm.config.default_config_path
+            message = ("A dpm configuration file has been created on %s\n"+
                         "Please restart the program.") %(configuration_path)
-            box = wx.MessageDialog(self.m_frame, message, "datapkg Configuration",wx.OK)
+            box = wx.MessageDialog(self.m_frame, message, "dpm Configuration",wx.OK)
             box.ShowModal()
             box.Destroy()
             self.m_frame.Close()

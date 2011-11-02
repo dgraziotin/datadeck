@@ -1,21 +1,21 @@
 __author__ = 'dgraziotin'
 """
-This module holds what we hope will become the future standard library for datapkg, to be used
+This module holds what we hope will become the future standard library for dpm, to be used
 by both the command line, the GUI and other projects.
 APIs are documented in each function.
 """
-import datapkg
-import datapkg.spec
-import datapkg.index
-import datapkg.download
-import datapkg.config
+import dpm
+import dpm.spec
+import dpm.index
+import dpm.download
+import dpm.config
 import ckanclient
 import os
 import shutil
 
 #TODO should we really export this functionality? can be useful.
 def index_from_spec(spec_str, all_index=False):
-    spec = datapkg.spec.Spec.parse_spec(spec_str, all_index=all_index)
+    spec = dpm.spec.Spec.parse_spec(spec_str, all_index=all_index)
     return spec.index_from_spec()
 
 
@@ -24,13 +24,13 @@ def create():
 
 def get_config():
     """
-    Returns datapkg configuration
+    Returns dpm configuration
 
     Return values:
     None if the configuration does not exist.
-    a datapkg.config.Config object on success
+    a dpm.config.Config object on success
     """
-    return datapkg.CONFIG
+    return dpm.CONFIG
 
 def download(package_spec, destination_path): #still have to understand this: filter_resources=["*"]):
     """Download a Package and the connected Resources
@@ -45,14 +45,14 @@ def download(package_spec, destination_path): #still have to understand this: fi
 
     Return values:
     True if the operation succeeds
-    The actual datapkg design does not let us to specify other values. Must fix this
+    The actual dpm design does not let us to specify other values. Must fix this
     """
     #TODO better return values
 
-    pkg_downloader = datapkg.download.PackageDownloader(verbose=True)
+    pkg_downloader = dpm.download.PackageDownloader(verbose=True)
 
     '''
-    The following are typical datapkg download usage
+    The following are typical dpm download usage
 
     # download the package specified by ckan://name to path-on-disk
     # selecting the resources to retrieve interactively
@@ -124,7 +124,7 @@ def info(package_spec, request_for='metadata'):
     else: # assume package_spec is of type Package, will check for it next
         package = package_spec
 
-    if not type(package) == datapkg.package.Package:
+    if not type(package) == dpm.package.Package:
         return None
     if request_for == 'metadata':
         return package.metadata
@@ -143,7 +143,7 @@ def list(index_spec=""):
 
     Return values:
     A list of Packages pointed by the Index
-    Actually, datapkg lacks the case in which an exception occurs (see datapkg.index.ckan.py.list())
+    Actually, dpm lacks the case in which an exception occurs (see dpm.index.ckan.py.list())
     """
     index, path = index_from_spec(index_spec, all_index=True)
     packages = index.list()

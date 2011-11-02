@@ -5,9 +5,9 @@ relevant information about a Package. It will also be used for creating a Packag
 """
 import wx
 import wx.xrc
-import datapkg
-import datapkggui.lib as lib
-import datapkggui.operations as operations
+import dpm
+import datadeck.lib as lib
+import datadeck.operations as operations
 import base
 
 
@@ -24,13 +24,13 @@ class PackageGUI(base.GUI):
         if not package:
             # we instantiate an empty package for obtaining its metadata
             # attributes
-            package = datapkg.package.Package()
+            package = dpm.package.Package()
 
         self.m_package = package
 
         # frame_info retrieving
         # WARNING: this only works because we defined the Widget names with the same
-        # names of those defined in datapkg.metadata.Metadata. It's a sort of Reflection.
+        # names of those defined in dpm.metadata.Metadata. It's a sort of Reflection.
         for key, value in lib.info(package, request_for="metadata").iteritems():
             setattr(self, key + "_text", wx.xrc.XRCCTRL(self.m_frame, key + "_text"))
 

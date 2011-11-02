@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <resource xmlns="http://www.wxwindows.org/wxxrc" version="2.3.0.1">
-	<object class="wxFrame" name="DatapkgFrame">
+	<object class="wxFrame" name="DataDeckFrame">
 		<style>wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL</style>
-		<title>Datapkg</title>
+		<title>DataDeck</title>
 		<centered>1</centered>
+		<aui_managed>0</aui_managed>
 		<object class="wxMenuBar" name="menubar">
 			<label>MyMenuBar</label>
 			<object class="wxMenu" name="menu">
@@ -142,6 +143,7 @@
 		<style>wxDEFAULT_FRAME_STYLE|wxSTAY_ON_TOP|wxTAB_TRAVERSAL</style>
 		<title>Package</title>
 		<centered>1</centered>
+		<aui_managed>0</aui_managed>
 		<object class="wxPanel" name="panel">
 			<style>wxTAB_TRAVERSAL</style>
 			<object class="wxBoxSizer">
@@ -355,6 +357,7 @@
 		<style>wxCLOSE_BOX|wxRESIZE_BORDER|wxSTAY_ON_TOP|wxTAB_TRAVERSAL</style>
 		<title>About</title>
 		<centered>1</centered>
+		<aui_managed>0</aui_managed>
 		<object class="wxPanel" name="panel">
 			<style>wxTAB_TRAVERSAL</style>
 			<object class="wxBoxSizer">

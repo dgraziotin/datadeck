@@ -9,7 +9,7 @@ import threading
 import wx
 import wx.xrc
 import wx.lib.newevent
-import datapkggui.operations as operations
+import datadeck.operations as operations
 import packagegui
 import shutil
 import os
@@ -28,7 +28,7 @@ class MainGUI(base.GUI):
         Loads resources from XRC file, prepares internal structures representing search results,
         binds events, prepares the Console for receiving stdout and stderr.
         """
-        base.GUI.__init__(self, xml, frame_name="DatapkgFrame", panel_name="notebook")
+        base.GUI.__init__(self, xml, frame_name="DataDeckFrame", panel_name="notebook")
 
         # search results
         self.m_search_results = {}

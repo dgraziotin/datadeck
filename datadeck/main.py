@@ -10,12 +10,12 @@ import wx.xrc
 import gui.maingui
 import pkg_resources
 
-class Datapkg(wx.App):
+class DataDeck(wx.App):
     def __init__(self, redirect=True, filename=None):
         wx.App.__init__(self, redirect, filename)
 
     def OnInit(self, ):
-        xml = wx.xrc.XmlResource(pkg_resources.resource_filename('datapkggui.res', 'datapkggui.xrc'))
+        xml = wx.xrc.XmlResource(pkg_resources.resource_filename('datadeck.res', 'datadeck.xrc'))
         self.MainGUI = gui.maingui.MainGUI(xml)
         return True
 
@@ -34,8 +34,8 @@ class SysOutListener:
 
 def run():
     sysout_listener = SysOutListener()
-    app = Datapkg(0)
-    app.SetAppName("Datapkg")
+    app = DataDeck(0)
+    app.SetAppName("DataDeck")
     sys.stdout = sysout_listener
     #sys.stderr = sysout_listener
     app.MainLoop()

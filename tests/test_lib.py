@@ -1,5 +1,5 @@
 __author__ = 'dgraziotin'
-import datapkggui.lib as lib
+import datadeck.lib as lib
 import tempfile
 
 TEST_PACKAGE_FIXED = 'datapkg-gui-test'

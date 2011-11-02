@@ -1,8 +1,10 @@
 Description
 ===========
 
-datapkggui is a graphical frontend for the datapkg tool (http://okfn.org/projects/datapkg/). It is aiming
-to become the standard CKAN (http://ckan.net/) graphical tool for searching, fetching and distributing open data sets.
+DataDeck (once known as datapkggui) is a graphical frontend for the dpm tool (once known as datapkg)
+(http://dpm.readthedocs.org/en/latest/index.html).
+It is aiming to become the standard CKAN (http://thedatahub.org/) graphical tool for searching, fetching
+and distributing open data sets.
 
 It is a 10 weeks project started on 2011-09-26 and developed by
 Daniel Graziotin <d@danielgraziotin.it> (http://task3.cc) during a stage
@@ -13,7 +15,17 @@ Please take a look at docs/report.{odt, pdf} for many other info.
 Website
 =======
 
-The official website of the project is http://task3.cc/projects/datapkggui.
-The source code is hosted on GitHub (http://github.com/dgraziotin/datapkggui)
+The official website of the project is http://task3.cc/projects/datadeck.
+The source code is hosted on GitHub (http://github.com/dgraziotin/datadeck)
+
+Versions
+========
+
+DataDeck uses Semantic Versioning for defining releases. (http://semver.org)
 
 
+Compatibility Notes
+===================
+
+Up to v0.2.3-datapkgguilast, the project was called datapkggui and supported datapkg 0.8.
+From v0.2.4, the project is renamed to DataDeck and supports dpm >= 0.10.

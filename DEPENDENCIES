@@ -1,6 +1,3 @@
-datapkggui depends on the following software.
-* datapkg (http://packages.python.org/datapkg/manual.html)
+DataDeck depends on the following software.
+* dpm (https://github.com/okfn/dpm)
 * wxPython (http://www.wxpython.org/)
-
-setup.py should automatically retrieve datapkg when installing datapkggui.
-You MUST manually install wxPython - see http://wxpython.org

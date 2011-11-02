@@ -1,14 +1,14 @@
-"""datapkggui is a graphical frontend for the datapkg tool (http://okfn.org/projects/datapkg/). It is aiming
-to become the standard CKAN (http://ckan.net/) graphical tool for searching, fetching and distributing open data sets.
+"""DataDeck is a graphical frontend for the dpm tool (http://dpm.readthedocs.org/en/latest/index.html). It is aiming
+to become the standard CKAN (http://thedatahub.org/) graphical tool for searching, fetching and distributing open data sets.
 
 For more information visit the official website at:
-http://task3.cc/projects/datapkggui
+http://task3.cc/projects/dpm
 
 .. _Data Packages: http://wiki.ckan.net/Data_Package
 .. _CKAN: http://ckan.org/
 """
-__version__ = '0.2.2'
-__description__ = 'datapkggui (data package GUI): wxPython GUI for datapkg: data packaging system and utilities'
+__version__ = '0.2.4'
+__description__ = 'DataDeck (dpm GUI): wxPython GUI for dpm: data packaging system and utilities'
 __license__ = 'BSD 2-Clause'
 __license_full__ =\
 """Copyright 2011 Daniel Graziotin. All rights reserved.

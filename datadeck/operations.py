@@ -1,6 +1,6 @@
 __author__ = 'dgraziotin'
 """
-Module holding all the operations of Datapkg. Operations are extended Python Threads that communicate to the GUI
+Module holding all the operations of DataDeck. Operations are extended Python Threads that communicate to the GUI
 through special objects called Operation Messages.
 Many of the steps of this module were possible thanks to this post:
 http://www.blog.pythonlibrary.org/2010/05/22/wxpython-and-threads/
