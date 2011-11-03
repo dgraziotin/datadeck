@@ -8,7 +8,10 @@ http://www.blog.pythonlibrary.org/2010/05/22/wxpython-and-threads/
 import os
 import threading
 import wx
-import lib
+try:
+    import dpm.lib as lib
+except ImportError:
+    import lib
 import inspect
 import ctypes
 import shutil

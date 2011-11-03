@@ -6,7 +6,12 @@ relevant information about a Package. It will also be used for creating a Packag
 import wx
 import wx.xrc
 import dpm
-import datadeck.lib as lib
+
+try:
+    import dpm.lib as lib
+except ImportError:
+    import lib
+
 import datadeck.operations as operations
 import base
 
@@ -15,7 +20,7 @@ class PackageGUI(base.GUI):
     def __init__(self, xml, package=None):
         base.GUI.__init__(self, xml, frame_name="InfoFrame", panel_name="panel")
 
-        # minimum size
+        # minimum sizea
         self.m_frame.SetSize(wx.Size(500, 500))
 
         self.m_download_button = self.GetWidget('download_button')
