@@ -20,13 +20,13 @@ setup(
 
     packages = find_packages(),  # include all packages under src
     package_data={
-      'datadeck.res': ['*.xrc']
+      'datadeck.res': ['*.xrc', '*.txt']
     },
     include_package_data=True,
     install_requires=[
         'setuptools>=0.6c',
         # make ckan support obligatory for time being
-        'dpm>=0.10a',
+        'dpm>=0.10',
 	    'wxpython>2.8.9.1', # this is the version I used, may work with precedent versions
     ],
     test_suite='nose.collector',

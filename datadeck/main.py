@@ -7,7 +7,6 @@ Coding standard: http://www.wxpython.org/codeguidelines.php
 import sys
 import wx
 import wx.xrc
-import gui.maingui
 import pkg_resources
 
 class DataDeck(wx.App):
@@ -16,8 +15,26 @@ class DataDeck(wx.App):
 
     def OnInit(self, ):
         xml = wx.xrc.XmlResource(pkg_resources.resource_filename('datadeck.res', 'datadeck.xrc'))
-        self.MainGUI = gui.maingui.MainGUI(xml)
+        if self.IsDpmInstalled():
+            import gui.maingui
+            self.MainGUI = gui.maingui.MainGUI(xml)
+        else:
+            frame = xml.LoadFrame(None, 'DepCheckFrame')
+            dependencies_test = wx.xrc.XRCCTRL(frame, 'dependencies_text')
+            dependencies_file = pkg_resources.resource_filename('datadeck.res', 'MISSING_DPM.txt')
+            dependencies_test.AppendText(open(dependencies_file).read())
+            frame.SetSize(wx.Size(600,400))
+            frame.Show()
         return True
+    
+    def IsDpmInstalled(self):
+        try:
+            import dpm
+            print "dpm installed"
+            return True
+        except ImportError:
+            print "dpm not installed"
+            return False
 
 
 class SysOutListener:

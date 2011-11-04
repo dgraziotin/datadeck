@@ -443,7 +443,108 @@
 							<flag>wxALL|wxEXPAND</flag>
 							<border>5</border>
 							<object class="wxTextCtrl" name="license_text">
-								<style>wxTE_MULTILINE</style>
+								<style>wxTE_MULTILINE|wxTE_READONLY</style>
+								<value></value>
+								<maxlength>0</maxlength>
+							</object>
+						</object>
+					</object>
+				</object>
+			</object>
+		</object>
+	</object>
+	<object class="wxFrame" name="DepCheckFrame">
+		<style>wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL</style>
+		<size>500,300</size>
+		<title>Dependencies</title>
+		<centered>1</centered>
+		<aui_managed>0</aui_managed>
+		<object class="wxPanel" name="panel">
+			<style>wxTAB_TRAVERSAL</style>
+			<object class="wxBoxSizer">
+				<orient>wxVERTICAL</orient>
+				<object class="sizeritem">
+					<option>0</option>
+					<flag>wxALIGN_CENTER|wxALL</flag>
+					<border>5</border>
+					<object class="wxStaticText" name="datadeck_label">
+						<font>
+							<family>default</family>
+							<style>normal</style>
+							<weight>bold</weight>
+							<underlined>0</underlined>
+						</font>
+						<label>DataDeck</label>
+						<wrap>-1</wrap>
+					</object>
+				</object>
+				<object class="sizeritem">
+					<option>1</option>
+					<flag>wxEXPAND</flag>
+					<border>5</border>
+					<object class="wxBoxSizer">
+						<orient>wxHORIZONTAL</orient>
+						<object class="sizeritem">
+							<option>1</option>
+							<flag>wxALL</flag>
+							<border>5</border>
+							<object class="wxStaticText" name="website_label">
+								<label>Website</label>
+								<wrap>-1</wrap>
+							</object>
+						</object>
+						<object class="sizeritem">
+							<option>5</option>
+							<flag>wxALL</flag>
+							<border>5</border>
+							<object class="wxHyperlinkCtrl" name="website_hyperlink">
+								<label></label>
+								<url>http://task3.cc/projects/datadeck</url>
+								<style>wxHL_ALIGN_LEFT</style>
+							</object>
+						</object>
+					</object>
+				</object>
+				<object class="sizeritem">
+					<option>1</option>
+					<flag>wxEXPAND</flag>
+					<border>5</border>
+					<object class="wxBoxSizer">
+						<orient>wxHORIZONTAL</orient>
+						<object class="sizeritem">
+							<option>1</option>
+							<flag>wxALL</flag>
+							<border>5</border>
+							<object class="wxStaticText" name="bugs_label">
+								<label>Bugs</label>
+								<wrap>-1</wrap>
+							</object>
+						</object>
+						<object class="sizeritem">
+							<option>5</option>
+							<flag>wxALL</flag>
+							<border>5</border>
+							<object class="wxHyperlinkCtrl" name="bugs_hyperlink">
+								<label></label>
+								<url>https://github.com/dgraziotin/datadeck/issues</url>
+								<style>wxHL_ALIGN_LEFT</style>
+							</object>
+						</object>
+					</object>
+				</object>
+				<object class="sizeritem">
+					<option>5</option>
+					<flag>wxEXPAND</flag>
+					<border>5</border>
+					<object class="wxStaticBoxSizer">
+						<orient>wxVERTICAL</orient>
+						<label>Missing dpm</label>
+						<object class="sizeritem">
+							<option>1</option>
+							<flag>wxALL|wxEXPAND</flag>
+							<border>5</border>
+							<object class="wxTextCtrl" name="dependencies_text">
+								<style>wxTE_MULTILINE|wxTE_READONLY</style>
 								<value></value>
 								<maxlength>0</maxlength>
 							</object>

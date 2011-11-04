@@ -1,0 +1,7 @@
+DataDeck is built around the dpm project by the Open Knowledge Foundation.
+Unfortunately, it appears that dpm is missing from your system.
+Here are some ways to obtain it:
+- dpm official repository -- https://github.com/okfn/dpm
+- Through PyPI (if it is already available) -- http://pypi.python.org/pypi/dpm
+
+Please install dpm and restart DataDeck.
