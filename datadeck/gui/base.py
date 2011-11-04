@@ -8,6 +8,9 @@ import datadeck
 import dpm.config
 import os
 import datadeck.lib
+import threading
+import datadeck.operations
+
 class GUI(object):
     """
     Generic GUI class, holds the common shared properties and methods.
@@ -47,13 +50,16 @@ class GUI(object):
         Creates the About window.
         """
         about_frame = self.m_xml.LoadFrame(None, "AboutFrame")
-        about_text = self.GetWidget('about_text', about_frame)
-        label = "DataDeck version %s.\n%s\nWebsite: %s\nLicense:\n%s" % (
-            datadeck.__version__, datadeck.__description__, "http://task3.cc/projects/datadeck",
-            datadeck.__license_full__)
+        datadeck_label = self.GetWidget('datadeck_label', about_frame)
+        license_text = self.GetWidget('license_text', about_frame)
 
-        about_text.AppendText(label)
-        about_frame.SetSize(wx.Size(694, 447))
+        label = "DataDeck v%s" % datadeck.__version__
+        datadeck_label.SetLabel(label)
+
+        license = datadeck.__license_full__
+        license_text.AppendText(license)
+
+        about_frame.SetSize(wx.Size(500, 400))
         about_frame.Centre()
         about_frame.Show()
 
@@ -61,6 +67,7 @@ class GUI(object):
         self.m_frame.Show(show)
 
     def OnMenuClickExit(self, event):
+        self.KillOperations()
         self.m_frame.Close()
 
     def DownloadDirDialog(self):
@@ -87,6 +94,13 @@ class GUI(object):
         Wrapper around Bind method.
         """
         self.m_frame.Bind(event, method, id=wx.xrc.XRCID(name))
+
+    def KillOperations(self):
+        for thread in  threading.enumerate():
+            # check if the first super class is an Operation
+            if thread.__class__.mro()[1] == datadeck.operations.Operation:
+                while thread.isAlive():
+                    thread.RaiseException(datadeck.operations.KillOperationException)
 
     def CheckConfig(self):
         configuration = dpm.CONFIG
