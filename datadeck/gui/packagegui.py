@@ -5,13 +5,10 @@ relevant information about a Package. It will also be used for creating a Packag
 """
 import wx
 import wx.xrc
+import shutil
+import os
 import dpm
-
-try:
-    import dpm.lib as lib
-except ImportError:
-    import lib
-
+import dpm.lib
 import datadeck.operations as operations
 import base
 
@@ -36,7 +33,7 @@ class PackageGUI(base.GUI):
         # frame_info retrieving
         # WARNING: this only works because we defined the Widget names with the same
         # names of those defined in dpm.metadata.Metadata. It's a sort of Reflection.
-        for key, value in lib.info(package, request_for="metadata").iteritems():
+        for key, value in dpm.lib.info(package)[1].iteritems():
             setattr(self, key + "_text", wx.xrc.XRCCTRL(self.m_frame, key + "_text"))
 
         self.UpdateWidgets(package)
@@ -44,8 +41,7 @@ class PackageGUI(base.GUI):
 
     def UpdateWidgets(self, package):
         # sets TextCtrl values by iterating Package Metadata
-        #TODO use the lib!
-        for key, value in lib.info(package, request_for="metadata").iteritems():
+        for key, value in dpm.lib.info(package)[1].iteritems():
             try:
                 text_ctrl = getattr(self, key + "_text")
                 # special case for tags list
@@ -68,7 +64,14 @@ class PackageGUI(base.GUI):
         Retrieve the currently selected package in the results list and launch a DownloadOperation
         for downloading it.
         """
+        if not self.m_package:
+            print "no package"
+            return
+
         download_dir = self.DownloadDirDialog()
-        if self.m_package and download_dir:
+
+        overwrite_check = self.CheckPackageOverwrite(download_dir, self.m_package)
+
+        if overwrite_check:
             operations.DownloadOperation(self.m_frame, self.m_package, download_dir)
             self.Show(False)

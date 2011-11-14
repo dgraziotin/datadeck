@@ -8,10 +8,7 @@ http://www.blog.pythonlibrary.org/2010/05/22/wxpython-and-threads/
 import os
 import threading
 import wx
-try:
-    import dpm.lib as lib
-except ImportError:
-    import lib
+import dpm.lib
 import inspect
 import ctypes
 import shutil
@@ -119,7 +116,7 @@ class DownloadOperation(Operation):
     def run(self):
         wx.PostEvent(self.m_wxobject, OperationMessage(self.__class__, OPERATION_STATUS_ID["started"]))
         try:
-            result = lib.download("ckan://" + self.package.name, self.download_dir)
+            result = dpm.lib.download("ckan://" + self.package.name, self.download_dir)
         except Exception, e:
             shutil.rmtree(self.download_dir + os.sep + self.package.name, ignore_errors=True)
             wx.PostEvent(self.m_wxobject, OperationMessage(self.__class__, OPERATION_STATUS_ID["error"], str(e)))
@@ -143,7 +140,7 @@ class SearchOperation(Operation):
         wx.PostEvent(self.m_wxobject,
                      OperationMessage(self.__class__, OPERATION_STATUS_ID["started"]))
         try:
-            results = lib.search("ckan://", self.query)
+            results = dpm.lib.search("ckan://", self.query)
         except Exception, e:
             wx.PostEvent(self.m_wxobject, OperationMessage(self.__class__, OPERATION_STATUS_ID["error"], str(e)))
             return

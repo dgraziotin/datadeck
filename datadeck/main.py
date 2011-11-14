@@ -9,6 +9,7 @@ import wx
 import wx.xrc
 import pkg_resources
 
+import datadeck.gui
 class DataDeck(wx.App):
     def __init__(self, redirect=True, filename=None):
         wx.App.__init__(self, redirect, filename)
@@ -16,8 +17,8 @@ class DataDeck(wx.App):
     def OnInit(self, ):
         xml = wx.xrc.XmlResource(pkg_resources.resource_filename('datadeck.res', 'datadeck.xrc'))
         if self.IsDpmInstalled():
-            import gui.maingui
-            self.MainGUI = gui.maingui.MainGUI(xml)
+            import datadeck.gui.maingui
+            self.MainGUI = datadeck.gui.maingui.MainGUI(xml)
         else:
             frame = xml.LoadFrame(None, 'DepCheckFrame')
             dependencies_test = wx.xrc.XRCCTRL(frame, 'dependencies_text')
@@ -30,31 +31,37 @@ class DataDeck(wx.App):
     def IsDpmInstalled(self):
         try:
             import dpm
-            print "dpm installed"
             return True
         except ImportError:
-            print "dpm not installed"
             return False
 
 
 class SysOutListener:
+    
+    def __init__(self, wx_widget):
+        self.m_wxwidget = wx_widget
+        
     def write(self, string):
         sys.__stdout__.write(string)
-        evt = gui.maingui.WX_STDOUT(text=string)
-        wx.PostEvent(wx.GetApp().MainGUI.m_console_text, evt)
+        evt = datadeck.gui.maingui.WX_STDOUT(text=string)
+        wx.PostEvent(self.m_wxwidget, evt)
 
     def flush(self):
         sys.__stdout__.flush()
         #evt = WX_STDOUT(text="clean")
         #wx.PostEvent(wx.GetApp().MainGUI.m_console_text, evt)
 
-
+def run_as_plugin():
+    xml = wx.xrc.XmlResource(pkg_resources.resource_filename('datadeck.res', 'datadeck.xrc'))
+    MainGUI = datadeck.gui.maingui.MainGUI(xml)
+    sysout_listener = SysOutListener(MainGUI.m_console_text)
+    sys.stdout = sysout_listener
+    
 def run():
-    sysout_listener = SysOutListener()
     app = DataDeck(0)
     app.SetAppName("DataDeck")
+    sysout_listener = SysOutListener(wx.GetApp().MainGUI.m_console_text)
     sys.stdout = sysout_listener
-    #sys.stderr = sysout_listener
     app.MainLoop()
 
 if __name__ == '__main__':

@@ -14,7 +14,6 @@ import packagegui
 import shutil
 import os
 
-
 import base
 # for handling stdout and stderr on a TextCtrl
 WX_STDOUT, EVT_STDOUT = wx.lib.newevent.NewEvent()
@@ -182,16 +181,9 @@ class MainGUI(base.GUI):
         download_dir = self.DownloadDirDialog()
         package_path = download_dir + os.sep + package_selected.name
 
-        if os.path.exists(package_path):
-            message = "Overwrite " + package_selected.name + "?"
-            box = wx.MessageDialog(self.m_frame, message, "Overwrite?",wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION)
-            overwrite = box.ShowModal()
-            if overwrite == wx.ID_YES:
-                shutil.rmtree(package_path, ignore_errors=True)
-            else:
-                return
+        overwrite_check = self.CheckPackageOverwrite(download_dir, package_selected)
 
-        if package_selected and download_dir:
+        if overwrite_check:
             operations.DownloadOperation(self.m_frame, package_selected, download_dir)
 
 

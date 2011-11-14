@@ -7,7 +7,7 @@ http://task3.cc/projects/dpm
 .. _Data Packages: http://wiki.ckan.net/Data_Package
 .. _CKAN: http://ckan.org/
 """
-__version__ = '0.2.6'
+__version__ = '0.3.0'
 __description__ = 'DataDeck (dpm GUI): wxPython GUI for dpm: data packaging system and utilities'
 __license__ = 'Simplified BSD License'
 __license_full__ =\
@@ -37,5 +37,5 @@ The views and conclusions contained in the software and documentation are those 
 authors and should not be interpreted as representing official policies, either expressed
 or implied, of Daniel Graziotin.
 """
-
+from datadeck import *
 

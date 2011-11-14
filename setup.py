@@ -26,7 +26,7 @@ setup(
     install_requires=[
         'setuptools>=0.6c',
         # make ckan support obligatory for time being
-        'dpm>=0.10',
+        #'dpm>=0.10a',
 	    'wxpython>2.8.9.1', # this is the version I used, may work with precedent versions
     ],
     test_suite='nose.collector',

@@ -4,10 +4,11 @@ General GUI module. it contains the base class for DataDeck GUIs, that should no
 """
 import wx
 import wx.xrc
+import shutil
 import datadeck
 import dpm.config
 import os
-import datadeck.lib
+import dpm.lib
 import threading
 import datadeck.operations
 
@@ -34,7 +35,8 @@ class GUI(object):
         self.m_menubar = self.m_frame.GetMenuBar()
 
         self.Bind(wx.EVT_MENU, self.OnMenuClickExit, 'menu_exit')
-        self.Bind(wx.EVT_MENU, self.OnMenuClickAbout, 'menu_about')
+        self.Bind(wx.EVT_MENU, self.OnMenuAboutClick, 'menu_about')
+        self.Bind(wx.EVT_MENU, self.OnMenuSettingsClick, 'menu_settings')
 
         self.m_frame.SetSize(wx.Size(600, 625))
         self.m_frame.Centre()
@@ -45,7 +47,7 @@ class GUI(object):
     def SetStatusBarMessage(self, message):
         self.m_status_bar.SetStatusText(message)
 
-    def OnMenuClickAbout(self, event):
+    def OnMenuAboutClick(self, event):
         """
         Creates the About window.
         """
@@ -65,10 +67,16 @@ class GUI(object):
 
     def Show(self, show):
         self.m_frame.Show(show)
-
+        
     def OnMenuClickExit(self, event):
         self.KillOperations()
         self.m_frame.Close()
+
+    def OnMenuSettingsClick(self, event):
+        import settings
+        settings.SettingsGUI(self.m_xml)
+        
+
 
     def DownloadDirDialog(self):
         """
@@ -80,6 +88,21 @@ class GUI(object):
             return download_dir
         else:
             return None
+
+    def CheckPackageOverwrite(self, download_dir, package):
+        package_path = download_dir + os.sep + package.name
+        if os.path.exists(package_path):
+            message = "Overwrite " + package.name + "?"
+            box = wx.MessageDialog(self.m_frame, message, "Overwrite?",wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION)
+            overwrite = box.ShowModal()
+            if overwrite == wx.ID_YES:
+                shutil.rmtree(package_path, ignore_errors=True)
+                return True
+            else:
+                return False
+        else:
+            return False
+
 
     def GetWidget(self, name, window=None):
         """
@@ -103,6 +126,7 @@ class GUI(object):
                     thread.RaiseException(datadeck.operations.KillOperationException)
 
     def CheckConfig(self):
+        #TODO: remove it when dpm 0.10 is officially released
         configuration = dpm.CONFIG
         if configuration.get("index:ckan","ckan.url").find('ckan.net') > -1:
             configuration.set("index:ckan","ckan.url","http://thedatahub.org/api/")
@@ -115,6 +139,3 @@ class GUI(object):
             box.ShowModal()
             box.Destroy()
             self.m_frame.Close()
-
-
-        
