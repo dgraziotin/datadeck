@@ -9,9 +9,8 @@ import dpm
 import dpm.lib
 
 import datadeck.operations as operations
+import datadeck.settings as settings
 import base
-
-
 
 class SettingsGUI(base.GUI):
     def __init__(self, xml, package=None):
@@ -29,6 +28,8 @@ class SettingsGUI(base.GUI):
         self.m_ckan_url_text = self.GetWidget('ckan_url_text')
         self.m_ckan_api_key_text = self.GetWidget('api_key_text')
 
+        self.m_datadeck_dir_picker = self.GetWidget('datadeck_packages_dir_picker')
+
         self.LoadConfig()
 
 
@@ -39,18 +40,19 @@ class SettingsGUI(base.GUI):
         """
         ckan_url = self.m_ckan_url_text.GetValue()
         ckan_api_key = self.m_ckan_api_key_text.GetValue()
-        dpm.lib.set_config("index:ckan", "ckan.url", ckan_url)
-        dpm.lib.set_config("index:ckan", "ckan.api_key", ckan_api_key)
+        default_path = self.m_datadeck_dir_picker.GetPath()
+        settings.Settings.ckan_url(ckan_url)
+        settings.Settings.ckan_api(ckan_api_key)
+        settings.Settings.datadeck_default_path(default_path)
         self.m_frame.Destroy()
 
     def OnButtonCancelClick(self, event):
         self.m_frame.Destroy()
 
     def LoadConfig(self):
-        ckan_url = dpm.lib.get_config("index:ckan", "ckan.url")
-        ckan_api_key = dpm.lib.get_config("index:ckan", "ckan.api_key")
-        self.m_ckan_url_text.SetValue(ckan_url)
-        self.m_ckan_api_key_text.SetValue(ckan_api_key)
+        self.m_ckan_url_text.SetValue(settings.Settings.ckan_url())
+        self.m_ckan_api_key_text.SetValue(settings.Settings.ckan_api())
+        self.m_datadeck_dir_picker.SetPath(settings.Settings.datadeck_default_path())
 
 
         

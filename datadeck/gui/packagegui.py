@@ -10,6 +10,7 @@ import os
 import dpm
 import dpm.lib
 import datadeck.operations as operations
+import datadeck.settings as settings
 import base
 
 

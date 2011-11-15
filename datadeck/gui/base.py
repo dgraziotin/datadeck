@@ -11,6 +11,7 @@ import os
 import dpm.lib
 import threading
 import datadeck.operations
+import datadeck.settings as settings
 
 class GUI(object):
     """
@@ -73,16 +74,16 @@ class GUI(object):
         self.m_frame.Close()
 
     def OnMenuSettingsClick(self, event):
-        import settings
-        settings.SettingsGUI(self.m_xml)
+        import settingsgui
+        settingsgui.SettingsGUI(self.m_xml)
         
 
 
-    def DownloadDirDialog(self):
+    def DownloadDirDialog(self, path=None):
         """
         Create a DirDialog for choosing the directory in which we save the Package
         """
-        dialog = wx.DirDialog(self.m_frame, "Choose a Download Directory", os.getcwd())
+        dialog = wx.DirDialog(self.m_frame, "Choose a Download Directory", settings.Settings.datadeck_default_path())
         if dialog.ShowModal() == wx.ID_OK:
             download_dir = dialog.GetPath()
             return download_dir
@@ -139,3 +140,12 @@ class GUI(object):
             box.ShowModal()
             box.Destroy()
             self.m_frame.Close()
+        import ConfigParser
+        default_path = ""
+        #TODO: no magic strings
+        try:
+            default_path = settings.Settings.datadeck_default_path()
+        except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
+            settings.Settings.datadeck_default_path(os.path.expanduser('~'))
+        if not default_path:
+            settings.Settings.datadeck_default_path(os.path.expanduser('~'))
