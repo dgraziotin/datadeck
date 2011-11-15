@@ -60,8 +60,9 @@ def run_as_plugin():
 def run():
     app = DataDeck(0)
     app.SetAppName("DataDeck")
-    sysout_listener = SysOutListener(wx.GetApp().MainGUI.m_console_text)
-    sys.stdout = sysout_listener
+    if app.IsDpmInstalled():
+        sysout_listener = SysOutListener(wx.GetApp().MainGUI.m_console_text)
+        sys.stdout = sysout_listener
     app.MainLoop()
 
 if __name__ == '__main__':
