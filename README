@@ -29,3 +29,11 @@ Compatibility Notes
 
 Up to v0.2.3-datapkgguilast, the project was called datapkggui and supported datapkg 0.8.
 From v0.2.4, the project is renamed to DataDeck and supports dpm >= 0.10.
+
+
+IMPORTANT
+=========
+
+DataDeck is in development while dpm is also under heavy development. Please note that dpm may have not been
+"officially" released when you try DataDeck. Therefore, dpm has been pulled out from the dependency check.
+Please be sure to obtain dpm at https://github.com/okfn/dpm if it has not already been published elsewhere.

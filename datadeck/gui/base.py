@@ -142,7 +142,6 @@ class GUI(object):
             self.m_frame.Close()
         import ConfigParser
         default_path = ""
-        #TODO: no magic strings
         try:
             default_path = settings.Settings.datadeck_default_path()
         except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
