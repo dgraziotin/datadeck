@@ -97,7 +97,7 @@ class GUI(object):
             else:
                 return False
         else:
-            return False
+            return True
 
 
     def GetWidget(self, name, window=None):

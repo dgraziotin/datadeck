@@ -179,6 +179,10 @@ class MainGUI(base.GUI):
 
         package_selected = self.m_search_results[package_selected_index]
         download_dir = self.DownloadDirDialog()
+
+        if not download_dir:
+            return
+
         package_path = download_dir + os.sep + package_selected.name
 
         overwrite_check = self.CheckPackageOverwrite(download_dir, package_selected)
