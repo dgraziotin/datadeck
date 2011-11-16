@@ -1,145 +1,473 @@
-__author__ = 'dgraziotin'
-"""
-General GUI module. it contains the base class for DataDeck GUIs, that should not be instantiated.
-"""
+# -*- coding: utf-8 -*- 
+
+###########################################################################
+## Python code generated with wxFormBuilder (version Oct 12 2011)
+## http://www.wxformbuilder.org/
+##
+## PLEASE DO "NOT" EDIT THIS FILE!
+###########################################################################
+
 import wx
-import wx.xrc
-import shutil
-import datadeck
-import dpm.config
-import os
-import dpm.lib
-import threading
-import datadeck.operations
-import datadeck.settings as settings
 
-class GUI(object):
-    """
-    Generic GUI class, holds the common shared properties and methods.
-    Don't instantiate it, please.
-    """
+###########################################################################
+## Class DataDeckFrame
+###########################################################################
 
-    def __init__(self, xml, frame_name, panel_name="panel"):
-        """
-        Constructor of our "abstract" class.
-        DataDeck windows have one frame and one panel, so they must be passed as arguments.
-        The xml XRC file must be passed, too.
-        Shared objects such as the status bar and the menu bar are created here.
-        """
-        self.m_xml = xml
+class DataDeckFrame ( wx.Frame ):
+	
+	def __init__( self, parent ):
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"DataDeck", pos = wx.DefaultPosition, size = wx.Size( -1,-1 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+		
+		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
+		
+		self.m_menubar = wx.MenuBar( 0 )
+		self.menu = wx.Menu()
+		self.menu_about = wx.MenuItem( self.menu, wx.ID_ANY, u"About", wx.EmptyString, wx.ITEM_NORMAL )
+		self.menu.AppendItem( self.menu_about )
+		
+		self.menu_settings = wx.MenuItem( self.menu, wx.ID_ANY, u"Settings", wx.EmptyString, wx.ITEM_NORMAL )
+		self.menu.AppendItem( self.menu_settings )
+		
+		self.menu_exit = wx.MenuItem( self.menu, wx.ID_ANY, u"Exit", wx.EmptyString, wx.ITEM_NORMAL )
+		self.menu.AppendItem( self.menu_exit )
+		
+		self.m_menubar.Append( self.menu, u"File" ) 
+		
+		self.SetMenuBar( self.m_menubar )
+		
+		bSizer1 = wx.BoxSizer( wx.VERTICAL )
+		
+		self.m_notebook = wx.Notebook( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_notebook_search = wx.Panel( self.m_notebook, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		bSizer2 = wx.BoxSizer( wx.VERTICAL )
+		
+		bSizer3 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.m_search_text = wx.TextCtrl( self.m_notebook_search, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer3.Add( self.m_search_text, 4, wx.EXPAND|wx.RIGHT, 5 )
+		
+		self.m_search_button = wx.Button( self.m_notebook_search, wx.ID_ANY, u"Search", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer3.Add( self.m_search_button, 1, 0, 5 )
+		
+		self.m_info_button = wx.Button( self.m_notebook_search, wx.ID_ANY, u"Get Info", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer3.Add( self.m_info_button, 1, 0, 5 )
+		
+		self.m_download_button = wx.Button( self.m_notebook_search, wx.ID_ANY, u"Download", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer3.Add( self.m_download_button, 1, 0, 5 )
+		
+		bSizer2.Add( bSizer3, 0, wx.ALL|wx.EXPAND, 5 )
+		
+		sbSizer1 = wx.StaticBoxSizer( wx.StaticBox( self.m_notebook_search, wx.ID_ANY, u"Packages" ), wx.VERTICAL )
+		
+		self.m_search_results_list = wx.ListCtrl( self.m_notebook_search, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_HRULES|wx.LC_REPORT|wx.LC_SINGLE_SEL )
+		sbSizer1.Add( self.m_search_results_list, 2, wx.ALL|wx.EXPAND, 5 )
+		
+		bSizer2.Add( sbSizer1, 3, wx.ALL|wx.EXPAND, 5 )
+		
+		self.m_notebook_search.SetSizer( bSizer2 )
+		self.m_notebook_search.Layout()
+		bSizer2.Fit( self.m_notebook_search )
+		self.m_notebook.AddPage( self.m_notebook_search, u"Search", False )
+		
+		bSizer1.Add( self.m_notebook, 1, wx.EXPAND |wx.ALL, 5 )
+		
+		self.m_console = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		sbSizer3 = wx.StaticBoxSizer( wx.StaticBox( self.m_console, wx.ID_ANY, u"Console Info" ), wx.VERTICAL )
+		
+		self.m_console_text = wx.TextCtrl( self.m_console, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( -1,-1 ), wx.TE_MULTILINE|wx.TE_READONLY )
+		self.m_console_text.SetBackgroundColour( wx.Colour( 246, 246, 245 ) )
+		
+		sbSizer3.Add( self.m_console_text, 3, wx.ALL|wx.EXPAND, 5 )
+		
+		bSizer13 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.m_console_clear_button = wx.Button( self.m_console, wx.ID_ANY, u"Clear Console", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer13.Add( self.m_console_clear_button, 1, wx.ALIGN_RIGHT|wx.ALL, 5 )
+		
+		self.m_console_kill_button = wx.Button( self.m_console, wx.ID_ANY, u"Kill Operations", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer13.Add( self.m_console_kill_button, 0, wx.ALL, 5 )
+		
+		sbSizer3.Add( bSizer13, 1, wx.EXPAND, 5 )
+		
+		self.m_console.SetSizer( sbSizer3 )
+		self.m_console.Layout()
+		sbSizer3.Fit( self.m_console )
+		bSizer1.Add( self.m_console, 1, wx.EXPAND |wx.ALL, 5 )
+		
+		self.SetSizer( bSizer1 )
+		self.Layout()
+		bSizer1.Fit( self )
+		
+		self.Centre( wx.BOTH )
+		
+		# Connect Events
+		self.m_search_text.Bind( wx.EVT_KEY_DOWN, self.OnSearchTextKeyDown )
+		self.m_search_button.Bind( wx.EVT_BUTTON, self.OnButtonSearchClick )
+		self.m_info_button.Bind( wx.EVT_BUTTON, self.OnButtonInfoClick )
+		self.m_download_button.Bind( wx.EVT_BUTTON, self.onButtonDownloadClick )
+		self.m_search_results_list.Bind( wx.EVT_LIST_ITEM_SELECTED, self.OnSearchResultsListItemSelected )
+		self.m_console_clear_button.Bind( wx.EVT_BUTTON, self.OnConsoleClearButtonClick )
+		self.m_console_kill_button.Bind( wx.EVT_BUTTON, self.OnConsoleKillButtonClick )
+	
+	def __del__( self ):
+		pass
+	
+	
+	# Virtual event handlers, overide them in your derived class
+	def OnSearchTextKeyDown( self, event ):
+		event.Skip()
+	
+	def OnButtonSearchClick( self, event ):
+		event.Skip()
+	
+	def OnButtonInfoClick( self, event ):
+		event.Skip()
+	
+	def onButtonDownloadClick( self, event ):
+		event.Skip()
+	
+	def OnSearchResultsListItemSelected( self, event ):
+		event.Skip()
+	
+	def OnConsoleClearButtonClick( self, event ):
+		event.Skip()
+	
+	def OnConsoleKillButtonClick( self, event ):
+		event.Skip()
+	
 
-        self.m_frame = xml.LoadFrame(None, frame_name)
+###########################################################################
+## Class SettingsFrame
+###########################################################################
 
-        self.m_panel = self.GetWidget(panel_name)
-        self.m_menubar = self.m_frame.GetMenuBar()
+class SettingsFrame ( wx.Frame ):
+	
+	def __init__( self, parent ):
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Settings", pos = wx.DefaultPosition, size = wx.Size( -1,-1 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+		
+		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
+		
+		bSizer22 = wx.BoxSizer( wx.VERTICAL )
+		
+		self.panel = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		bSizer23 = wx.BoxSizer( wx.VERTICAL )
+		
+		sbSizer5 = wx.StaticBoxSizer( wx.StaticBox( self.panel, wx.ID_ANY, u"TheDataHub" ), wx.VERTICAL )
+		
+		bSizer24 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.ckan_url_label = wx.StaticText( self.panel, wx.ID_ANY, u"API URL", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.ckan_url_label.Wrap( -1 )
+		bSizer24.Add( self.ckan_url_label, 0, wx.ALL, 5 )
+		
+		self.ckan_url_text = wx.TextCtrl( self.panel, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer24.Add( self.ckan_url_text, 2, wx.ALL, 5 )
+		
+		sbSizer5.Add( bSizer24, 2, wx.ALL|wx.EXPAND, 5 )
+		
+		bSizer241 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.api_key_label = wx.StaticText( self.panel, wx.ID_ANY, u"API Key", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.api_key_label.Wrap( -1 )
+		bSizer241.Add( self.api_key_label, 0, wx.ALL, 5 )
+		
+		self.api_key_text = wx.TextCtrl( self.panel, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer241.Add( self.api_key_text, 2, wx.ALL, 5 )
+		
+		sbSizer5.Add( bSizer241, 2, wx.ALL|wx.EXPAND, 5 )
+		
+		bSizer29 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.m_staticText17 = wx.StaticText( self.panel, wx.ID_ANY, u"Register for an API Key", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText17.Wrap( -1 )
+		bSizer29.Add( self.m_staticText17, 1, wx.ALL, 5 )
+		
+		self.m_hyperlink5 = wx.HyperlinkCtrl( self.panel, wx.ID_ANY, u"http://thedatahub.org/user/register", u"http://thedatahub.org/user/register", wx.DefaultPosition, wx.DefaultSize, wx.HL_DEFAULT_STYLE )
+		bSizer29.Add( self.m_hyperlink5, 2, wx.ALL, 5 )
+		
+		sbSizer5.Add( bSizer29, 1, wx.ALL, 5 )
+		
+		bSizer23.Add( sbSizer5, 1, wx.ALL|wx.EXPAND, 5 )
+		
+		sbSizer6 = wx.StaticBoxSizer( wx.StaticBox( self.panel, wx.ID_ANY, u"DataDeck" ), wx.VERTICAL )
+		
+		bSizer242 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.datadeck_packages_label = wx.StaticText( self.panel, wx.ID_ANY, u"Default Folder for Packages", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.datadeck_packages_label.Wrap( -1 )
+		bSizer242.Add( self.datadeck_packages_label, 0, wx.ALL, 10 )
+		
+		self.datadeck_packages_dir_picker = wx.DirPickerCtrl( self.panel, wx.ID_ANY, wx.EmptyString, u"Select a folder", wx.DefaultPosition, wx.DefaultSize, wx.DIRP_DEFAULT_STYLE )
+		bSizer242.Add( self.datadeck_packages_dir_picker, 2, wx.ALL, 5 )
+		
+		sbSizer6.Add( bSizer242, 1, wx.EXPAND, 5 )
+		
+		bSizer23.Add( sbSizer6, 0, wx.ALL|wx.EXPAND, 5 )
+		
+		bSizer25 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.save_button = wx.Button( self.panel, wx.ID_ANY, u"Save", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer25.Add( self.save_button, 0, wx.ALL, 5 )
+		
+		self.cancel_button = wx.Button( self.panel, wx.ID_ANY, u"Cancel", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer25.Add( self.cancel_button, 0, wx.ALIGN_RIGHT|wx.ALL, 5 )
+		
+		bSizer23.Add( bSizer25, 0, wx.ALIGN_RIGHT|wx.ALL, 5 )
+		
+		self.panel.SetSizer( bSizer23 )
+		self.panel.Layout()
+		bSizer23.Fit( self.panel )
+		bSizer22.Add( self.panel, 1, wx.EXPAND |wx.ALL, 5 )
+		
+		self.SetSizer( bSizer22 )
+		self.Layout()
+		bSizer22.Fit( self )
+		
+		self.Centre( wx.BOTH )
+	
+	def __del__( self ):
+		pass
+	
 
-        self.Bind(wx.EVT_MENU, self.OnMenuClickExit, 'menu_exit')
-        self.Bind(wx.EVT_MENU, self.OnMenuAboutClick, 'menu_about')
-        self.Bind(wx.EVT_MENU, self.OnMenuSettingsClick, 'menu_settings')
+###########################################################################
+## Class InfoFrame
+###########################################################################
 
-        self.m_frame.SetSize(wx.Size(600, 625))
-        self.m_frame.Centre()
-        self.m_frame.Show()
+class InfoFrame ( wx.Frame ):
+	
+	def __init__( self, parent ):
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Package", pos = wx.DefaultPosition, size = wx.Size( -1,-1 ), style = wx.DEFAULT_FRAME_STYLE|wx.STAY_ON_TOP|wx.TAB_TRAVERSAL )
+		
+		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
+		
+		bSizer4 = wx.BoxSizer( wx.VERTICAL )
+		
+		self.panel = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		bSizer5 = wx.BoxSizer( wx.VERTICAL )
+		
+		bSizer6 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.name_label = wx.StaticText( self.panel, wx.ID_ANY, u"Name", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.name_label.Wrap( -1 )
+		bSizer6.Add( self.name_label, 1, wx.ALL|wx.EXPAND, 5 )
+		
+		self.name_text = wx.TextCtrl( self.panel, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY )
+		bSizer6.Add( self.name_text, 2, wx.ALL, 5 )
+		
+		bSizer5.Add( bSizer6, 1, wx.EXPAND, 5 )
+		
+		bSizer7 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.url_label = wx.StaticText( self.panel, wx.ID_ANY, u"URL", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.url_label.Wrap( -1 )
+		bSizer7.Add( self.url_label, 1, wx.ALL|wx.EXPAND, 5 )
+		
+		self.url_text = wx.TextCtrl( self.panel, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY )
+		bSizer7.Add( self.url_text, 2, wx.ALL, 5 )
+		
+		bSizer5.Add( bSizer7, 1, wx.EXPAND, 5 )
+		
+		bSizer8 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.license_label = wx.StaticText( self.panel, wx.ID_ANY, u"License", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.license_label.Wrap( -1 )
+		bSizer8.Add( self.license_label, 1, wx.ALL|wx.EXPAND, 5 )
+		
+		self.license_text = wx.TextCtrl( self.panel, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY )
+		bSizer8.Add( self.license_text, 2, wx.ALL, 5 )
+		
+		bSizer5.Add( bSizer8, 1, wx.EXPAND, 5 )
+		
+		bSizer71 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.author_label = wx.StaticText( self.panel, wx.ID_ANY, u"Author", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.author_label.Wrap( -1 )
+		bSizer71.Add( self.author_label, 1, wx.ALL|wx.EXPAND, 5 )
+		
+		self.author_text = wx.TextCtrl( self.panel, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY )
+		bSizer71.Add( self.author_text, 2, wx.ALL, 5 )
+		
+		bSizer5.Add( bSizer71, 1, wx.EXPAND, 5 )
+		
+		bSizer72 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.author_email_label = wx.StaticText( self.panel, wx.ID_ANY, u"Email", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.author_email_label.Wrap( -1 )
+		bSizer72.Add( self.author_email_label, 1, wx.ALL|wx.EXPAND, 5 )
+		
+		self.author_email_text = wx.TextCtrl( self.panel, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY )
+		bSizer72.Add( self.author_email_text, 2, wx.ALL, 5 )
+		
+		bSizer5.Add( bSizer72, 1, wx.EXPAND, 5 )
+		
+		bSizer11 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.notes_label = wx.StaticText( self.panel, wx.ID_ANY, u"Notes", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.notes_label.Wrap( -1 )
+		bSizer11.Add( self.notes_label, 1, wx.ALL|wx.EXPAND, 5 )
+		
+		self.notes_text = wx.TextCtrl( self.panel, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE|wx.TE_READONLY )
+		bSizer11.Add( self.notes_text, 2, wx.ALL|wx.EXPAND, 5 )
+		
+		bSizer5.Add( bSizer11, 3, wx.EXPAND, 5 )
+		
+		bSizer9 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.tags_label = wx.StaticText( self.panel, wx.ID_ANY, u"Tags", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.tags_label.Wrap( -1 )
+		bSizer9.Add( self.tags_label, 1, wx.ALL|wx.EXPAND, 5 )
+		
+		self.tags_text = wx.TextCtrl( self.panel, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY )
+		bSizer9.Add( self.tags_text, 2, wx.ALL, 5 )
+		
+		bSizer5.Add( bSizer9, 1, wx.EXPAND, 5 )
+		
+		self.download_button = wx.Button( self.panel, wx.ID_ANY, u"Download", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer5.Add( self.download_button, 0, wx.ALL|wx.EXPAND, 5 )
+		
+		self.panel.SetSizer( bSizer5 )
+		self.panel.Layout()
+		bSizer5.Fit( self.panel )
+		bSizer4.Add( self.panel, 1, wx.EXPAND |wx.ALL, 5 )
+		
+		self.SetSizer( bSizer4 )
+		self.Layout()
+		bSizer4.Fit( self )
+		
+		self.Centre( wx.BOTH )
+	
+	def __del__( self ):
+		pass
+	
 
-        self.CheckConfig()
+###########################################################################
+## Class AboutFrame
+###########################################################################
 
-    def OnMenuAboutClick(self, event):
-        """
-        Creates the About window.
-        """
-        about_frame = self.m_xml.LoadFrame(None, "AboutFrame")
-        datadeck_label = self.GetWidget('datadeck_label', about_frame)
-        license_text = self.GetWidget('license_text', about_frame)
+class AboutFrame ( wx.Frame ):
+	
+	def __init__( self, parent ):
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"About", pos = wx.DefaultPosition, size = wx.Size( -1,-1 ), style = wx.CLOSE_BOX|wx.RESIZE_BORDER|wx.STAY_ON_TOP|wx.TAB_TRAVERSAL )
+		
+		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
+		
+		bSizer16 = wx.BoxSizer( wx.VERTICAL )
+		
+		self.panel = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		bSizer14 = wx.BoxSizer( wx.VERTICAL )
+		
+		self.datadeck_label = wx.StaticText( self.panel, wx.ID_ANY, u"DataDeck", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.datadeck_label.Wrap( -1 )
+		self.datadeck_label.SetFont( wx.Font( wx.NORMAL_FONT.GetPointSize(), 70, 90, 92, False, wx.EmptyString ) )
+		
+		bSizer14.Add( self.datadeck_label, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+		
+		bSizer161 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.website_label = wx.StaticText( self.panel, wx.ID_ANY, u"Website", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.website_label.Wrap( -1 )
+		bSizer161.Add( self.website_label, 1, wx.ALL, 5 )
+		
+		self.website_hyperlink = wx.HyperlinkCtrl( self.panel, wx.ID_ANY, wx.EmptyString, u"http://task3.cc/projects/datadeck", wx.DefaultPosition, wx.DefaultSize, wx.HL_ALIGN_LEFT )
+		bSizer161.Add( self.website_hyperlink, 5, wx.ALL, 5 )
+		
+		bSizer14.Add( bSizer161, 1, wx.EXPAND, 5 )
+		
+		bSizer1611 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.bugs_label = wx.StaticText( self.panel, wx.ID_ANY, u"Bugs", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.bugs_label.Wrap( -1 )
+		bSizer1611.Add( self.bugs_label, 1, wx.ALL, 5 )
+		
+		self.bugs_hyperlink = wx.HyperlinkCtrl( self.panel, wx.ID_ANY, wx.EmptyString, u"https://github.com/dgraziotin/datadeck/issues", wx.DefaultPosition, wx.DefaultSize, wx.HL_ALIGN_LEFT )
+		bSizer1611.Add( self.bugs_hyperlink, 5, wx.ALL, 5 )
+		
+		bSizer14.Add( bSizer1611, 1, wx.EXPAND, 5 )
+		
+		sbSizer3 = wx.StaticBoxSizer( wx.StaticBox( self.panel, wx.ID_ANY, u"License" ), wx.VERTICAL )
+		
+		self.license_text = wx.TextCtrl( self.panel, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE|wx.TE_READONLY )
+		sbSizer3.Add( self.license_text, 1, wx.ALL|wx.EXPAND, 5 )
+		
+		bSizer14.Add( sbSizer3, 5, wx.EXPAND, 5 )
+		
+		self.panel.SetSizer( bSizer14 )
+		self.panel.Layout()
+		bSizer14.Fit( self.panel )
+		bSizer16.Add( self.panel, 1, wx.EXPAND |wx.ALL, 5 )
+		
+		self.SetSizer( bSizer16 )
+		self.Layout()
+		bSizer16.Fit( self )
+		
+		self.Centre( wx.BOTH )
+	
+	def __del__( self ):
+		pass
+	
 
-        label = "DataDeck v%s" % datadeck.__version__
-        datadeck_label.SetLabel(label)
+###########################################################################
+## Class DepCheckFrame
+###########################################################################
 
-        license = datadeck.__license_full__
-        license_text.AppendText(license)
+class DepCheckFrame ( wx.Frame ):
+	
+	def __init__( self, parent ):
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Dependencies", pos = wx.DefaultPosition, size = wx.Size( 500,300 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+		
+		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
+		
+		bSizer16 = wx.BoxSizer( wx.VERTICAL )
+		
+		self.panel = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		bSizer14 = wx.BoxSizer( wx.VERTICAL )
+		
+		self.datadeck_label = wx.StaticText( self.panel, wx.ID_ANY, u"DataDeck", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.datadeck_label.Wrap( -1 )
+		self.datadeck_label.SetFont( wx.Font( wx.NORMAL_FONT.GetPointSize(), 70, 90, 92, False, wx.EmptyString ) )
+		
+		bSizer14.Add( self.datadeck_label, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+		
+		bSizer161 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.website_label = wx.StaticText( self.panel, wx.ID_ANY, u"Website", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.website_label.Wrap( -1 )
+		bSizer161.Add( self.website_label, 1, wx.ALL, 5 )
+		
+		self.website_hyperlink = wx.HyperlinkCtrl( self.panel, wx.ID_ANY, wx.EmptyString, u"http://task3.cc/projects/datadeck", wx.DefaultPosition, wx.DefaultSize, wx.HL_ALIGN_LEFT )
+		bSizer161.Add( self.website_hyperlink, 5, wx.ALL, 5 )
+		
+		bSizer14.Add( bSizer161, 1, wx.EXPAND, 5 )
+		
+		bSizer1611 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.bugs_label = wx.StaticText( self.panel, wx.ID_ANY, u"Bugs", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.bugs_label.Wrap( -1 )
+		bSizer1611.Add( self.bugs_label, 1, wx.ALL, 5 )
+		
+		self.bugs_hyperlink = wx.HyperlinkCtrl( self.panel, wx.ID_ANY, wx.EmptyString, u"https://github.com/dgraziotin/datadeck/issues", wx.DefaultPosition, wx.DefaultSize, wx.HL_ALIGN_LEFT )
+		bSizer1611.Add( self.bugs_hyperlink, 5, wx.ALL, 5 )
+		
+		bSizer14.Add( bSizer1611, 1, wx.EXPAND, 5 )
+		
+		sbSizer3 = wx.StaticBoxSizer( wx.StaticBox( self.panel, wx.ID_ANY, u"Missing dpm" ), wx.VERTICAL )
+		
+		self.dependencies_text = wx.TextCtrl( self.panel, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE|wx.TE_READONLY )
+		sbSizer3.Add( self.dependencies_text, 1, wx.ALL|wx.EXPAND, 5 )
+		
+		bSizer14.Add( sbSizer3, 5, wx.EXPAND, 5 )
+		
+		self.panel.SetSizer( bSizer14 )
+		self.panel.Layout()
+		bSizer14.Fit( self.panel )
+		bSizer16.Add( self.panel, 1, wx.EXPAND |wx.ALL, 5 )
+		
+		self.SetSizer( bSizer16 )
+		self.Layout()
+		
+		self.Centre( wx.BOTH )
+	
+	def __del__( self ):
+		pass
+	
 
-        about_frame.SetSize(wx.Size(500, 400))
-        about_frame.Centre()
-        about_frame.Show()
-
-    def Show(self, show):
-        self.m_frame.Show(show)
-        
-    def OnMenuClickExit(self, event):
-        self.KillOperations()
-        self.m_frame.Close()
-
-    def OnMenuSettingsClick(self, event):
-        import settingsgui
-        settingsgui.SettingsGUI(self.m_xml)
-        
-
-
-    def DownloadDirDialog(self, path=None):
-        """
-        Create a DirDialog for choosing the directory in which we save the Package
-        """
-        dialog = wx.DirDialog(self.m_frame, "Choose a Download Directory", settings.Settings.datadeck_default_path())
-        if dialog.ShowModal() == wx.ID_OK:
-            download_dir = dialog.GetPath()
-            return download_dir
-        else:
-            return None
-
-    def CheckPackageOverwrite(self, download_dir, package):
-        package_path = download_dir + os.sep + package.name
-        if os.path.exists(package_path):
-            message = "Overwrite " + package.name + "?"
-            box = wx.MessageDialog(self.m_frame, message, "Overwrite?",wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION)
-            overwrite = box.ShowModal()
-            if overwrite == wx.ID_YES:
-                shutil.rmtree(package_path, ignore_errors=True)
-                return True
-            else:
-                return False
-        else:
-            return True
-
-
-    def GetWidget(self, name, window=None):
-        """
-        Wrapper around wx.xrc.XRCCTRL with window = self.m_frame set as default.
-        """
-        if not window:
-            window = self.m_frame
-        return wx.xrc.XRCCTRL(window, name)
-
-    def Bind(self, event, method, name):
-        """
-        Wrapper around Bind method.
-        """
-        self.m_frame.Bind(event, method, id=wx.xrc.XRCID(name))
-
-    def KillOperations(self):
-        for thread in  threading.enumerate():
-            # check if the first super class is an Operation
-            if thread.__class__.mro()[1] == datadeck.operations.Operation:
-                while thread.isAlive():
-                    thread.RaiseException(datadeck.operations.KillOperationException)
-
-    def CheckConfig(self):
-        #TODO: remove it when dpm 0.10 is officially released
-        configuration = dpm.CONFIG
-        if configuration.get("index:ckan","ckan.url").find('ckan.net') > -1:
-            configuration.set("index:ckan","ckan.url","http://thedatahub.org/api/")
-            configuration.write(open(dpm.config.default_config_path,'w'))
-
-            configuration_path = dpm.config.default_config_path
-            message = ("A dpm configuration file has been created on %s\n"+
-                        "Please restart the program.") %(configuration_path)
-            box = wx.MessageDialog(self.m_frame, message, "dpm Configuration",wx.OK)
-            box.ShowModal()
-            box.Destroy()
-            self.m_frame.Close()
-        import ConfigParser
-        default_path = ""
-        try:
-            default_path = settings.Settings.datadeck_default_path()
-        except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
-            settings.Settings.datadeck_default_path(os.path.expanduser('~'))
-        if not default_path:
-            settings.Settings.datadeck_default_path(os.path.expanduser('~'))

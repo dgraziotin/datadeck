@@ -15,11 +15,11 @@ class DataDeck(wx.App):
         wx.App.__init__(self, redirect, filename)
 
     def OnInit(self, ):
-        xml = wx.xrc.XmlResource(pkg_resources.resource_filename('datadeck.res', 'datadeck.xrc'))
         if self.IsDpmInstalled():
             import datadeck.gui.maingui
-            self.MainGUI = datadeck.gui.maingui.MainGUI(xml)
+            self.MainGUI = datadeck.gui.maingui.MainGUI()
         else:
+            #TODO no more xml here
             frame = xml.LoadFrame(None, 'DepCheckFrame')
             dependencies_test = wx.xrc.XRCCTRL(frame, 'dependencies_text')
             dependencies_file = pkg_resources.resource_filename('datadeck.res', 'MISSING_DPM.txt')
@@ -52,6 +52,7 @@ class SysOutListener:
         #wx.PostEvent(wx.GetApp().MainGUI.m_console_text, evt)
 
 def run_as_plugin():
+    #TODO no more xml here
     xml = wx.xrc.XmlResource(pkg_resources.resource_filename('datadeck.res', 'datadeck.xrc'))
     MainGUI = datadeck.gui.maingui.MainGUI(xml)
     sysout_listener = SysOutListener(MainGUI.m_console_text)
