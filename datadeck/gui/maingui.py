@@ -100,15 +100,15 @@ class MainGUI(base.GUI):
 
         if operation_message.status == operations.OPERATION_STATUS_ID["error"] and self.m_killing_operations:
             self.m_killing_operations = False
-            self.SetStatusBarMessage(operation_type_str + " Killed")
+            print operation_type_str + " Killed"
             return
         elif operation_message.status == (operations.OPERATION_STATUS_ID["error"]
                                           and not self.m_killing_operations and operation_message.data):
-            self.SetStatusBarMessage(operation_type_str + " ERROR: " + operation_message.data)
+            print operation_type_str + " ERROR: " + operation_message.data
         elif operation_message.status == operations.OPERATION_STATUS_ID["started"]:
-            self.SetStatusBarMessage(operation_type_str + " Started")
+            print operation_type_str + " Started"
         elif operation_message.status == operations.OPERATION_STATUS_ID["finished"]:
-            self.SetStatusBarMessage(operation_type_str + " Finished")
+            print operation_type_str + " Finished"
             if operation_message.type == operations.SearchOperation:
                 self.CleanSearchResults()
                 results = operation_message.data

@@ -31,8 +31,6 @@ class GUI(object):
         self.m_frame = xml.LoadFrame(None, frame_name)
 
         self.m_panel = self.GetWidget(panel_name)
-        self.m_status_bar = self.m_frame.CreateStatusBar()
-
         self.m_menubar = self.m_frame.GetMenuBar()
 
         self.Bind(wx.EVT_MENU, self.OnMenuClickExit, 'menu_exit')
@@ -44,9 +42,6 @@ class GUI(object):
         self.m_frame.Show()
 
         self.CheckConfig()
-
-    def SetStatusBarMessage(self, message):
-        self.m_status_bar.SetStatusText(message)
 
     def OnMenuAboutClick(self, event):
         """

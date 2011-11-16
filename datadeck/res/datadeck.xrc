@@ -23,7 +23,7 @@
 				</object>
 			</object>
 		</object>
-		<object class="wxNotebook" name="notebook">
+		<object class="wxNotebook" name="create_panel">
 			<object class="notebookpage">
 				<label>Search</label>
 				<selected>0</selected>

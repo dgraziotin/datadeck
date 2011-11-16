@@ -38,7 +38,6 @@ class PackageGUI(base.GUI):
             setattr(self, key + "_text", wx.xrc.XRCCTRL(self.m_frame, key + "_text"))
 
         self.UpdateWidgets(package)
-        self.m_status_bar.Hide()
 
     def UpdateWidgets(self, package):
         # sets TextCtrl values by iterating Package Metadata
