@@ -14,15 +14,9 @@ import datadeck.settings as settings
 import base
 
 
-class PackageGUI(base.GUI):
-    def __init__(self, xml, package=None):
-        base.GUI.__init__(self, xml, frame_name="InfoFrame", panel_name="panel")
-
-        # minimum sizea
-        self.m_frame.SetSize(wx.Size(500, 500))
-
-        self.m_download_button = self.GetWidget('download_button')
-        self.Bind(wx.EVT_BUTTON, self.OnButtonDownloadClick, 'download_button')
+class PackageGUI(base.InfoFrame):
+    def __init__(self, parent, package=None):
+        base.InfoFrame.__init__(self, parent)
 
         if not package:
             # we instantiate an empty package for obtaining its metadata
@@ -30,13 +24,6 @@ class PackageGUI(base.GUI):
             package = dpm.package.Package()
 
         self.m_package = package
-
-        # frame_info retrieving
-        # WARNING: this only works because we defined the Widget names with the same
-        # names of those defined in dpm.metadata.Metadata. It's a sort of Reflection.
-        for key, value in dpm.lib.info(package)[1].iteritems():
-            setattr(self, key + "_text", wx.xrc.XRCCTRL(self.m_frame, key + "_text"))
-
         self.UpdateWidgets(package)
 
     def UpdateWidgets(self, package):
@@ -59,19 +46,5 @@ class PackageGUI(base.GUI):
             except AttributeError:
                 continue
 
-    def OnButtonDownloadClick(self, event):
-        """
-        Retrieve the currently selected package in the results list and launch a DownloadOperation
-        for downloading it.
-        """
-        if not self.m_package:
-            print "no package"
-            return
-
-        download_dir = self.DownloadDirDialog()
-
-        overwrite_check = self.CheckPackageOverwrite(download_dir, self.m_package)
-
-        if overwrite_check:
-            operations.DownloadOperation(self.m_frame, self.m_package, download_dir)
-            self.Show(False)
+    def OnButtonCloseClick( self, event ):
+        self.Destroy()
