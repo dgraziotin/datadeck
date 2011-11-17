@@ -101,10 +101,13 @@ class DataDeckFrame ( wx.Frame ):
 		self.Centre( wx.BOTH )
 		
 		# Connect Events
+		self.Bind( wx.EVT_MENU, self.OnMenuAboutClick, id = self.menu_about.GetId() )
+		self.Bind( wx.EVT_MENU, self.OnMenuSettingsClick, id = self.menu_settings.GetId() )
+		self.Bind( wx.EVT_MENU, self.OnMenuExitClick, id = self.menu_exit.GetId() )
 		self.m_search_text.Bind( wx.EVT_KEY_DOWN, self.OnSearchTextKeyDown )
 		self.m_search_button.Bind( wx.EVT_BUTTON, self.OnButtonSearchClick )
 		self.m_info_button.Bind( wx.EVT_BUTTON, self.OnButtonInfoClick )
-		self.m_download_button.Bind( wx.EVT_BUTTON, self.onButtonDownloadClick )
+		self.m_download_button.Bind( wx.EVT_BUTTON, self.OnButtonDownloadClick )
 		self.m_search_results_list.Bind( wx.EVT_LIST_ITEM_SELECTED, self.OnSearchResultsListItemSelected )
 		self.m_console_clear_button.Bind( wx.EVT_BUTTON, self.OnConsoleClearButtonClick )
 		self.m_console_kill_button.Bind( wx.EVT_BUTTON, self.OnConsoleKillButtonClick )
@@ -114,6 +117,15 @@ class DataDeckFrame ( wx.Frame ):
 	
 	
 	# Virtual event handlers, overide them in your derived class
+	def OnMenuAboutClick( self, event ):
+		event.Skip()
+	
+	def OnMenuSettingsClick( self, event ):
+		event.Skip()
+	
+	def OnMenuExitClick( self, event ):
+		event.Skip()
+	
 	def OnSearchTextKeyDown( self, event ):
 		event.Skip()
 	
@@ -123,7 +135,7 @@ class DataDeckFrame ( wx.Frame ):
 	def OnButtonInfoClick( self, event ):
 		event.Skip()
 	
-	def onButtonDownloadClick( self, event ):
+	def OnButtonDownloadClick( self, event ):
 		event.Skip()
 	
 	def OnSearchResultsListItemSelected( self, event ):
@@ -224,9 +236,21 @@ class SettingsFrame ( wx.Frame ):
 		bSizer22.Fit( self )
 		
 		self.Centre( wx.BOTH )
+		
+		# Connect Events
+		self.save_button.Bind( wx.EVT_BUTTON, self.OnButtonSaveClick )
+		self.cancel_button.Bind( wx.EVT_BUTTON, self.OnButtonCancelClick )
 	
 	def __del__( self ):
 		pass
+	
+	
+	# Virtual event handlers, overide them in your derived class
+	def OnButtonSaveClick( self, event ):
+		event.Skip()
+	
+	def OnButtonCancelClick( self, event ):
+		event.Skip()
 	
 
 ###########################################################################
@@ -322,8 +346,8 @@ class InfoFrame ( wx.Frame ):
 		
 		bSizer5.Add( bSizer9, 1, wx.EXPAND, 5 )
 		
-		self.download_button = wx.Button( self.panel, wx.ID_ANY, u"Download", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer5.Add( self.download_button, 0, wx.ALL|wx.EXPAND, 5 )
+		self.m_close_button = wx.Button( self.panel, wx.ID_ANY, u"Close", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer5.Add( self.m_close_button, 0, wx.ALL|wx.EXPAND, 5 )
 		
 		self.panel.SetSizer( bSizer5 )
 		self.panel.Layout()
@@ -335,9 +359,17 @@ class InfoFrame ( wx.Frame ):
 		bSizer4.Fit( self )
 		
 		self.Centre( wx.BOTH )
+		
+		# Connect Events
+		self.m_close_button.Bind( wx.EVT_BUTTON, self.OnButtonCloseClick )
 	
 	def __del__( self ):
 		pass
+	
+	
+	# Virtual event handlers, overide them in your derived class
+	def OnButtonCloseClick( self, event ):
+		event.Skip()
 	
 
 ###########################################################################
@@ -347,7 +379,7 @@ class InfoFrame ( wx.Frame ):
 class AboutFrame ( wx.Frame ):
 	
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"About", pos = wx.DefaultPosition, size = wx.Size( -1,-1 ), style = wx.CLOSE_BOX|wx.RESIZE_BORDER|wx.STAY_ON_TOP|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"About", pos = wx.DefaultPosition, size = wx.Size( -1,-1 ), style = wx.CAPTION|wx.CLOSE_BOX|wx.RESIZE_BORDER|wx.STAY_ON_TOP|wx.TAB_TRAVERSAL )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		
