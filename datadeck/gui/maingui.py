@@ -48,6 +48,9 @@ class MainGUI(base.DataDeckFrame):
         self.m_console_text.Bind(EVT_STDOUT, self.OnUpdateConsole)
         self.m_console_text.Bind(wx.EVT_TIMER, self.OnProcessPendingEventsConsole)
 
+        self.license_choice.AppendItems(settings.Settings.licenses())
+        self.destination_dirpicker.SetPath(settings.Settings.datadeck_default_path())
+
 
 
         # Set up event handler for any worker thread results
@@ -59,7 +62,25 @@ class MainGUI(base.DataDeckFrame):
         self.Show(True)
 
     def OnButtonCreateClick( self, event ):
-        event.Skip()
+        import dpm.package
+        import datadeck.validator
+        p = dpm.package.Package()
+        p.name = self.name_text.GetValue()
+        p.title = p.name
+        p.url = self.url_text.GetValue()
+        p.license = settings.Settings.licenses(self.license_choice.GetSelection())
+        p.author = self.author_text.GetValue()
+        p.author_email = self.author_email_text.GetValue()
+        p.notes = self.notes_text.GetValue()
+        try:
+            datadeck.validator.PackageValidator.validate(p)
+        except datadeck.validator.PackageNonValid, e:
+            wx.MessageBox(str(e), caption="Validation Error", style=wx.OK)
+
+
+
+
+
 
 
     def OnConsoleKillButtonClick(self, event):
@@ -258,6 +279,8 @@ class MainGUI(base.DataDeckFrame):
         about_frame.SetSize(wx.Size(500, 400))
         about_frame.Centre()
         about_frame.Show()
+
+
 
     def OnMenuClickExit(self, event):
         self.KillOperations()

@@ -67,7 +67,7 @@ class DataDeckFrame ( wx.Frame ):
 		self.m_notebook_search.SetSizer( bSizer2 )
 		self.m_notebook_search.Layout()
 		bSizer2.Fit( self.m_notebook_search )
-		self.m_notebook.AddPage( self.m_notebook_search, u"Search", False )
+		self.m_notebook.AddPage( self.m_notebook_search, u"Search", True )
 		self.m_notebok_create = wx.Panel( self.m_notebook, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer5 = wx.BoxSizer( wx.VERTICAL )
 		
@@ -77,7 +77,7 @@ class DataDeckFrame ( wx.Frame ):
 		self.name_label.Wrap( -1 )
 		bSizer6.Add( self.name_label, 1, wx.ALL|wx.EXPAND, 5 )
 		
-		self.name_text = wx.TextCtrl( self.m_notebok_create, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY )
+		self.name_text = wx.TextCtrl( self.m_notebok_create, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer6.Add( self.name_text, 2, wx.ALL, 5 )
 		
 		bSizer5.Add( bSizer6, 1, wx.EXPAND, 5 )
@@ -88,7 +88,7 @@ class DataDeckFrame ( wx.Frame ):
 		self.url_label.Wrap( -1 )
 		bSizer7.Add( self.url_label, 1, wx.ALL|wx.EXPAND, 5 )
 		
-		self.url_text = wx.TextCtrl( self.m_notebok_create, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY )
+		self.url_text = wx.TextCtrl( self.m_notebok_create, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer7.Add( self.url_text, 2, wx.ALL, 5 )
 		
 		bSizer5.Add( bSizer7, 1, wx.EXPAND, 5 )
@@ -99,8 +99,10 @@ class DataDeckFrame ( wx.Frame ):
 		self.license_label.Wrap( -1 )
 		bSizer8.Add( self.license_label, 1, wx.ALL|wx.EXPAND, 5 )
 		
-		self.license_text = wx.TextCtrl( self.m_notebok_create, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY )
-		bSizer8.Add( self.license_text, 2, wx.ALL, 5 )
+		license_choiceChoices = []
+		self.license_choice = wx.Choice( self.m_notebok_create, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, license_choiceChoices, 0 )
+		self.license_choice.SetSelection( 0 )
+		bSizer8.Add( self.license_choice, 2, wx.ALL, 5 )
 		
 		bSizer5.Add( bSizer8, 1, wx.EXPAND, 5 )
 		
@@ -110,7 +112,7 @@ class DataDeckFrame ( wx.Frame ):
 		self.author_label.Wrap( -1 )
 		bSizer71.Add( self.author_label, 1, wx.ALL|wx.EXPAND, 5 )
 		
-		self.author_text = wx.TextCtrl( self.m_notebok_create, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY )
+		self.author_text = wx.TextCtrl( self.m_notebok_create, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer71.Add( self.author_text, 2, wx.ALL, 5 )
 		
 		bSizer5.Add( bSizer71, 1, wx.EXPAND, 5 )
@@ -121,7 +123,7 @@ class DataDeckFrame ( wx.Frame ):
 		self.author_email_label.Wrap( -1 )
 		bSizer72.Add( self.author_email_label, 1, wx.ALL|wx.EXPAND, 5 )
 		
-		self.author_email_text = wx.TextCtrl( self.m_notebok_create, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY )
+		self.author_email_text = wx.TextCtrl( self.m_notebok_create, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer72.Add( self.author_email_text, 2, wx.ALL, 5 )
 		
 		bSizer5.Add( bSizer72, 1, wx.EXPAND, 5 )
@@ -132,7 +134,7 @@ class DataDeckFrame ( wx.Frame ):
 		self.notes_label.Wrap( -1 )
 		bSizer11.Add( self.notes_label, 1, wx.ALL|wx.EXPAND, 5 )
 		
-		self.notes_text = wx.TextCtrl( self.m_notebok_create, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE|wx.TE_READONLY )
+		self.notes_text = wx.TextCtrl( self.m_notebok_create, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE )
 		bSizer11.Add( self.notes_text, 2, wx.ALL|wx.EXPAND, 5 )
 		
 		bSizer5.Add( bSizer11, 3, wx.EXPAND, 5 )
@@ -143,18 +145,36 @@ class DataDeckFrame ( wx.Frame ):
 		self.tags_label.Wrap( -1 )
 		bSizer9.Add( self.tags_label, 1, wx.ALL|wx.EXPAND, 5 )
 		
-		self.tags_text = wx.TextCtrl( self.m_notebok_create, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY )
+		self.tags_text = wx.TextCtrl( self.m_notebok_create, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer9.Add( self.tags_text, 2, wx.ALL, 5 )
 		
 		bSizer5.Add( bSizer9, 1, wx.EXPAND, 5 )
 		
-		self.m_create_button = wx.Button( self.m_notebok_create, wx.ID_ANY, u"Create", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer5.Add( self.m_create_button, 0, wx.ALL|wx.EXPAND, 5 )
+		bSizer91 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.destination_label = wx.StaticText( self.m_notebok_create, wx.ID_ANY, u"Destination Path", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.destination_label.Wrap( -1 )
+		bSizer91.Add( self.destination_label, 1, wx.ALL|wx.EXPAND, 5 )
+		
+		self.destination_dirpicker = wx.DirPickerCtrl( self.m_notebok_create, wx.ID_ANY, u"/home/dgraziotin", u"Select a folder", wx.DefaultPosition, wx.DefaultSize, wx.DIRP_DEFAULT_STYLE )
+		bSizer91.Add( self.destination_dirpicker, 2, wx.ALL, 5 )
+		
+		bSizer5.Add( bSizer91, 1, wx.EXPAND, 5 )
+		
+		bSizer61 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		
+		bSizer61.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
+		
+		self.m_create_button = wx.Button( self.m_notebok_create, wx.ID_ANY, u"Create Package", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer61.Add( self.m_create_button, 2, wx.ALL, 5 )
+		
+		bSizer5.Add( bSizer61, 1, wx.EXPAND, 5 )
 		
 		self.m_notebok_create.SetSizer( bSizer5 )
 		self.m_notebok_create.Layout()
 		bSizer5.Fit( self.m_notebok_create )
-		self.m_notebook.AddPage( self.m_notebok_create, u"Create", True )
+		self.m_notebook.AddPage( self.m_notebok_create, u"Create", False )
 		
 		bSizer1.Add( self.m_notebook, 3, wx.EXPAND |wx.ALL, 5 )
 		
