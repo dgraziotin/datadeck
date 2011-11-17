@@ -145,4 +145,24 @@ class SearchOperation(Operation):
             wx.PostEvent(self.m_wxobject, OperationMessage(self.__class__, OPERATION_STATUS_ID["error"], str(e)))
             return
         wx.PostEvent(self.m_wxobject, OperationMessage(self.__class__, OPERATION_STATUS_ID["finished"], results))
-        
+
+class InitOperation(Operation):
+    """
+    Given a path and a package, it physically creates a package in the Path.
+    """
+
+    def __init__(self, linked_wxobject, path, package_name):
+        self.path = path
+        self.package_name = package_name
+        Operation.__init__(self, linked_wxobject)
+        self.start()
+
+    def run(self):
+        wx.PostEvent(self.m_wxobject,
+                     OperationMessage(self.__class__, OPERATION_STATUS_ID["started"]))
+        try:
+            results = dpm.lib.init(self.path, self.package_name)
+        except Exception, e:
+            wx.PostEvent(self.m_wxobject, OperationMessage(self.__class__, OPERATION_STATUS_ID["error"], str(e)))
+            return
+        wx.PostEvent(self.m_wxobject, OperationMessage(self.__class__, OPERATION_STATUS_ID["finished"], results))

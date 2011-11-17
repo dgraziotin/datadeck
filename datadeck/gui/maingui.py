@@ -10,11 +10,11 @@ import wx
 import wx.xrc
 import wx.lib.newevent
 import datadeck.operations as operations
-#TODO packagegui
 import packagegui
 import shutil
 import os
 import datadeck.settings as settings
+import datadeck.operations as operations
 
 import base
 # for handling stdout and stderr on a TextCtrl
@@ -76,6 +76,11 @@ class MainGUI(base.DataDeckFrame):
             datadeck.validator.PackageValidator.validate(p)
         except datadeck.validator.PackageNonValid, e:
             wx.MessageBox(str(e), caption="Validation Error", style=wx.OK)
+            return
+
+        path = self.destination_dirpicker.GetPath()
+        package_name = p.name
+        operations.InitOperation(self, path, package_name)
 
 
 
@@ -120,8 +125,7 @@ class MainGUI(base.DataDeckFrame):
             self.m_killing_operations = False
             print operation_type_str + " Killed"
             return
-        elif operation_message.status == (operations.OPERATION_STATUS_ID["error"]
-                                          and not self.m_killing_operations and operation_message.data):
+        elif operation_message.status == operations.OPERATION_STATUS_ID["error"] and not self.m_killing_operations and operation_message.data:
             print operation_type_str + " ERROR: " + operation_message.data
         elif operation_message.status == operations.OPERATION_STATUS_ID["started"]:
             print operation_type_str + " Started"
