@@ -19,11 +19,10 @@ class DataDeck(wx.App):
             import datadeck.gui.maingui
             self.MainGUI = datadeck.gui.maingui.MainGUI()
         else:
-            #TODO no more xml here
-            frame = xml.LoadFrame(None, 'DepCheckFrame')
-            dependencies_test = wx.xrc.XRCCTRL(frame, 'dependencies_text')
+            import datadeck.gui.base
+            frame = datadeck.gui.base.DepCheckFrame(None)
             dependencies_file = pkg_resources.resource_filename('datadeck.res', 'MISSING_DPM.txt')
-            dependencies_test.AppendText(open(dependencies_file).read())
+            frame.dependencies_text.AppendText(open(dependencies_file).read())
             frame.SetSize(wx.Size(600,400))
             frame.Show()
         return True
@@ -48,13 +47,9 @@ class SysOutListener:
 
     def flush(self):
         sys.__stdout__.flush()
-        #evt = WX_STDOUT(text="clean")
-        #wx.PostEvent(wx.GetApp().MainGUI.m_console_text, evt)
 
 def run_as_plugin():
-    #TODO no more xml here
-    xml = wx.xrc.XmlResource(pkg_resources.resource_filename('datadeck.res', 'datadeck.xrc'))
-    MainGUI = datadeck.gui.maingui.MainGUI(xml)
+    MainGUI = datadeck.gui.maingui.MainGUI()
     sysout_listener = SysOutListener(MainGUI.m_console_text)
     sys.stdout = sysout_listener
     

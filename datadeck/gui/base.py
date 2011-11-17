@@ -68,8 +68,95 @@ class DataDeckFrame ( wx.Frame ):
 		self.m_notebook_search.Layout()
 		bSizer2.Fit( self.m_notebook_search )
 		self.m_notebook.AddPage( self.m_notebook_search, u"Search", False )
+		self.m_notebok_create = wx.Panel( self.m_notebook, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		bSizer5 = wx.BoxSizer( wx.VERTICAL )
 		
-		bSizer1.Add( self.m_notebook, 1, wx.EXPAND |wx.ALL, 5 )
+		bSizer6 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.name_label = wx.StaticText( self.m_notebok_create, wx.ID_ANY, u"Name", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.name_label.Wrap( -1 )
+		bSizer6.Add( self.name_label, 1, wx.ALL|wx.EXPAND, 5 )
+		
+		self.name_text = wx.TextCtrl( self.m_notebok_create, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY )
+		bSizer6.Add( self.name_text, 2, wx.ALL, 5 )
+		
+		bSizer5.Add( bSizer6, 1, wx.EXPAND, 5 )
+		
+		bSizer7 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.url_label = wx.StaticText( self.m_notebok_create, wx.ID_ANY, u"URL", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.url_label.Wrap( -1 )
+		bSizer7.Add( self.url_label, 1, wx.ALL|wx.EXPAND, 5 )
+		
+		self.url_text = wx.TextCtrl( self.m_notebok_create, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY )
+		bSizer7.Add( self.url_text, 2, wx.ALL, 5 )
+		
+		bSizer5.Add( bSizer7, 1, wx.EXPAND, 5 )
+		
+		bSizer8 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.license_label = wx.StaticText( self.m_notebok_create, wx.ID_ANY, u"License", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.license_label.Wrap( -1 )
+		bSizer8.Add( self.license_label, 1, wx.ALL|wx.EXPAND, 5 )
+		
+		self.license_text = wx.TextCtrl( self.m_notebok_create, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY )
+		bSizer8.Add( self.license_text, 2, wx.ALL, 5 )
+		
+		bSizer5.Add( bSizer8, 1, wx.EXPAND, 5 )
+		
+		bSizer71 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.author_label = wx.StaticText( self.m_notebok_create, wx.ID_ANY, u"Author", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.author_label.Wrap( -1 )
+		bSizer71.Add( self.author_label, 1, wx.ALL|wx.EXPAND, 5 )
+		
+		self.author_text = wx.TextCtrl( self.m_notebok_create, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY )
+		bSizer71.Add( self.author_text, 2, wx.ALL, 5 )
+		
+		bSizer5.Add( bSizer71, 1, wx.EXPAND, 5 )
+		
+		bSizer72 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.author_email_label = wx.StaticText( self.m_notebok_create, wx.ID_ANY, u"Email", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.author_email_label.Wrap( -1 )
+		bSizer72.Add( self.author_email_label, 1, wx.ALL|wx.EXPAND, 5 )
+		
+		self.author_email_text = wx.TextCtrl( self.m_notebok_create, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY )
+		bSizer72.Add( self.author_email_text, 2, wx.ALL, 5 )
+		
+		bSizer5.Add( bSizer72, 1, wx.EXPAND, 5 )
+		
+		bSizer11 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.notes_label = wx.StaticText( self.m_notebok_create, wx.ID_ANY, u"Notes", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.notes_label.Wrap( -1 )
+		bSizer11.Add( self.notes_label, 1, wx.ALL|wx.EXPAND, 5 )
+		
+		self.notes_text = wx.TextCtrl( self.m_notebok_create, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE|wx.TE_READONLY )
+		bSizer11.Add( self.notes_text, 2, wx.ALL|wx.EXPAND, 5 )
+		
+		bSizer5.Add( bSizer11, 3, wx.EXPAND, 5 )
+		
+		bSizer9 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.tags_label = wx.StaticText( self.m_notebok_create, wx.ID_ANY, u"Tags", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.tags_label.Wrap( -1 )
+		bSizer9.Add( self.tags_label, 1, wx.ALL|wx.EXPAND, 5 )
+		
+		self.tags_text = wx.TextCtrl( self.m_notebok_create, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY )
+		bSizer9.Add( self.tags_text, 2, wx.ALL, 5 )
+		
+		bSizer5.Add( bSizer9, 1, wx.EXPAND, 5 )
+		
+		self.m_create_button = wx.Button( self.m_notebok_create, wx.ID_ANY, u"Create", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer5.Add( self.m_create_button, 0, wx.ALL|wx.EXPAND, 5 )
+		
+		self.m_notebok_create.SetSizer( bSizer5 )
+		self.m_notebok_create.Layout()
+		bSizer5.Fit( self.m_notebok_create )
+		self.m_notebook.AddPage( self.m_notebok_create, u"Create", True )
+		
+		bSizer1.Add( self.m_notebook, 3, wx.EXPAND |wx.ALL, 5 )
 		
 		self.m_console = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		sbSizer3 = wx.StaticBoxSizer( wx.StaticBox( self.m_console, wx.ID_ANY, u"Console Info" ), wx.VERTICAL )
@@ -109,6 +196,7 @@ class DataDeckFrame ( wx.Frame ):
 		self.m_info_button.Bind( wx.EVT_BUTTON, self.OnButtonInfoClick )
 		self.m_download_button.Bind( wx.EVT_BUTTON, self.OnButtonDownloadClick )
 		self.m_search_results_list.Bind( wx.EVT_LIST_ITEM_SELECTED, self.OnSearchResultsListItemSelected )
+		self.m_create_button.Bind( wx.EVT_BUTTON, self.OnButtonCreateClick )
 		self.m_console_clear_button.Bind( wx.EVT_BUTTON, self.OnConsoleClearButtonClick )
 		self.m_console_kill_button.Bind( wx.EVT_BUTTON, self.OnConsoleKillButtonClick )
 	
@@ -139,6 +227,9 @@ class DataDeckFrame ( wx.Frame ):
 		event.Skip()
 	
 	def OnSearchResultsListItemSelected( self, event ):
+		event.Skip()
+	
+	def OnButtonCreateClick( self, event ):
 		event.Skip()
 	
 	def OnConsoleClearButtonClick( self, event ):

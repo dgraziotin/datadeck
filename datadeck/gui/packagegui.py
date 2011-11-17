@@ -24,15 +24,6 @@ class PackageGUI(base.InfoFrame):
             package = dpm.package.Package()
 
         self.m_package = package
-
-        """
-        # frame_info retrieving
-        # WARNING: this only works because we defined the Widget names with the same
-        # names of those defined in dpm.metadata.Metadata. It's a sort of Reflection.
-        for key, value in dpm.lib.info(package)[1].iteritems():
-            setattr(self, key + "_text", wx.xrc.XRCCTRL(self, key + "_text"))
-        """
-
         self.UpdateWidgets(package)
 
     def UpdateWidgets(self, package):
