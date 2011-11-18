@@ -15,6 +15,8 @@ import shutil
 import os
 import datadeck.settings as settings
 import datadeck.operations as operations
+import dpm.package
+import datadeck.validator
 
 import base
 # for handling stdout and stderr on a TextCtrl
@@ -62,8 +64,6 @@ class MainGUI(base.DataDeckFrame):
         self.Show(True)
 
     def OnButtonCreateClick( self, event ):
-        import dpm.package
-        import datadeck.validator
         p = dpm.package.Package()
         p.name = self.name_text.GetValue()
         p.title = p.name
@@ -72,6 +72,8 @@ class MainGUI(base.DataDeckFrame):
         p.author = self.author_text.GetValue()
         p.author_email = self.author_email_text.GetValue()
         p.notes = self.notes_text.GetValue()
+        tags = self.tags_text.GetValue()
+        p.tags = tags.split(" ")
         try:
             datadeck.validator.PackageValidator.validate(p)
         except datadeck.validator.PackageNonValid, e:
@@ -79,8 +81,15 @@ class MainGUI(base.DataDeckFrame):
             return
 
         path = self.destination_dirpicker.GetPath()
-        package_name = p.name
-        operations.InitOperation(self, path, package_name)
+        operations.InitAndSaveOperation(self, p, path)
+
+    def OnNameTextKillFocus( self, event ):
+        name = self.name_text.GetValue()
+        path = self.destination_dirpicker.GetPath()
+        if not name or not path:
+            return
+        if datadeck.validator.PackageValidator.already_existing(path, name):
+            print "WARNING: a package named " + name + " already exists. You will overwrite it."
 
 
 
@@ -141,6 +150,9 @@ class MainGUI(base.DataDeckFrame):
                         self.m_search_results_index += 1
                 else:
                     print "No Results."
+            if operation_message.type == operations.InitOperation or operation_message.type == operations.SaveOperation:
+                package = operation_message.data
+                print package
         else:
             pass
 

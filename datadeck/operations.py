@@ -95,7 +95,7 @@ class Operation(threading.Thread):
             raise TypeError("Only types can be raised (not instances)")
 
         res = ctypes.pythonapi.PyThreadState_SetAsyncExc(self.ident,
-                                                         ctypes.py_object(exception_type))
+            ctypes.py_object(exception_type))
         if res > 1:
             # "if it returns a number greater than one, you're in trouble,
             # and you should call it again with exc=NULL to revert the effect"
@@ -107,6 +107,7 @@ class DownloadOperation(Operation):
     """
     It calls lib.download in a separate thread for retrieving the package and its resources.
     """
+
     def __init__(self, linked_wxobject, package, download_dir):
         Operation.__init__(self, linked_wxobject)
         self.package = package
@@ -130,7 +131,6 @@ class SearchOperation(Operation):
     it communicates to the main GUI that the the search was finished, returning the retrieved Packages
     in an OperationMessage object.
     """
-
     def __init__(self, linked_wxobject, query):
         self.query = query
         Operation.__init__(self, linked_wxobject)
@@ -138,7 +138,7 @@ class SearchOperation(Operation):
 
     def run(self):
         wx.PostEvent(self.m_wxobject,
-                     OperationMessage(self.__class__, OPERATION_STATUS_ID["started"]))
+            OperationMessage(self.__class__, OPERATION_STATUS_ID["started"]))
         try:
             results = dpm.lib.search("ckan://", self.query)
         except Exception, e:
@@ -146,9 +146,10 @@ class SearchOperation(Operation):
             return
         wx.PostEvent(self.m_wxobject, OperationMessage(self.__class__, OPERATION_STATUS_ID["finished"], results))
 
+
 class InitOperation(Operation):
     """
-    Given a path and a package, it physically creates a package in the Path.
+    Given a path and a package name, it physically creates a package in the Path.
     """
 
     def __init__(self, linked_wxobject, path, package_name):
@@ -159,10 +160,55 @@ class InitOperation(Operation):
 
     def run(self):
         wx.PostEvent(self.m_wxobject,
-                     OperationMessage(self.__class__, OPERATION_STATUS_ID["started"]))
+            OperationMessage(self.__class__, OPERATION_STATUS_ID["started"]))
         try:
-            results = dpm.lib.init(self.path, self.package_name)
+            package = dpm.lib.init(self.path, self.package_name)
         except Exception, e:
             wx.PostEvent(self.m_wxobject, OperationMessage(self.__class__, OPERATION_STATUS_ID["error"], str(e)))
             return
-        wx.PostEvent(self.m_wxobject, OperationMessage(self.__class__, OPERATION_STATUS_ID["finished"], results))
+        wx.PostEvent(self.m_wxobject, OperationMessage(self.__class__, OPERATION_STATUS_ID["finished"], package))
+
+
+class SaveOperation(Operation):
+    """
+    Given a path and a package name, it physically creates a package in the Path.
+    """
+
+    def __init__(self, linked_wxobject, package, path):
+        self.package = package
+        self.path = path
+        Operation.__init__(self, linked_wxobject)
+        self.start()
+
+    def run(self):
+        wx.PostEvent(self.m_wxobject,
+            OperationMessage(self.__class__, OPERATION_STATUS_ID["started"]))
+        try:
+            package = dpm.lib.save(self.package)
+        except Exception, e:
+            wx.PostEvent(self.m_wxobject, OperationMessage(self.__class__, OPERATION_STATUS_ID["error"], str(e)))
+            return
+        wx.PostEvent(self.m_wxobject, OperationMessage(self.__class__, OPERATION_STATUS_ID["finished"], package))
+
+
+class InitAndSaveOperation(Operation):
+    """
+    Given a path and a not yet created Package, it physically creates and stores it
+    """
+    def __init__(self, linked_wxobject, package, path):
+        self.package = package
+        self.path = path
+        Operation.__init__(self, linked_wxobject)
+        self.start()
+
+    def run(self):
+        wx.PostEvent(self.m_wxobject,
+            OperationMessage(self.__class__, OPERATION_STATUS_ID["started"]))
+        try:
+            package = dpm.lib.init(self.path, self.package.name)
+            self.package.installed_path = package.installed_path
+            package = dpm.lib.save(self.package)
+        except Exception, e:
+            wx.PostEvent(self.m_wxobject, OperationMessage(self.__class__, OPERATION_STATUS_ID["error"], str(e)))
+            return
+        wx.PostEvent(self.m_wxobject, OperationMessage(self.__class__, OPERATION_STATUS_ID["finished"], package))

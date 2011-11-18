@@ -146,6 +146,8 @@ class DataDeckFrame ( wx.Frame ):
 		bSizer9.Add( self.tags_label, 1, wx.ALL|wx.EXPAND, 5 )
 		
 		self.tags_text = wx.TextCtrl( self.m_notebok_create, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.tags_text.SetToolTipString( u"Separate tags with spaces, unite-words-with-dashes " )
+		
 		bSizer9.Add( self.tags_text, 2, wx.ALL, 5 )
 		
 		bSizer5.Add( bSizer9, 1, wx.EXPAND, 5 )
@@ -216,6 +218,7 @@ class DataDeckFrame ( wx.Frame ):
 		self.m_info_button.Bind( wx.EVT_BUTTON, self.OnButtonInfoClick )
 		self.m_download_button.Bind( wx.EVT_BUTTON, self.OnButtonDownloadClick )
 		self.m_search_results_list.Bind( wx.EVT_LIST_ITEM_SELECTED, self.OnSearchResultsListItemSelected )
+		self.name_text.Bind( wx.EVT_KILL_FOCUS, self.OnNameTextKillFocus )
 		self.m_create_button.Bind( wx.EVT_BUTTON, self.OnButtonCreateClick )
 		self.m_console_clear_button.Bind( wx.EVT_BUTTON, self.OnConsoleClearButtonClick )
 		self.m_console_kill_button.Bind( wx.EVT_BUTTON, self.OnConsoleKillButtonClick )
@@ -247,6 +250,9 @@ class DataDeckFrame ( wx.Frame ):
 		event.Skip()
 	
 	def OnSearchResultsListItemSelected( self, event ):
+		event.Skip()
+	
+	def OnNameTextKillFocus( self, event ):
 		event.Skip()
 	
 	def OnButtonCreateClick( self, event ):
