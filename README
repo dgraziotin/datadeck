@@ -23,6 +23,13 @@ Versions
 
 DataDeck uses Semantic Versioning for defining releases. (http://semver.org)
 
+Changelog
+=========
+
+A sort of changelog can be retrieved at http://task3.cc/tag/datadeck-changelog/
+Only some relases are posted in the website.
+For in-depth changelog, please refer to GitHub project page.
+
 
 Compatibility Notes
 ===================

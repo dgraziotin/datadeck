@@ -16,8 +16,8 @@ class DataDeck(wx.App):
 
     def OnInit(self, ):
         if self.IsDpmInstalled():
-            import datadeck.gui.maingui
-            self.MainGUI = datadeck.gui.maingui.MainGUI()
+            import datadeck.gui.main
+            self.MainGUI = datadeck.gui.main.MainGUI()
         else:
             import datadeck.gui.base
             frame = datadeck.gui.base.DepCheckFrame(None)
@@ -42,14 +42,14 @@ class SysOutListener:
         
     def write(self, string):
         sys.__stdout__.write(string)
-        evt = datadeck.gui.maingui.WX_STDOUT(text=string)
+        evt = datadeck.gui.main.WX_STDOUT(text=string)
         wx.PostEvent(self.m_wxwidget, evt)
 
     def flush(self):
         sys.__stdout__.flush()
 
 def run_as_plugin():
-    MainGUI = datadeck.gui.maingui.MainGUI()
+    MainGUI = datadeck.gui.main.MainGUI()
     sysout_listener = SysOutListener(MainGUI.m_console_text)
     sys.stdout = sysout_listener
     

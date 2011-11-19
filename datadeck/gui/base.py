@@ -22,9 +22,6 @@ class DataDeckFrame ( wx.Frame ):
 		
 		self.m_menubar = wx.MenuBar( 0 )
 		self.menu = wx.Menu()
-		self.menu_open = wx.MenuItem( self.menu, wx.ID_ANY, u"Open", wx.EmptyString, wx.ITEM_NORMAL )
-		self.menu.AppendItem( self.menu_open )
-		
 		self.menu_settings = wx.MenuItem( self.menu, wx.ID_ANY, u"Settings", wx.EmptyString, wx.ITEM_NORMAL )
 		self.menu.AppendItem( self.menu_settings )
 		
@@ -199,8 +196,8 @@ class DataDeckFrame ( wx.Frame ):
 		self.m_console_clear_button = wx.Button( self.m_console, wx.ID_ANY, u"Clear Console", wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer13.Add( self.m_console_clear_button, 1, wx.ALIGN_RIGHT|wx.ALL, 5 )
 		
-		self.m_console_kill_button = wx.Button( self.m_console, wx.ID_ANY, u"Kill Operations", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer13.Add( self.m_console_kill_button, 0, wx.ALL, 5 )
+		self.m_operations_kill_button = wx.Button( self.m_console, wx.ID_ANY, u"Kill Operations", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer13.Add( self.m_operations_kill_button, 0, wx.ALL, 5 )
 		
 		sbSizer3.Add( bSizer13, 1, wx.EXPAND, 5 )
 		
@@ -216,7 +213,6 @@ class DataDeckFrame ( wx.Frame ):
 		self.Centre( wx.BOTH )
 		
 		# Connect Events
-		self.Bind( wx.EVT_MENU, self.OnMenuOpenClick, id = self.menu_open.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnMenuSettingsClick, id = self.menu_settings.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnMenuExitClick, id = self.menu_exit.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnMenuAboutClick, id = self.menu_about.GetId() )
@@ -228,16 +224,13 @@ class DataDeckFrame ( wx.Frame ):
 		self.name_text.Bind( wx.EVT_KILL_FOCUS, self.OnNameTextKillFocus )
 		self.m_create_button.Bind( wx.EVT_BUTTON, self.OnButtonCreateClick )
 		self.m_console_clear_button.Bind( wx.EVT_BUTTON, self.OnConsoleClearButtonClick )
-		self.m_console_kill_button.Bind( wx.EVT_BUTTON, self.OnConsoleKillButtonClick )
+		self.m_operations_kill_button.Bind( wx.EVT_BUTTON, self.OnOperationsKillButtonClick )
 	
 	def __del__( self ):
 		pass
 	
 	
 	# Virtual event handlers, overide them in your derived class
-	def OnMenuOpenClick( self, event ):
-		event.Skip()
-	
 	def OnMenuSettingsClick( self, event ):
 		event.Skip()
 	
@@ -271,7 +264,7 @@ class DataDeckFrame ( wx.Frame ):
 	def OnConsoleClearButtonClick( self, event ):
 		event.Skip()
 	
-	def OnConsoleKillButtonClick( self, event ):
+	def OnOperationsKillButtonClick( self, event ):
 		event.Skip()
 	
 

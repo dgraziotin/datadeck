@@ -18,17 +18,6 @@ class ConsoleUtil(object):
         """
         self.m_wxframe.m_console_text.ProcessPendingEvents()
 
-    def OnConsoleKillButtonClick(self, event):
-        """
-        Kill all the currently running Operations
-        """
-        for thread in  threading.enumerate():
-            # check if the first super class is an Operation
-            if thread.__class__.mro()[1] == datadeck.operations.Operation:
-                self.m_killing_operations = True
-                while thread.isAlive():
-                    thread.RaiseException(datadeck.operations.KillOperationException)
-
     def OnConsoleClearButtonClick(self, event):
         self.m_wxframe.m_console_text.Clear()
 

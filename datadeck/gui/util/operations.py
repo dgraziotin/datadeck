@@ -17,7 +17,6 @@ class OperationsUtil(object):
             See operations.py
             """
             operation_type_str = operation_message.type.__name__
-
             if operation_message.status == datadeck.operations.OPERATION_STATUS_ID["error"] and self.m_killing_operations:
                 self.m_killing_operations = False
                 print operation_type_str + " Killed"
