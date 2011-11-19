@@ -22,8 +22,8 @@ class DataDeckFrame ( wx.Frame ):
 		
 		self.m_menubar = wx.MenuBar( 0 )
 		self.menu = wx.Menu()
-		self.menu_about = wx.MenuItem( self.menu, wx.ID_ANY, u"About", wx.EmptyString, wx.ITEM_NORMAL )
-		self.menu.AppendItem( self.menu_about )
+		self.menu_open = wx.MenuItem( self.menu, wx.ID_ANY, u"Open", wx.EmptyString, wx.ITEM_NORMAL )
+		self.menu.AppendItem( self.menu_open )
 		
 		self.menu_settings = wx.MenuItem( self.menu, wx.ID_ANY, u"Settings", wx.EmptyString, wx.ITEM_NORMAL )
 		self.menu.AppendItem( self.menu_settings )
@@ -32,6 +32,12 @@ class DataDeckFrame ( wx.Frame ):
 		self.menu.AppendItem( self.menu_exit )
 		
 		self.m_menubar.Append( self.menu, u"File" ) 
+		
+		self.about = wx.Menu()
+		self.menu_about = wx.MenuItem( self.about, wx.ID_ANY, u"About", wx.EmptyString, wx.ITEM_NORMAL )
+		self.about.AppendItem( self.menu_about )
+		
+		self.m_menubar.Append( self.about, u"About" ) 
 		
 		self.SetMenuBar( self.m_menubar )
 		
@@ -210,9 +216,10 @@ class DataDeckFrame ( wx.Frame ):
 		self.Centre( wx.BOTH )
 		
 		# Connect Events
-		self.Bind( wx.EVT_MENU, self.OnMenuAboutClick, id = self.menu_about.GetId() )
+		self.Bind( wx.EVT_MENU, self.OnMenuOpenClick, id = self.menu_open.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnMenuSettingsClick, id = self.menu_settings.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnMenuExitClick, id = self.menu_exit.GetId() )
+		self.Bind( wx.EVT_MENU, self.OnMenuAboutClick, id = self.menu_about.GetId() )
 		self.m_search_text.Bind( wx.EVT_KEY_DOWN, self.OnSearchTextKeyDown )
 		self.m_search_button.Bind( wx.EVT_BUTTON, self.OnButtonSearchClick )
 		self.m_info_button.Bind( wx.EVT_BUTTON, self.OnButtonInfoClick )
@@ -228,13 +235,16 @@ class DataDeckFrame ( wx.Frame ):
 	
 	
 	# Virtual event handlers, overide them in your derived class
-	def OnMenuAboutClick( self, event ):
+	def OnMenuOpenClick( self, event ):
 		event.Skip()
 	
 	def OnMenuSettingsClick( self, event ):
 		event.Skip()
 	
 	def OnMenuExitClick( self, event ):
+		event.Skip()
+	
+	def OnMenuAboutClick( self, event ):
 		event.Skip()
 	
 	def OnSearchTextKeyDown( self, event ):

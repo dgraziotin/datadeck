@@ -122,7 +122,8 @@ class DownloadOperation(Operation):
             shutil.rmtree(self.download_dir + os.sep + self.package.name, ignore_errors=True)
             wx.PostEvent(self.m_wxobject, OperationMessage(self.__class__, OPERATION_STATUS_ID["error"], str(e)))
             return
-        wx.PostEvent(self.m_wxobject, OperationMessage(self.__class__, OPERATION_STATUS_ID["finished"]))
+        self.package.installed_path = self.download_dir
+        wx.PostEvent(self.m_wxobject, OperationMessage(self.__class__, OPERATION_STATUS_ID["finished"], self.package))
 
 
 class SearchOperation(Operation):

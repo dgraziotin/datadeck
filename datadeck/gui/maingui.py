@@ -17,6 +17,10 @@ import datadeck.settings as settings
 import datadeck.operations as operations
 import dpm.package
 import datadeck.validator
+import util
+import consoleutil
+import operationsutil
+import downloadutil
 
 import base
 # for handling stdout and stderr on a TextCtrl
@@ -39,12 +43,14 @@ class MainGUI(base.DataDeckFrame):
         # search results
         self.m_search_results = {}
         self.m_search_results_index = 0
-        self.m_killing_operations = False
 
         self.m_search_results_list.InsertColumn(0, "Name")
         self.m_search_results_list.InsertColumn(1, "Short Description")
         self.m_search_results_list.InsertColumn(2, "License")
 
+        self.m_console = consoleutil.ConsoleUtil(self)
+        self.m_operations = operationsutil.OperationsUtil(self)
+        self.m_download = downloadutil.DownloadUtil(self)
 
         self.m_console_text_timer = wx.Timer(self.m_console_text, -1)
         self.m_console_text.Bind(EVT_STDOUT, self.OnUpdateConsole)
@@ -60,7 +66,7 @@ class MainGUI(base.DataDeckFrame):
 
         # disable Download and Info buttons
         self.EnableButtons(False)
-        self.SetSize(wx.Size(600,650))
+        self.SetSize(wx.Size(600, 650))
         self.Show(True)
 
     def OnButtonCreateClick( self, event ):
@@ -91,35 +97,24 @@ class MainGUI(base.DataDeckFrame):
         if datadeck.validator.PackageValidator.already_existing(path, name):
             print "WARNING: a package named " + name + " already exists. You will overwrite it."
 
-
-
-
-
-
-
     def OnConsoleKillButtonClick(self, event):
         """
         Kill all the currently running Operations
         """
-        for thread in  threading.enumerate():
-            # check if the first super class is an Operation
-            if thread.__class__.mro()[1] == operations.Operation:
-                self.m_killing_operations = True
-                while thread.isAlive():
-                    thread.RaiseException(operations.KillOperationException)
+        self.m_console.OnConsoleKillButtonClick(event)
+
 
     def OnUpdateConsole(self, event):
         """
         Update the Console text
         """
-        value = event.text
-        self.m_console_text.AppendText(value)
+        self.m_console.OnUpdateConsole(event)
 
     def OnProcessPendingEventsConsole(self, event):
         """
         Handle pending events
         """
-        self.m_console_text.ProcessPendingEvents()
+        self.m_console.OnProcessPendingEventsConsole(event)
 
 
     def OnOperationMessageReceived(self, operation_message):
@@ -128,33 +123,7 @@ class MainGUI(base.DataDeckFrame):
         According to the status of the Message, inform the user and update the GUI.
         See operations.py
         """
-        operation_type_str = operation_message.type.__name__
-
-        if operation_message.status == operations.OPERATION_STATUS_ID["error"] and self.m_killing_operations:
-            self.m_killing_operations = False
-            print operation_type_str + " Killed"
-            return
-        elif operation_message.status == operations.OPERATION_STATUS_ID["error"] and not self.m_killing_operations and operation_message.data:
-            print operation_type_str + " ERROR: " + operation_message.data
-        elif operation_message.status == operations.OPERATION_STATUS_ID["started"]:
-            print operation_type_str + " Started"
-        elif operation_message.status == operations.OPERATION_STATUS_ID["finished"]:
-            print operation_type_str + " Finished"
-            if operation_message.type == operations.SearchOperation:
-                self.CleanSearchResults()
-                results = operation_message.data
-                if results:
-                    print "Results found."
-                    for package in results:
-                        self.InsertSearchResultsList(package)
-                        self.m_search_results_index += 1
-                else:
-                    print "No Results."
-            if operation_message.type == operations.InitOperation or operation_message.type == operations.SaveOperation:
-                package = operation_message.data
-                print package
-        else:
-            pass
+        self.m_operations.OnOperationMessageReceived(operation_message)
 
     def OnSearchTextKeyDown(self, event):
         """
@@ -212,14 +181,14 @@ class MainGUI(base.DataDeckFrame):
             return
 
         package_selected = self.m_search_results[package_selected_index]
-        download_dir = self.DownloadDirDialog()
+        download_dir = self.m_download.DownloadDirDialog()
 
         if not download_dir:
             return
 
         package_path = download_dir + os.sep + package_selected.name
 
-        overwrite_check = self.CheckPackageOverwrite(download_dir, package_selected)
+        overwrite_check = self.m_download.CheckPackageOverwrite(download_dir, package_selected)
 
         if overwrite_check:
             operations.DownloadOperation(self, package_selected, download_dir)
@@ -238,13 +207,13 @@ class MainGUI(base.DataDeckFrame):
 
         if package_selected:
             package_info = packagegui.PackageGUI(self, package_selected)
-            package_info.SetSize(wx.Size(500,500))
+            package_info.SetSize(wx.Size(500, 500))
             package_info.Center()
             package_info.Show(True)
         return
 
     def OnConsoleClearButtonClick(self, event):
-        self.m_console_text.Clear()
+        self.m_console.OnConsoleClearButtonClick(event)
 
     def EnableButtons(self, enable):
         """
@@ -270,9 +239,9 @@ class MainGUI(base.DataDeckFrame):
 
         self.m_search_results_list.InsertStringItem(self.m_search_results_index, name)
 
-        self.m_search_results_list.SetStringItem(self.m_search_results_index, 1, notes[:30].replace("\n", " ").replace("\r", " "))
+        self.m_search_results_list.SetStringItem(self.m_search_results_index, 1,
+            notes[:30].replace("\n", " ").replace("\r", " "))
         self.m_search_results_list.SetStringItem(self.m_search_results_index, 2, license)
-
 
         self.m_search_results_list.SetColumnWidth(0, wx.LIST_AUTOSIZE)
         self.m_search_results_list.SetColumnWidth(1, wx.LIST_AUTOSIZE)
@@ -284,6 +253,7 @@ class MainGUI(base.DataDeckFrame):
         Creates the About window.
         """
         import datadeck
+
         about_frame = base.AboutFrame(self)
         label = "DataDeck v%s" % datadeck.__version__
 
@@ -297,58 +267,16 @@ class MainGUI(base.DataDeckFrame):
         about_frame.Show()
 
 
-
     def OnMenuClickExit(self, event):
-        self.KillOperations()
+        self.m_operations.KillOperations()
         self.Close()
 
     def OnMenuSettingsClick(self, event):
         import settingsgui
+
         settings = settingsgui.SettingsGUI(self)
         settings.Show()
 
-
-    def DownloadDirDialog(self, path=None):
-        """
-        Create a DirDialog for choosing the directory in which we save the Package
-        """
-        dialog = wx.DirDialog(self, "Choose a Download Directory", settings.Settings.datadeck_default_path())
-        if dialog.ShowModal() == wx.ID_OK:
-            download_dir = dialog.GetPath()
-            return download_dir
-        else:
-            return None
-
-    def CheckPackageOverwrite(self, download_dir, package):
-        package_path = download_dir + os.sep + package.name
-        if os.path.exists(package_path):
-            message = "Overwrite " + package.name + "?"
-            box = wx.MessageDialog(self, message, "Overwrite?", wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION)
-            overwrite = box.ShowModal()
-            if overwrite == wx.ID_YES:
-                shutil.rmtree(package_path, ignore_errors=True)
-                return True
-            else:
-                return False
-        else:
-            return True
-
-
-    def GetWidget(self, name, window=None):
-        """
-        Wrapper around wx.xrc.XRCCTRL with window = self set as default.
-        """
-        if not window:
-            window = self
-        return wx.xrc.XRCCTRL(window, name)
-
-
-    def KillOperations(self):
-        for thread in  threading.enumerate():
-            # check if the first super class is an Operation
-            if thread.__class__.mro()[1] == datadeck.operations.Operation:
-                while thread.isAlive():
-                    thread.RaiseException(datadeck.operations.KillOperationException)
 
     def CheckConfig(self):
         #TODO: remove it when dpm 0.10 is officially released
