@@ -5,25 +5,25 @@ Calls packagegui.py for displaying information about a package.
 Manages Operations (~threads, see operations.py) and their messages.
 Coding standard: http://www.wxpython.org/codeguidelines.php
 """
-import threading
+import os
 import wx
 import wx.xrc
 import wx.lib.newevent
-import datadeck.operations as operations
-import packagegui
-import shutil
-import os
+import dpm.package
+import datadeck
 import datadeck.settings as settings
 import datadeck.operations as operations
-import dpm.package
-import datadeck.validator
-import util
+
 import consoleutil
 import operationsutil
 import downloadutil
 import searchutil
+import packageutil
 
 import base
+import settingsgui
+
+
 # for handling stdout and stderr on a TextCtrl
 WX_STDOUT, EVT_STDOUT = wx.lib.newevent.NewEvent()
 
@@ -31,7 +31,6 @@ class MainGUI(base.DataDeckFrame):
     """
     The first GUI displayed when the program starts up.
     """
-
     def __init__(self):
         """
         Loads resources from XRC file, prepares internal structures representing search results,
@@ -48,6 +47,7 @@ class MainGUI(base.DataDeckFrame):
         self.m_console = consoleutil.ConsoleUtil(self)
         self.m_operations = operationsutil.OperationsUtil(self)
         self.m_download = downloadutil.DownloadUtil(self)
+        self.m_package = packageutil.PackageUtil(self)
         self.m_search_results_internal = searchutil.SearchResults(self)
 
         self.m_console_text_timer = wx.Timer(self.m_console_text, -1)
@@ -68,31 +68,29 @@ class MainGUI(base.DataDeckFrame):
         self.Show(True)
 
     def OnButtonCreateClick( self, event ):
-        p = dpm.package.Package()
-        p.name = self.name_text.GetValue()
-        p.title = p.name
-        p.url = self.url_text.GetValue()
-        p.license = settings.Settings.licenses(self.license_choice.GetSelection())
-        p.author = self.author_text.GetValue()
-        p.author_email = self.author_email_text.GetValue()
-        p.notes = self.notes_text.GetValue()
+        package = dpm.package.Package()
+        package.name = self.name_text.GetValue()
+        package.title = package.name
+        package.url = self.url_text.GetValue()
+        package.license = settings.Settings.licenses(self.license_choice.GetSelection())
+        package.author = self.author_text.GetValue()
+        package.author_email = self.author_email_text.GetValue()
+        package.notes = self.notes_text.GetValue()
         tags = self.tags_text.GetValue()
-        p.tags = tags.split(" ")
-        try:
-            datadeck.validator.PackageValidator.validate(p)
-        except datadeck.validator.PackageNonValid, e:
-            wx.MessageBox(str(e), caption="Validation Error", style=wx.OK)
-            return
-
+        package.tags = tags.split(" ")
         path = self.destination_dirpicker.GetPath()
-        operations.InitAndSaveOperation(self, p, path)
+        self.m_package.Create(package, path)
+
 
     def OnNameTextKillFocus( self, event ):
+        """
+        Called when focus is lost on package name, creation phase
+        """
         name = self.name_text.GetValue()
         path = self.destination_dirpicker.GetPath()
         if not name or not path:
             return
-        if datadeck.validator.PackageValidator.already_existing(path, name):
+        if self.m_package.AlreadyExists(path, name):
             print "WARNING: a package named " + name + " already exists. You will overwrite it."
 
     def OnConsoleKillButtonClick(self, event):
@@ -132,6 +130,16 @@ class MainGUI(base.DataDeckFrame):
             self.OnButtonSearchClick(event)
         event.Skip()
 
+    def GetSelectedPackage(self):
+        """
+        Returns the currently selected package, fetched from the internal list
+        """
+        package_selected_index = self.m_search_results_listctrl.GetNextSelected(-1)
+        if package_selected_index == -1:
+            return None
+        package_selected = self.m_search_results_internal.Get(package_selected_index)
+        return package_selected
+
     def OnSearchResultsListItemSelected( self, event ):
         """
         If the user selects a package in the search result list,
@@ -163,9 +171,8 @@ class MainGUI(base.DataDeckFrame):
         self.EnableButtons(False)
         self.CleanSearchResults()
 
-        print "Please wait..."
-
         operations.SearchOperation(self, searched_value)
+        print "Please wait..."
 
 
     def OnButtonDownloadClick(self, event):
@@ -173,23 +180,10 @@ class MainGUI(base.DataDeckFrame):
         Retrieve the currently selected package in the results list and launch a DownloadOperation
         for downloading it.
         """
-        package_selected_index = self.m_search_results_listctrl.GetNextSelected(-1)
-
-        if package_selected_index == -1:
+        selected_package = self.GetSelectedPackage()
+        if not selected_package:
             return
-
-        package_selected = self.m_search_results_internal.Get(package_selected_index)
-        download_dir = self.m_download.DownloadDirDialog()
-
-        if not download_dir:
-            return
-
-        package_path = download_dir + os.sep + package_selected.name
-
-        overwrite_check = self.m_download.CheckPackageOverwrite(download_dir, package_selected)
-
-        if overwrite_check:
-            operations.DownloadOperation(self, package_selected, download_dir)
+        self.m_package.Download(selected_package)
 
 
     def OnButtonInfoClick(self, event):
@@ -197,18 +191,10 @@ class MainGUI(base.DataDeckFrame):
         Retrieve the currently selected package in the results list and invoke the Package GUI
         for displaying information about it.
         """
-        package_selected_index = self.m_search_results_listctrl.GetNextSelected(-1)
-        if package_selected_index == -1:
-            return
+        selected_package = self.GetSelectedPackage()
+        if selected_package:
+            self.m_package.Info(selected_package)
 
-        package_selected = self.m_search_results_internal.Get(package_selected_index)
-
-        if package_selected:
-            package_info = packagegui.PackageGUI(self, package_selected)
-            package_info.SetSize(wx.Size(500, 500))
-            package_info.Center()
-            package_info.Show(True)
-        return
 
     def OnConsoleClearButtonClick(self, event):
         self.m_console.OnConsoleClearButtonClick(event)
@@ -229,34 +215,26 @@ class MainGUI(base.DataDeckFrame):
         Insert a package in both the internal list and the GUI list. self.m_search_results_index ensures us that
         the two lists will be consistent.
         """
-
         name = package.metadata['name'] if package.metadata['name'] else "N/A"
         notes = package.metadata['notes'] if package.metadata['notes'] else "N/A"
         notes = notes[:30].replace("\n", " ").replace("\r", " ")
         license = package.metadata['license'] if package.metadata['license'] else "N/A"
 
-        # get the index from internal list, for consistency
-        index = self.m_search_results_internal.m_index
+        index = self.m_search_results_internal.Add(package)
 
         self.m_search_results_listctrl.InsertStringItem(index, name)
         self.m_search_results_listctrl.SetStringItem(index, 1, notes)
         self.m_search_results_listctrl.SetStringItem(index, 2, license)
 
-
         self.m_search_results_listctrl.SetColumnWidth(0, wx.LIST_AUTOSIZE)
         self.m_search_results_listctrl.SetColumnWidth(1, wx.LIST_AUTOSIZE)
         self.m_search_results_listctrl.SetColumnWidth(2, wx.LIST_AUTOSIZE)
-
-        #added in internal list for consistency and retrieval
-        self.m_search_results_internal.Add(package)
 
 
     def OnMenuAboutClick(self, event):
         """
         Creates the About window.
         """
-        import datadeck
-
         about_frame = base.AboutFrame(self)
         label = "DataDeck v%s" % datadeck.__version__
 
@@ -275,8 +253,6 @@ class MainGUI(base.DataDeckFrame):
         self.Close()
 
     def OnMenuSettingsClick(self, event):
-        import settingsgui
-
         settings = settingsgui.SettingsGUI(self)
         settings.Show()
 

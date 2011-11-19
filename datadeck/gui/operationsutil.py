@@ -3,6 +3,9 @@ import threading
 import datadeck.operations
 
 class OperationsUtil(object):
+    """
+    Utility methods to handle datadeck.operations things from the GUI
+    """
     def __init__(self, wxframe):
         self.m_wxframe = wxframe
         self.m_killing_operations = False
@@ -46,6 +49,9 @@ class OperationsUtil(object):
                 pass
 
     def KillOperations(self):
+        """
+        Kills any active thread that is a datadeck.operation
+        """
         for thread in  threading.enumerate():
             # check if the first super class is an Operation
             if thread.__class__.mro()[1] == datadeck.operations.Operation:
