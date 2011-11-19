@@ -65,8 +65,8 @@ class DataDeckFrame ( wx.Frame ):
 		
 		sbSizer1 = wx.StaticBoxSizer( wx.StaticBox( self.m_notebook_search, wx.ID_ANY, u"Packages" ), wx.VERTICAL )
 		
-		self.m_search_results_list = wx.ListCtrl( self.m_notebook_search, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_HRULES|wx.LC_REPORT|wx.LC_SINGLE_SEL )
-		sbSizer1.Add( self.m_search_results_list, 2, wx.ALL|wx.EXPAND, 5 )
+		self.m_search_results_listctrl = wx.ListCtrl( self.m_notebook_search, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_HRULES|wx.LC_REPORT|wx.LC_SINGLE_SEL )
+		sbSizer1.Add( self.m_search_results_listctrl, 2, wx.ALL|wx.EXPAND, 5 )
 		
 		bSizer2.Add( sbSizer1, 3, wx.ALL|wx.EXPAND, 5 )
 		
@@ -224,7 +224,7 @@ class DataDeckFrame ( wx.Frame ):
 		self.m_search_button.Bind( wx.EVT_BUTTON, self.OnButtonSearchClick )
 		self.m_info_button.Bind( wx.EVT_BUTTON, self.OnButtonInfoClick )
 		self.m_download_button.Bind( wx.EVT_BUTTON, self.OnButtonDownloadClick )
-		self.m_search_results_list.Bind( wx.EVT_LIST_ITEM_SELECTED, self.OnSearchResultsListItemSelected )
+		self.m_search_results_listctrl.Bind( wx.EVT_LIST_ITEM_SELECTED, self.OnSearchResultsListItemSelected )
 		self.name_text.Bind( wx.EVT_KILL_FOCUS, self.OnNameTextKillFocus )
 		self.m_create_button.Bind( wx.EVT_BUTTON, self.OnButtonCreateClick )
 		self.m_console_clear_button.Bind( wx.EVT_BUTTON, self.OnConsoleClearButtonClick )

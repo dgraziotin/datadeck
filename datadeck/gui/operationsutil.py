@@ -33,7 +33,6 @@ class OperationsUtil(object):
                         print "Results found."
                         for package in results:
                             self.m_wxframe.InsertSearchResultsList(package)
-                            self.m_wxframe.m_search_results_index += 1
                     else:
                         print "No Results."
                 if operation_message.type == datadeck.operations.InitAndSaveOperation:
