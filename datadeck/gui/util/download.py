@@ -33,11 +33,13 @@ class DownloadUtil(object):
         else:
             return True
 
-    def DownloadDirDialog(self, path=None):
+    def DownloadDirDialog(self, path=None, message="Choose a Download Directory"):
         """
         Create a DirDialog for choosing the directory in which we save the Package
         """
-        dialog = wx.DirDialog(self.m_wxframe, "Choose a Download Directory", datadeck.settings.Settings.datadeck_default_path())
+        if not path:
+            path = datadeck.settings.Settings.datadeck_default_path()
+        dialog = wx.DirDialog(self.m_wxframe, message, path)
         if dialog.ShowModal() == wx.ID_OK:
             download_dir = dialog.GetPath()
             return download_dir

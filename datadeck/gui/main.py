@@ -69,6 +69,44 @@ class MainGUI(base.DataDeckFrame):
         self.SetSize(wx.Size(600, 650))
         self.Show(True)
 
+    def OnMenuOpenClick( self, event ):
+        open_path = self.m_download.DownloadDirDialog(message="Select a Package folder")
+        if not open_path:
+            return
+        package = self.m_package.Open(open_path)
+        if not package:
+            return
+        #TODO magic number
+        self.PopulatePackageCreation(package)
+        self.m_notebook.ChangeSelection(1)
+
+    def PopulatePackageCreation(self, package):
+        self.name_text.SetValue(package.name)
+        self.url_text.SetValue(package.url)
+        self.license_choice.SetSelection(datadeck.settings.Settings.licenses(package.license))
+        self.author_text.SetValue(package.author)
+        self.author_email_text.SetValue(package.author_email)
+        self.notes_text.SetValue(package.notes)
+        tags = ""
+        for tag in package.tags:
+            tags += tag + " "
+        tags = tags.rstrip()
+        self.tags_text.SetValue(tags)
+        self.destination_dirpicker.SetPath(package.installed_path)
+
+    def OnMenuNewClick( self, event ):
+        self.name_text.Clear()
+        self.url_text.Clear()
+        self.license_choice.Clear()
+        self.author_text.Clear()
+        self.author_email_text.Clear()
+        self.notes_text.Clear()
+        self.tags_text.Clear()
+        self.destination_dirpicker.SetPath(datadeck.settings.Settings.datadeck_default_path())
+        #TODO magic number
+        self.m_notebook.ChangeSelection(1)
+
+
     def OnButtonCreateClick( self, event ):
         package = dpm.package.Package()
         package.name = self.name_text.GetValue()
@@ -79,21 +117,15 @@ class MainGUI(base.DataDeckFrame):
         package.author_email = self.author_email_text.GetValue()
         package.notes = self.notes_text.GetValue()
         tags = self.tags_text.GetValue()
+        tags = tags.rstrip()
         package.tags = tags.split(" ")
         path = self.destination_dirpicker.GetPath()
-        self.m_package.Create(package, path)
+        overwrite_check = self.m_download.CheckPackageOverwrite(path, package)
+
+        if overwrite_check:
+            self.m_package.Create(package, path)
 
 
-    def OnNameTextKillFocus( self, event ):
-        """
-        Called when focus is lost on package name, creation phase
-        """
-        name = self.name_text.GetValue()
-        path = self.destination_dirpicker.GetPath()
-        if not name or not path:
-            return
-        if self.m_package.AlreadyExists(path, name):
-            print "WARNING: a package named " + name + " already exists. You will overwrite it."
 
     def OnOperationsKillButtonClick( self, event ):
         """

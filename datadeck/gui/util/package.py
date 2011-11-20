@@ -5,11 +5,19 @@ import download
 import validator
 import datadeck.operations
 import datadeck.settings
+import dpm.lib
 
 class PackageUtil(object):
     def __init__(self, wxparent):
         self.m_wxparent = wxparent
         self.m_download = download.DownloadUtil(self.m_wxparent)
+
+    def Open(self, path):
+        try:
+            package = dpm.lib.load(path)
+            return package
+        except IOError:
+            return None
 
     def Info(self, package):
         if not package:

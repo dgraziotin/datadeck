@@ -110,10 +110,15 @@ class Settings(object):
     def licenses(key=None):
         if not key:
             return Settings._licenses
-        elif key < 0:
-            return None
-        else:
+        if type(key) == int:
             try:
                 return Settings._licenses[key]
             except IndexError:
-                return None
+                return u'Other::License Not Specified'
+        if type(key) == str or type(key) == unicode:
+            try:
+                return Settings._licenses.index(key)
+            except ValueError:
+                return Settings._licenses.index(u'Other::License Not Specified')
+        else:
+            return u'Other::License Not Specified'

@@ -22,6 +22,12 @@ class DataDeckFrame ( wx.Frame ):
 		
 		self.m_menubar = wx.MenuBar( 0 )
 		self.menu = wx.Menu()
+		self.menu_new = wx.MenuItem( self.menu, wx.ID_ANY, u"New Package", wx.EmptyString, wx.ITEM_NORMAL )
+		self.menu.AppendItem( self.menu_new )
+		
+		self.menu_open = wx.MenuItem( self.menu, wx.ID_ANY, u"Open", wx.EmptyString, wx.ITEM_NORMAL )
+		self.menu.AppendItem( self.menu_open )
+		
 		self.menu_settings = wx.MenuItem( self.menu, wx.ID_ANY, u"Settings", wx.EmptyString, wx.ITEM_NORMAL )
 		self.menu.AppendItem( self.menu_settings )
 		
@@ -70,7 +76,7 @@ class DataDeckFrame ( wx.Frame ):
 		self.m_notebook_search.SetSizer( bSizer2 )
 		self.m_notebook_search.Layout()
 		bSizer2.Fit( self.m_notebook_search )
-		self.m_notebook.AddPage( self.m_notebook_search, u"Search", True )
+		self.m_notebook.AddPage( self.m_notebook_search, u"Search", False )
 		self.m_notebok_create = wx.Panel( self.m_notebook, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer5 = wx.BoxSizer( wx.VERTICAL )
 		
@@ -179,7 +185,7 @@ class DataDeckFrame ( wx.Frame ):
 		self.m_notebok_create.SetSizer( bSizer5 )
 		self.m_notebok_create.Layout()
 		bSizer5.Fit( self.m_notebok_create )
-		self.m_notebook.AddPage( self.m_notebok_create, u"Create", False )
+		self.m_notebook.AddPage( self.m_notebok_create, u"Create", True )
 		
 		bSizer1.Add( self.m_notebook, 3, wx.EXPAND |wx.ALL, 5 )
 		
@@ -213,6 +219,8 @@ class DataDeckFrame ( wx.Frame ):
 		self.Centre( wx.BOTH )
 		
 		# Connect Events
+		self.Bind( wx.EVT_MENU, self.OnMenuNewClick, id = self.menu_new.GetId() )
+		self.Bind( wx.EVT_MENU, self.OnMenuOpenClick, id = self.menu_open.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnMenuSettingsClick, id = self.menu_settings.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnMenuExitClick, id = self.menu_exit.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnMenuAboutClick, id = self.menu_about.GetId() )
@@ -221,7 +229,6 @@ class DataDeckFrame ( wx.Frame ):
 		self.m_info_button.Bind( wx.EVT_BUTTON, self.OnButtonInfoClick )
 		self.m_download_button.Bind( wx.EVT_BUTTON, self.OnButtonDownloadClick )
 		self.m_search_results_listctrl.Bind( wx.EVT_LIST_ITEM_SELECTED, self.OnSearchResultsListItemSelected )
-		self.name_text.Bind( wx.EVT_KILL_FOCUS, self.OnNameTextKillFocus )
 		self.m_create_button.Bind( wx.EVT_BUTTON, self.OnButtonCreateClick )
 		self.m_console_clear_button.Bind( wx.EVT_BUTTON, self.OnConsoleClearButtonClick )
 		self.m_operations_kill_button.Bind( wx.EVT_BUTTON, self.OnOperationsKillButtonClick )
@@ -231,6 +238,12 @@ class DataDeckFrame ( wx.Frame ):
 	
 	
 	# Virtual event handlers, overide them in your derived class
+	def OnMenuNewClick( self, event ):
+		event.Skip()
+	
+	def OnMenuOpenClick( self, event ):
+		event.Skip()
+	
 	def OnMenuSettingsClick( self, event ):
 		event.Skip()
 	
@@ -253,9 +266,6 @@ class DataDeckFrame ( wx.Frame ):
 		event.Skip()
 	
 	def OnSearchResultsListItemSelected( self, event ):
-		event.Skip()
-	
-	def OnNameTextKillFocus( self, event ):
 		event.Skip()
 	
 	def OnButtonCreateClick( self, event ):
