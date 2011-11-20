@@ -31,6 +31,7 @@ class MainGUI(base.DataDeckFrame):
     """
     The first GUI displayed when the program starts up.
     """
+
     def __init__(self):
         """
         Loads resources from XRC file, prepares internal structures representing search results,
@@ -50,7 +51,7 @@ class MainGUI(base.DataDeckFrame):
         self.m_operations = util.operations.OperationsUtil(self)
         self.m_download = util.download.DownloadUtil(self)
         self.m_package = util.package.PackageUtil(self)
-        self.m_search_results_internal = util.search.SearchResults(self)
+        self.m_search_results = util.package.SearchResults(self.m_search_results_listctrl)
 
         self.m_console_text_timer = wx.Timer(self.m_console_text, -1)
         self.m_console_text.Bind(EVT_STDOUT, self.OnUpdateConsole)
@@ -69,6 +70,19 @@ class MainGUI(base.DataDeckFrame):
         self.SetSize(wx.Size(600, 650))
         self.Show(True)
 
+    # <menu>
+    def OnMenuNewClick( self, event ):
+        self.name_text.Clear()
+        self.url_text.Clear()
+        self.license_choice.Clear()
+        self.author_text.Clear()
+        self.author_email_text.Clear()
+        self.notes_text.Clear()
+        self.tags_text.Clear()
+        self.destination_dirpicker.SetPath(datadeck.settings.Settings.datadeck_default_path())
+        #TODO magic number
+        self.m_notebook.ChangeSelection(1)
+
     def OnMenuOpenClick( self, event ):
         open_path = self.m_download.DownloadDirDialog(message="Select a Package folder")
         if not open_path:
@@ -76,10 +90,37 @@ class MainGUI(base.DataDeckFrame):
         package = self.m_package.Open(open_path)
         if not package:
             return
-        #TODO magic number
+            #TODO magic number
         self.PopulatePackageCreation(package)
         self.m_notebook.ChangeSelection(1)
 
+    def OnMenuSettingsClick(self, event):
+        settings.SettingsGUI(self).Show()
+
+    def OnMenuExitClick(self, event):
+        self.m_operations.KillOperations()
+        self.Close()
+
+
+    def OnMenuAboutClick(self, event):
+        """
+        Creates the About window.
+        """
+        about_frame = base.AboutFrame(self)
+        label = "DataDeck v%s" % datadeck.__version__
+
+        about_frame.datadeck_label.SetLabel(label)
+
+        license = datadeck.__license_full__
+        about_frame.license_text.AppendText(license)
+
+        about_frame.SetSize(wx.Size(500, 400))
+        about_frame.Centre()
+        about_frame.Show()
+    # </menu>
+
+
+    # <creation>
     def PopulatePackageCreation(self, package):
         self.name_text.SetValue(package.name)
         self.url_text.SetValue(package.url)
@@ -94,19 +135,8 @@ class MainGUI(base.DataDeckFrame):
         self.tags_text.SetValue(tags)
         self.destination_dirpicker.SetPath(package.installed_path)
 
-    def OnMenuNewClick( self, event ):
-        self.name_text.Clear()
-        self.url_text.Clear()
-        self.license_choice.Clear()
-        self.author_text.Clear()
-        self.author_email_text.Clear()
-        self.notes_text.Clear()
-        self.tags_text.Clear()
-        self.destination_dirpicker.SetPath(datadeck.settings.Settings.datadeck_default_path())
-        #TODO magic number
-        self.m_notebook.ChangeSelection(1)
 
-
+    # Save or Create a Package
     def OnButtonCreateClick( self, event ):
         package = dpm.package.Package()
         package.name = self.name_text.GetValue()
@@ -124,37 +154,10 @@ class MainGUI(base.DataDeckFrame):
 
         if overwrite_check:
             self.m_package.Create(package, path)
+    # </creation>
 
 
-
-    def OnOperationsKillButtonClick( self, event ):
-        """
-        Kill all the currently running Operations
-        """
-        self.m_operations.KillOperations()
-
-
-    def OnUpdateConsole(self, event):
-        """
-        Update the Console text
-        """
-        self.m_console.OnUpdateConsole(event)
-
-    def OnProcessPendingEventsConsole(self, event):
-        """
-        Handle pending events
-        """
-        self.m_console.OnProcessPendingEventsConsole(event)
-
-
-    def OnOperationMessageReceived(self, operation_message):
-        """
-        Handler for Operation Messages. Detect the type of the Message received and take care of it.
-        According to the status of the Message, inform the user and update the GUI.
-        See operations.py
-        """
-        self.m_operations.OnOperationMessageReceived(operation_message)
-
+    # <search>
     def OnSearchTextKeyDown(self, event):
         """
         Simulate a click on Search button when Return is pressed
@@ -163,34 +166,6 @@ class MainGUI(base.DataDeckFrame):
         if key_code == wx.WXK_RETURN:
             self.OnButtonSearchClick(event)
         event.Skip()
-
-    def GetSelectedPackage(self):
-        """
-        Returns the currently selected package, fetched from the internal list
-        """
-        package_selected_index = self.m_search_results_listctrl.GetNextSelected(-1)
-        if package_selected_index == -1:
-            return None
-        package_selected = self.m_search_results_internal.Get(package_selected_index)
-        return package_selected
-
-    def OnSearchResultsListItemSelected( self, event ):
-        """
-        If the user selects a package in the search result list,
-        enable the Info and Download buttons, for processing it.
-        """
-        selected_item = event.m_itemIndex
-        package_selected = self.m_search_results_internal.Get(selected_item)
-        if package_selected:
-            self.EnableButtons(True)
-
-    def CleanSearchResults(self):
-        """
-        Clear both the GUI and the internal lists of packages found. Ready for a new search.
-        """
-        self.m_search_results_listctrl.DeleteAllItems()
-        self.m_search_results_internal.Clear()
-
 
     def OnButtonSearchClick( self, event ):
         """
@@ -207,7 +182,6 @@ class MainGUI(base.DataDeckFrame):
 
         datadeck.operations.SearchOperation(self, searched_value)
         print "Please wait..."
-
 
     def OnButtonDownloadClick(self, event):
         """
@@ -229,9 +203,73 @@ class MainGUI(base.DataDeckFrame):
         if selected_package:
             self.m_package.Info(selected_package)
 
+    def CleanSearchResults(self):
+        self.m_search_results.Clear()
+
+
+    def OnSearchResultsListItemSelected( self, event ):
+        """
+        If the user selects a package in the search result list,
+        enable the Info and Download buttons, for processing it.
+        """
+        selected_item = event.m_itemIndex
+        package_selected = self.m_search_results.Get(selected_item)
+        if package_selected:
+            self.EnableButtons(True)
+
+    def InsertSearchResultsList(self, package):
+        """
+        Insert a package in both the internal list and the GUI list. self.m_search_results_index ensures us that
+        the two lists will be consistent.
+        """
+        self.m_search_results.Add(package)
+
+        # <console>
+    def OnUpdateConsole(self, event):
+        """
+        Update the Console text
+        """
+        self.m_console.OnUpdateConsole(event)
+
+    def OnProcessPendingEventsConsole(self, event):
+        """
+        Handle pending events
+        """
+        self.m_console.OnProcessPendingEventsConsole(event)
 
     def OnConsoleClearButtonClick(self, event):
         self.m_console.OnConsoleClearButtonClick(event)
+        # </console>
+
+
+    # <operations>
+    def OnOperationMessageReceived(self, operation_message):
+        """
+        Handler for Operation Messages. Detect the type of the Message received and take care of it.
+        According to the status of the Message, inform the user and update the GUI.
+        See operations.py
+        """
+        self.m_operations.OnOperationMessageReceived(operation_message)
+
+    def OnOperationsKillButtonClick( self, event ):
+        """
+        Kill all the currently running Operations
+        """
+        self.m_operations.KillOperations()
+        # </operations>
+
+
+
+    # <misc>
+    def GetSelectedPackage(self):
+        """
+        Returns the currently selected package, fetched from the internal list
+        """
+        package_selected_index = self.m_search_results_listctrl.GetNextSelected(-1)
+        if package_selected_index == -1:
+            return None
+        package_selected = self.m_search_results.Get(package_selected_index)
+        return package_selected
 
     def EnableButtons(self, enable):
         """
@@ -242,52 +280,6 @@ class MainGUI(base.DataDeckFrame):
         """
         self.m_info_button.Enable(enable)
         self.m_download_button.Enable(enable)
-
-
-    def InsertSearchResultsList(self, package):
-        """
-        Insert a package in both the internal list and the GUI list. self.m_search_results_index ensures us that
-        the two lists will be consistent.
-        """
-        name = package.metadata['name'] if package.metadata['name'] else "N/A"
-        notes = package.metadata['notes'] if package.metadata['notes'] else "N/A"
-        notes = notes[:30].replace("\n", " ").replace("\r", " ")
-        license = package.metadata['license'] if package.metadata['license'] else "N/A"
-
-        index = self.m_search_results_internal.Add(package)
-
-        self.m_search_results_listctrl.InsertStringItem(index, name)
-        self.m_search_results_listctrl.SetStringItem(index, 1, notes)
-        self.m_search_results_listctrl.SetStringItem(index, 2, license)
-
-        self.m_search_results_listctrl.SetColumnWidth(0, wx.LIST_AUTOSIZE)
-        self.m_search_results_listctrl.SetColumnWidth(1, wx.LIST_AUTOSIZE)
-        self.m_search_results_listctrl.SetColumnWidth(2, wx.LIST_AUTOSIZE)
-
-
-    def OnMenuAboutClick(self, event):
-        """
-        Creates the About window.
-        """
-        about_frame = base.AboutFrame(self)
-        label = "DataDeck v%s" % datadeck.__version__
-
-        about_frame.datadeck_label.SetLabel(label)
-
-        license = datadeck.__license_full__
-        about_frame.license_text.AppendText(license)
-
-        about_frame.SetSize(wx.Size(500, 400))
-        about_frame.Centre()
-        about_frame.Show()
-
-
-    def OnMenuExitClick(self, event):
-        self.m_operations.KillOperations()
-        self.Close()
-
-    def OnMenuSettingsClick(self, event):
-        settings.SettingsGUI(self).Show()
 
 
     def CheckConfig(self):
@@ -313,3 +305,4 @@ class MainGUI(base.DataDeckFrame):
             datadeck.settings.Settings.datadeck_default_path(os.path.expanduser('~'))
         if not default_path:
             datadeck.settings.Settings.datadeck_default_path(os.path.expanduser('~'))
+    # </misc>

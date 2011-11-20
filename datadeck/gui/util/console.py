@@ -1,7 +1,8 @@
-import threading
-import datadeck.operations
-
+#TODO evaluate how much sense has this, it directly accesses MainGUI attributes.
 class ConsoleUtil(object):
+    """
+    GUI utilities for the Console
+    """
     def __init__(self, wxframe):
         self.m_wxframe = wxframe
 

@@ -1,3 +1,6 @@
+"""
+Tools for handling validation of Packages
+"""
 __author__ = 'dgraziotin'
 import dpm
 import dpm.lib

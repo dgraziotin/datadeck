@@ -185,7 +185,23 @@ class DataDeckFrame ( wx.Frame ):
 		self.m_notebok_create.SetSizer( bSizer5 )
 		self.m_notebok_create.Layout()
 		bSizer5.Fit( self.m_notebok_create )
-		self.m_notebook.AddPage( self.m_notebok_create, u"Create", True )
+		self.m_notebook.AddPage( self.m_notebok_create, u"Create", False )
+		self.m_notebook_library = wx.Panel( self.m_notebook, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		self.m_notebook_library.Hide()
+		
+		bSizer21 = wx.BoxSizer( wx.VERTICAL )
+		
+		sbSizer11 = wx.StaticBoxSizer( wx.StaticBox( self.m_notebook_library, wx.ID_ANY, u"Packages" ), wx.VERTICAL )
+		
+		self.m_library_list = wx.ListCtrl( self.m_notebook_library, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LC_HRULES|wx.LC_REPORT|wx.LC_SINGLE_SEL )
+		sbSizer11.Add( self.m_library_list, 2, wx.ALL|wx.EXPAND, 5 )
+		
+		bSizer21.Add( sbSizer11, 3, wx.ALL|wx.EXPAND, 5 )
+		
+		self.m_notebook_library.SetSizer( bSizer21 )
+		self.m_notebook_library.Layout()
+		bSizer21.Fit( self.m_notebook_library )
+		self.m_notebook.AddPage( self.m_notebook_library, u"Library", True )
 		
 		bSizer1.Add( self.m_notebook, 3, wx.EXPAND |wx.ALL, 5 )
 		
@@ -230,6 +246,7 @@ class DataDeckFrame ( wx.Frame ):
 		self.m_download_button.Bind( wx.EVT_BUTTON, self.OnButtonDownloadClick )
 		self.m_search_results_listctrl.Bind( wx.EVT_LIST_ITEM_SELECTED, self.OnSearchResultsListItemSelected )
 		self.m_create_button.Bind( wx.EVT_BUTTON, self.OnButtonCreateClick )
+		self.m_library_list.Bind( wx.EVT_LIST_ITEM_SELECTED, self.OnSearchResultsListItemSelected )
 		self.m_console_clear_button.Bind( wx.EVT_BUTTON, self.OnConsoleClearButtonClick )
 		self.m_operations_kill_button.Bind( wx.EVT_BUTTON, self.OnOperationsKillButtonClick )
 	
@@ -270,6 +287,7 @@ class DataDeckFrame ( wx.Frame ):
 	
 	def OnButtonCreateClick( self, event ):
 		event.Skip()
+	
 	
 	def OnConsoleClearButtonClick( self, event ):
 		event.Skip()
