@@ -44,6 +44,7 @@ class OperationsUtil(object):
                     package = operation_message.data
                     print "Package " + package.name + " successfully downloaded at " + os.path.join(package.installed_path,
                         package.name)
+                    self.m_wxframe.RefreshLibrary()
             else:
                 pass
 

@@ -2,12 +2,16 @@
 This module holds GUI utilities for handling/representing Packages
 """
 import wx
+import os
+import os.path
+import shutil
 import datadeck.gui.package
 import download
 import validator
 import datadeck.operations
 import datadeck.settings
 import dpm.lib
+
 
 class PackageList(object):
     """
@@ -44,6 +48,16 @@ class PackageList(object):
         self._AddWxListrCtrl(package)
         return self.Index()
 
+    def GetSelected(self, index=-1):
+        package_index = self.m_wxlistctrl.GetNextSelected(index)
+
+        if package_index == -1:
+            return None
+
+        package_selected = self.Get(package_index)
+
+        return package_selected
+
     def _AddWxListrCtrl(self, package):
         """
         Implement here the code for adding a package in the wx.ListCtrl
@@ -64,6 +78,58 @@ class SearchResults(PackageList):
     """
     def __init__(self, wxlistctrl):
         PackageList.__init__(self, wxlistctrl)
+
+    def _AddWxListrCtrl(self, package):
+        name = package.metadata['name'] if package.metadata['name'] else "N/A"
+        notes = package.metadata['notes'] if package.metadata['notes'] else "N/A"
+        notes = notes[:30].replace("\n", " ").replace("\r", " ")
+        license = package.metadata['license'] if package.metadata['license'] else "N/A"
+
+        index = self.Index()
+
+        self.m_wxlistctrl.InsertStringItem(index, name)
+        self.m_wxlistctrl.SetStringItem(index, 1, notes)
+        self.m_wxlistctrl.SetStringItem(index, 2, license)
+
+        self.m_wxlistctrl.SetColumnWidth(0, wx.LIST_AUTOSIZE)
+        self.m_wxlistctrl.SetColumnWidth(1, wx.LIST_AUTOSIZE)
+        self.m_wxlistctrl.SetColumnWidth(2, wx.LIST_AUTOSIZE)
+
+class Library(PackageList):
+    """
+    A PackageList for local installed packages
+    """
+    def __init__(self, wxlistctrl):
+        PackageList.__init__(self, wxlistctrl)
+        self.Refresh()
+
+    def PackagesDirs(self):
+        library_path = datadeck.settings.Settings.datadeck_default_path()
+        packages_dirs = [file for file in os.listdir(library_path) if os.path.isdir(os.path.join(library_path,file))]
+        return packages_dirs
+
+    def PackagesInLibrary(self, packages_dirs):
+        library_path = datadeck.settings.Settings.datadeck_default_path()
+        packages_in_library = []
+        for package_dir in packages_dirs:
+            try:
+                packages_in_library.append(dpm.lib.load(os.path.join(library_path,package_dir)))
+            except IOError:
+                pass    #just ignore dirs that do not contain packages
+        return packages_in_library
+
+    def Refresh(self):
+        self.Clear()
+        packages_dirs = self.PackagesDirs()
+        packages_in_library = self.PackagesInLibrary(packages_dirs)
+
+        for package in packages_in_library:
+            self.m_packages.append(package)
+            self._AddWxListrCtrl(package)
+
+    def Remove(self, package):
+        shutil.rmtree(package.installed_path, ignore_errors=True)
+
 
     def _AddWxListrCtrl(self, package):
         name = package.metadata['name'] if package.metadata['name'] else "N/A"
