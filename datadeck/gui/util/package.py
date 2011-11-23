@@ -104,12 +104,12 @@ class Library(PackageList):
         self.Refresh()
 
     def PackagesDirs(self):
-        library_path = datadeck.settings.Settings.datadeck_default_path()
+        library_path = datadeck.settings.Settings.library_path()
         packages_dirs = [file for file in os.listdir(library_path) if os.path.isdir(os.path.join(library_path,file))]
         return packages_dirs
 
     def PackagesInLibrary(self, packages_dirs):
-        library_path = datadeck.settings.Settings.datadeck_default_path()
+        library_path = datadeck.settings.Settings.library_path()
         packages_in_library = []
         for package_dir in packages_dirs:
             try:

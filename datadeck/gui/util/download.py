@@ -38,7 +38,7 @@ class DownloadUtil(object):
         Create a DirDialog for choosing the directory in which we save the Package
         """
         if not path:
-            path = datadeck.settings.Settings.datadeck_default_path()
+            path = datadeck.settings.Settings.library_path()
         dialog = wx.DirDialog(self.m_wxframe, message, path)
         if dialog.ShowModal() == wx.ID_OK:
             download_dir = dialog.GetPath()

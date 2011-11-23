@@ -266,7 +266,7 @@ class MainGUI(base.DataDeckFrame):
         tags = self.m_create_tags_tc.GetValue()
         tags = tags.rstrip()
         package.tags = tags.split(" ")
-        path = datadeck.settings.Settings.datadeck_default_path()
+        path = datadeck.settings.Settings.library_path()
 
         if not self.m_upackage.Validate(package):
             print "no valid"
@@ -333,9 +333,13 @@ class MainGUI(base.DataDeckFrame):
 
         default_path = ""
         try:
-            default_path = datadeck.settings.Settings.datadeck_default_path()
+            default_path = datadeck.settings.Settings.library_path()
         except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
-            datadeck.settings.Settings.datadeck_default_path(os.path.expanduser('~'))
+            datadeck.settings.Settings.library_path(os.path.expanduser('~'))
         if not default_path:
-            datadeck.settings.Settings.datadeck_default_path(os.path.expanduser('~'))
+            datadeck.settings.Settings.library_path(os.path.expanduser('~'))
+            message = "It seems that you have not set a library path for packages yet.\n" \
+                      "DataDeck has just set it up as your home directory.\n" \
+                      "Please open Settings and change it."
+            wx.MessageBox(message)
     # </misc>

@@ -1,4 +1,3 @@
-__author__ = 'dgraziotin'
 """
 This module holds the GUI for changing dpm and DataDeck settings
 """
@@ -21,7 +20,7 @@ class SettingsGUI(base.SettingsFrame):
         default_path = self.m_datadeck_library_dp.GetPath()
         settings.Settings.ckan_url(ckan_url)
         settings.Settings.ckan_api(ckan_api_key)
-        settings.Settings.datadeck_default_path(default_path)
+        settings.Settings.library_path(default_path)
         self.Destroy()
 
     def OnButtonCancelClick(self, event):
@@ -30,7 +29,7 @@ class SettingsGUI(base.SettingsFrame):
     def LoadConfig(self):
         self.m_ckan_url_tc.SetValue(settings.Settings.ckan_url())
         self.m_api_key_tc.SetValue(settings.Settings.ckan_api())
-        self.m_datadeck_library_dp.SetPath(settings.Settings.datadeck_default_path())
+        self.m_datadeck_library_dp.SetPath(settings.Settings.library_path())
 
 
         

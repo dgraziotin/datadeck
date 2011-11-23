@@ -5,7 +5,8 @@ class Settings(object):
     _ckan_url_option = 'ckan.url'
     _ckan_api_key_option = 'ckan.api_key'
     _datadeck_section = 'datadeck'
-    _datadeck_default_path_option = 'default_path'
+    _datadeck_library_path_option = 'library_path'
+
     _licenses = [u'Non-OKD Compliant::Creative Commons Non-Commercial (Any)',
                  u'Non-OKD Compliant::Crown Copyright',
                  u'Non-OKD Compliant::Non-Commercial Other',
@@ -99,12 +100,12 @@ class Settings(object):
             return dpm.lib.set_config(Settings._ckan_section, Settings._ckan_api_key_option, ckan_api)
 
     @staticmethod
-    def datadeck_default_path(datadeck_default_path=None):
-        if not datadeck_default_path:
-            return dpm.lib.get_config(Settings._datadeck_section, Settings._datadeck_default_path_option)
+    def library_path(default_path=None):
+        if not default_path:
+            return dpm.lib.get_config(Settings._datadeck_section, Settings._datadeck_library_path_option)
         else:
-            return dpm.lib.set_config(Settings._datadeck_section, Settings._datadeck_default_path_option,
-                                      datadeck_default_path)
+            return dpm.lib.set_config(Settings._datadeck_section, Settings._datadeck_library_path_option,
+                                      default_path)
 
     @staticmethod
     def licenses(key=None):
