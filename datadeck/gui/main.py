@@ -17,8 +17,8 @@ import datadeck.operations
 import util.console
 import util.operations
 import util.download
-import util.search
 import util.package
+import util.validator
 
 import base
 import settings
@@ -40,7 +40,7 @@ class MainGUI(base.DataDeckFrame):
 
         self.CheckConfig()
 
-        self.notebook_tabs = {
+        self.m_notebook_tabs = {
             "library" : 0,
             "search" : 1,
             "create" : 2,
@@ -68,7 +68,6 @@ class MainGUI(base.DataDeckFrame):
         self.m_console_text.Bind(wx.EVT_TIMER, self.OnProcessPendingEventsConsole)
 
         self.license_choice.AppendItems(self.m_package.Licenses())
-        self.destination_dirpicker.SetPath(datadeck.settings.Settings.datadeck_default_path())
 
         # Set up event handler for any worker thread results
         datadeck.operations.OPERATION_MESSAGE_HANDLER(self, self.OnOperationMessageReceived)
@@ -87,8 +86,7 @@ class MainGUI(base.DataDeckFrame):
         self.author_email_text.Clear()
         self.notes_text.Clear()
         self.tags_text.Clear()
-        self.destination_dirpicker.SetPath(datadeck.settings.Settings.datadeck_default_path())
-        self.m_notebook.ChangeSelection(self.notebook_tabs["create"])
+        self.m_notebook.ChangeSelection(self.m_notebook_tabs["create"])
 
     def OnMenuOpenClick( self, event ):
         open_path = self.m_download.DownloadDirDialog(message="Select a Package folder")
@@ -98,7 +96,7 @@ class MainGUI(base.DataDeckFrame):
         if not package:
             return
         self.PopulatePackageCreation(package)
-        self.m_notebook.ChangeSelection(self.notebook_tabs["create"])
+        self.m_notebook.ChangeSelection(self.m_notebook_tabs["create"])
 
     def OnMenuSettingsClick(self, event):
         settings.SettingsGUI(self).Show()
@@ -143,9 +141,11 @@ class MainGUI(base.DataDeckFrame):
             self.m_package.Info(selected_package)
 
     def OnButtonLibraryEditClick( self, event ):
-        package = self.m_library.GetSelected()
-        if package:
-            print "Edit"
+        selected_package = self.m_library.GetSelected()
+        if not selected_package:
+            return
+        self.PopulatePackageCreation(selected_package)
+        self.m_notebook.ChangeSelection(self.m_notebook_tabs["create"])
 
     def OnButtonLibraryDeleteClick( self, event ):
         package = self.m_library.GetSelected()
@@ -251,7 +251,6 @@ class MainGUI(base.DataDeckFrame):
             tags += tag + " "
         tags = tags.rstrip()
         self.tags_text.SetValue(tags)
-        self.destination_dirpicker.SetPath(package.installed_path)
 
 
     # Save or Create a Package
@@ -267,7 +266,12 @@ class MainGUI(base.DataDeckFrame):
         tags = self.tags_text.GetValue()
         tags = tags.rstrip()
         package.tags = tags.split(" ")
-        path = self.destination_dirpicker.GetPath()
+        path = datadeck.settings.Settings.datadeck_default_path()
+
+        if not self.m_package.Validate(package):
+            print "no valid"
+            return
+
         overwrite_check = self.m_download.CheckPackageOverwrite(path, package)
 
         if overwrite_check:
@@ -320,7 +324,7 @@ class MainGUI(base.DataDeckFrame):
 
             configuration_path = dpm.config.default_config_path
             message = ("A dpm configuration file has been created on %s\n" +
-                       "Please restart the program.") % (configuration_path)
+                       "Please restart the program.") % configuration_path
             box = wx.MessageDialog(self, message, "dpm Configuration", wx.OK)
             box.ShowModal()
             box.Destroy()

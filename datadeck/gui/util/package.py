@@ -171,13 +171,16 @@ class PackageUtil(object):
         package_info.Center()
         package_info.Show(True)
 
-    def Create(self, package, path):
+    def Validate(self, package):
         try:
-            validator.PackageValidator.validate(package)
+            return validator.PackageValidator.validate(package)
         except validator.PackageNonValid, e:
             wx.MessageBox(str(e), caption="Validation Error", style=wx.OK)
-            return
-        datadeck.operations.InitAndSaveOperation(self.m_wxparent, package, path)
+            return False
+
+    def Create(self, package, path):
+        if self.Validate(package):
+            datadeck.operations.InitAndSaveOperation(self.m_wxparent, package, path)
 
     def Download(self, package):
         download_dir = self.m_download.DownloadDirDialog()

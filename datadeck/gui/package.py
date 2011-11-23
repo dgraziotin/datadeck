@@ -3,14 +3,8 @@ __author__ = 'dgraziotin'
 This module holds the GUI for representing a Package. Currently it is used only for showing
 relevant information about a Package. It will also be used for creating a Package.
 """
-import wx
-import wx.xrc
-import shutil
-import os
 import dpm
 import dpm.lib
-import datadeck.operations as operations
-import datadeck.settings as settings
 import base
 
 

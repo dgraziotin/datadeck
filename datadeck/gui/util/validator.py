@@ -8,6 +8,7 @@ import os
 
 class PackageNonValid(Exception):
     def __init__(self, value, missing_fields=None):
+        Exception.__init__(value)
         self.parameter = value
         self.missing_fields = missing_fields
 
@@ -22,13 +23,15 @@ class PackageValidator(object):
     MANDATORY_FIELDS = (
         'name',
         'title'
-        )
+    )
 
     @classmethod
     def validate(cls, package):
         for field in PackageValidator.MANDATORY_FIELDS:
-            if not getattr(package, field):
+            attribute = getattr(package, field, None)
+            if not attribute:
                 raise PackageNonValid("Package misses a mandatory field: ", field)
+        return True
 
     @classmethod
     def already_existing(cls, path, package_name):

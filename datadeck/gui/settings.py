@@ -2,13 +2,6 @@ __author__ = 'dgraziotin'
 """
 This module holds the GUI for changing dpm and DataDeck settings
 """
-import wx
-import wx.xrc
-import dpm
-
-import dpm.lib
-
-import datadeck.operations as operations
 import datadeck.settings as settings
 import base
 

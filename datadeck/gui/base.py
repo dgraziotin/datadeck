@@ -201,23 +201,12 @@ class DataDeckFrame ( wx.Frame ):
 		
 		bSizer5.Add( bSizer9, 1, wx.EXPAND, 5 )
 		
-		bSizer91 = wx.BoxSizer( wx.HORIZONTAL )
-		
-		self.destination_label = wx.StaticText( self.m_notebok_create, wx.ID_ANY, u"Destination Path", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.destination_label.Wrap( -1 )
-		bSizer91.Add( self.destination_label, 1, wx.ALL|wx.EXPAND, 5 )
-		
-		self.destination_dirpicker = wx.DirPickerCtrl( self.m_notebok_create, wx.ID_ANY, u"/home/dgraziotin", u"Select a folder", wx.DefaultPosition, wx.DefaultSize, wx.DIRP_DEFAULT_STYLE )
-		bSizer91.Add( self.destination_dirpicker, 2, wx.ALL, 5 )
-		
-		bSizer5.Add( bSizer91, 1, wx.EXPAND, 5 )
-		
 		bSizer61 = wx.BoxSizer( wx.HORIZONTAL )
 		
 		
 		bSizer61.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
 		
-		self.m_create_button = wx.Button( self.m_notebok_create, wx.ID_ANY, u"Create Package", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_create_button = wx.Button( self.m_notebok_create, wx.ID_ANY, u"Save", wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer61.Add( self.m_create_button, 2, wx.ALL, 5 )
 		
 		bSizer5.Add( bSizer61, 1, wx.EXPAND, 5 )
@@ -264,6 +253,7 @@ class DataDeckFrame ( wx.Frame ):
 		self.Bind( wx.EVT_MENU, self.OnMenuSettingsClick, id = self.menu_settings.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnMenuExitClick, id = self.menu_exit.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnMenuAboutClick, id = self.menu_about.GetId() )
+		self.m_notebook.Bind( wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnNotebookPageChanged )
 		self.m_library_info_button.Bind( wx.EVT_BUTTON, self.OnButtonLibraryInfoClick )
 		self.m_library_edit_button.Bind( wx.EVT_BUTTON, self.OnButtonLibraryEditClick )
 		self.m_library_delete_button.Bind( wx.EVT_BUTTON, self.OnButtonLibraryDeleteClick )
@@ -298,6 +288,9 @@ class DataDeckFrame ( wx.Frame ):
 		event.Skip()
 	
 	def OnMenuAboutClick( self, event ):
+		event.Skip()
+	
+	def OnNotebookPageChanged( self, event ):
 		event.Skip()
 	
 	def OnButtonLibraryInfoClick( self, event ):

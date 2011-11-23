@@ -40,6 +40,7 @@ class OperationsUtil(object):
                 if operation_message.type == datadeck.operations.InitAndSaveOperation:
                     package = operation_message.data
                     print "Package " + package.name + " successfully created at " + package.installed_path
+                    self.m_wxframe.RefreshLibrary()
                 if operation_message.type == datadeck.operations.DownloadOperation:
                     package = operation_message.data
                     print "Package " + package.name + " successfully downloaded at " + os.path.join(package.installed_path,
