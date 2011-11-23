@@ -74,7 +74,7 @@ class MainGUI(base.DataDeckFrame):
         datadeck.operations.OPERATION_MESSAGE_HANDLER(self, self.OnOperationMessageReceived)
 
         # disable Download and Info buttons
-        self.EnableButtons(False)
+        self.EnableSearchResultsButtons(False)
         self.SetSize(wx.Size(600, 650))
         self.Show(True)
 
@@ -126,6 +126,17 @@ class MainGUI(base.DataDeckFrame):
     # </menu>
 
     # <library>
+
+    def OnLibraryListItemSelected( self, event ):
+        self.EnableLibraryButtons(True)
+
+    def OnLibraryListItemDeselected( self, event ):
+        self.EnableLibraryButtons(False)
+
+    def EnableLibraryButtons(self, enable):
+        self.m_library_info_button.Enable(enable)
+        self.m_library_edit_button.Enable(enable)
+        self.m_library_delete_button.Enable(enable)
 
     def OnButtonDeleteClick( self, event ):
         package = self.GetSelectedPackage(self.m_library)
@@ -182,6 +193,23 @@ class MainGUI(base.DataDeckFrame):
 
 
     # <search>
+    def OnSearchResultsListItemSelected( self, event ):
+        self.EnableSearchResultsButtons(True)
+
+    def OnSearchResultsListItemDeselected( self, event ):
+        self.EnableSearchResultsButtons(False)
+
+    def EnableSearchResultsButtons(self, enable):
+        """
+        Could not find a better name. Take care of two buttons that user sometimes do not need to click.
+        Info and Download button can not be clicked if there are no packages selected. Their respective Click events
+        take care whether there is a package selected or not, but in this way we drive the user experience, letting
+        him/her know what to do after a package is searched.
+        """
+        self.m_info_button.Enable(enable)
+        self.m_download_button.Enable(enable)
+
+
     def OnSearchTextKeyDown(self, event):
         """
         Simulate a click on Search button when Return is pressed
@@ -201,7 +229,7 @@ class MainGUI(base.DataDeckFrame):
             return
 
         # clean eventual previous results
-        self.EnableButtons(False)
+        self.EnableSearchResultsButtons(False)
         self.CleanSearchResults()
 
         datadeck.operations.SearchOperation(self, searched_value)
@@ -230,16 +258,6 @@ class MainGUI(base.DataDeckFrame):
     def CleanSearchResults(self):
         self.m_search_results.Clear()
 
-
-    def OnSearchResultsListItemSelected( self, event ):
-        """
-        If the user selects a package in the search result list,
-        enable the Info and Download buttons, for processing it.
-        """
-        selected_item = event.m_itemIndex
-        package_selected = self.m_search_results.Get(selected_item)
-        if package_selected:
-            self.EnableButtons(True)
 
     def InsertSearchResultsList(self, package):
         """
@@ -291,16 +309,6 @@ class MainGUI(base.DataDeckFrame):
         source is the wx.ListCtrl from which the user selected the package
         """
         return wx_list_ctrl.GetSelected()
-
-    def EnableButtons(self, enable):
-        """
-        Could not find a better name. Take care of two buttons that user sometimes do not need to click.
-        Info and Download button can not be clicked if there are no packages selected. Their respective Click events
-        take care whether there is a package selected or not, but in this way we drive the user experience, letting
-        him/her know what to do after a package is searched.
-        """
-        self.m_info_button.Enable(enable)
-        self.m_download_button.Enable(enable)
 
 
     def CheckConfig(self):

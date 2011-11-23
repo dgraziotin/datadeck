@@ -53,13 +53,19 @@ class DataDeckFrame ( wx.Frame ):
 		bSizer31 = wx.BoxSizer( wx.HORIZONTAL )
 		
 		self.m_library_info_button = wx.Button( self.m_notebook_library, wx.ID_ANY, u"Info", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_library_info_button.Enable( False )
+		
 		bSizer31.Add( self.m_library_info_button, 1, 0, 5 )
 		
-		self.m_edit_button = wx.Button( self.m_notebook_library, wx.ID_ANY, u"Edit", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer31.Add( self.m_edit_button, 1, 0, 5 )
+		self.m_library_edit_button = wx.Button( self.m_notebook_library, wx.ID_ANY, u"Edit", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_library_edit_button.Enable( False )
 		
-		self.m_delete_button = wx.Button( self.m_notebook_library, wx.ID_ANY, u"Delete", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer31.Add( self.m_delete_button, 1, 0, 5 )
+		bSizer31.Add( self.m_library_edit_button, 1, 0, 5 )
+		
+		self.m_library_delete_button = wx.Button( self.m_notebook_library, wx.ID_ANY, u"Delete", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_library_delete_button.Enable( False )
+		
+		bSizer31.Add( self.m_library_delete_button, 1, 0, 5 )
 		
 		bSizer21.Add( bSizer31, 0, wx.ALL|wx.EXPAND, 5 )
 		
@@ -89,9 +95,13 @@ class DataDeckFrame ( wx.Frame ):
 		bSizer3.Add( self.m_search_button, 1, 0, 5 )
 		
 		self.m_info_button = wx.Button( self.m_notebook_search, wx.ID_ANY, u"Info", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_info_button.Enable( False )
+		
 		bSizer3.Add( self.m_info_button, 1, 0, 5 )
 		
 		self.m_download_button = wx.Button( self.m_notebook_search, wx.ID_ANY, u"Download", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_download_button.Enable( False )
+		
 		bSizer3.Add( self.m_download_button, 1, 0, 5 )
 		
 		bSizer2.Add( bSizer3, 0, wx.ALL|wx.EXPAND, 5 )
@@ -254,15 +264,17 @@ class DataDeckFrame ( wx.Frame ):
 		self.Bind( wx.EVT_MENU, self.OnMenuSettingsClick, id = self.menu_settings.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnMenuExitClick, id = self.menu_exit.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnMenuAboutClick, id = self.menu_about.GetId() )
-		self.m_library_info_button.Bind( wx.EVT_BUTTON, self.OnButtonInfoClick )
-		self.m_edit_button.Bind( wx.EVT_BUTTON, self.OnButtonEditClick )
-		self.m_delete_button.Bind( wx.EVT_BUTTON, self.OnButtonDeleteClick )
+		self.m_library_info_button.Bind( wx.EVT_BUTTON, self.OnButtonLibraryInfoClick )
+		self.m_library_edit_button.Bind( wx.EVT_BUTTON, self.OnButtonLibraryEditClick )
+		self.m_library_delete_button.Bind( wx.EVT_BUTTON, self.OnButtonLibraryDeleteClick )
+		self.m_library_listctrl.Bind( wx.EVT_LIST_ITEM_DESELECTED, self.OnLibraryListItemDeselected )
 		self.m_library_listctrl.Bind( wx.EVT_LIST_ITEM_SELECTED, self.OnLibraryListItemSelected )
 		self.m_refresh_button.Bind( wx.EVT_BUTTON, self.OnButtonRefreshClick )
 		self.m_search_text.Bind( wx.EVT_KEY_DOWN, self.OnSearchTextKeyDown )
 		self.m_search_button.Bind( wx.EVT_BUTTON, self.OnButtonSearchClick )
 		self.m_info_button.Bind( wx.EVT_BUTTON, self.OnButtonInfoClick )
 		self.m_download_button.Bind( wx.EVT_BUTTON, self.OnButtonDownloadClick )
+		self.m_search_results_listctrl.Bind( wx.EVT_LIST_ITEM_DESELECTED, self.OnSearchResultsListItemDeselected )
 		self.m_search_results_listctrl.Bind( wx.EVT_LIST_ITEM_SELECTED, self.OnSearchResultsListItemSelected )
 		self.m_create_button.Bind( wx.EVT_BUTTON, self.OnButtonCreateClick )
 		self.m_console_clear_button.Bind( wx.EVT_BUTTON, self.OnConsoleClearButtonClick )
@@ -288,13 +300,16 @@ class DataDeckFrame ( wx.Frame ):
 	def OnMenuAboutClick( self, event ):
 		event.Skip()
 	
-	def OnButtonInfoClick( self, event ):
+	def OnButtonLibraryInfoClick( self, event ):
 		event.Skip()
 	
-	def OnButtonEditClick( self, event ):
+	def OnButtonLibraryEditClick( self, event ):
 		event.Skip()
 	
-	def OnButtonDeleteClick( self, event ):
+	def OnButtonLibraryDeleteClick( self, event ):
+		event.Skip()
+	
+	def OnLibraryListItemDeselected( self, event ):
 		event.Skip()
 	
 	def OnLibraryListItemSelected( self, event ):
@@ -309,8 +324,13 @@ class DataDeckFrame ( wx.Frame ):
 	def OnButtonSearchClick( self, event ):
 		event.Skip()
 	
+	def OnButtonInfoClick( self, event ):
+		event.Skip()
 	
 	def OnButtonDownloadClick( self, event ):
+		event.Skip()
+	
+	def OnSearchResultsListItemDeselected( self, event ):
 		event.Skip()
 	
 	def OnSearchResultsListItemSelected( self, event ):
