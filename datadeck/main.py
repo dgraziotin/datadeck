@@ -22,7 +22,7 @@ class DataDeck(wx.App):
             import datadeck.gui.base
             frame = datadeck.gui.base.DepCheckFrame(None)
             dependencies_file = pkg_resources.resource_filename('datadeck.res', 'MISSING_DPM.txt')
-            frame.dependencies_text.AppendText(open(dependencies_file).read())
+            frame.m_dependencies_tc.AppendText(open(dependencies_file).read())
             frame.SetSize(wx.Size(600,400))
             frame.Show()
         return True
@@ -50,14 +50,14 @@ class SysOutListener:
 
 def run_as_plugin():
     MainGUI = datadeck.gui.main.MainGUI()
-    sysout_listener = SysOutListener(MainGUI.m_console_text)
+    sysout_listener = SysOutListener(MainGUI.m_console_tc)
     sys.stdout = sysout_listener
     
 def run():
     app = DataDeck(0)
     app.SetAppName("DataDeck")
     if app.IsDpmInstalled():
-        sysout_listener = SysOutListener(wx.GetApp().MainGUI.m_console_text)
+        sysout_listener = SysOutListener(wx.GetApp().MainGUI.m_console_tc)
         sys.stdout = sysout_listener
     app.MainLoop()
 

@@ -11,16 +11,16 @@ class ConsoleUtil(object):
         Update the Console text
         """
         value = event.text
-        self.m_wxframe.m_console_text.AppendText(value)
+        self.m_wxframe.m_console_tc.AppendText(value)
 
     def OnProcessPendingEventsConsole(self, event):
         """
         Handle pending events
         """
-        self.m_wxframe.m_console_text.ProcessPendingEvents()
+        self.m_wxframe.m_console_tc.ProcessPendingEvents()
 
     def OnConsoleClearButtonClick(self, event):
-        self.m_wxframe.m_console_text.Clear()
+        self.m_wxframe.m_console_tc.Clear()
 
     def OnConsoleClearButtonClick(self, event):
-        self.m_wxframe.m_console_text.Clear()
+        self.m_wxframe.m_console_tc.Clear()

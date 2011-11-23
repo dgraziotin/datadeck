@@ -16,9 +16,9 @@ class SettingsGUI(base.SettingsFrame):
         Retrieve the currently selected package in the results list and launch a DownloadOperation
         for downloading it.
         """
-        ckan_url = self.ckan_url_text.GetValue()
-        ckan_api_key = self.api_key_text.GetValue()
-        default_path = self.datadeck_packages_dir_picker.GetPath()
+        ckan_url = self.m_ckan_url_tc.GetValue()
+        ckan_api_key = self.m_api_key_tc.GetValue()
+        default_path = self.m_datadeck_library_dp.GetPath()
         settings.Settings.ckan_url(ckan_url)
         settings.Settings.ckan_api(ckan_api_key)
         settings.Settings.datadeck_default_path(default_path)
@@ -28,9 +28,9 @@ class SettingsGUI(base.SettingsFrame):
         self.Destroy()
 
     def LoadConfig(self):
-        self.ckan_url_text.SetValue(settings.Settings.ckan_url())
-        self.api_key_text.SetValue(settings.Settings.ckan_api())
-        self.datadeck_packages_dir_picker.SetPath(settings.Settings.datadeck_default_path())
+        self.m_ckan_url_tc.SetValue(settings.Settings.ckan_url())
+        self.m_api_key_tc.SetValue(settings.Settings.ckan_api())
+        self.m_datadeck_library_dp.SetPath(settings.Settings.datadeck_default_path())
 
 
         
