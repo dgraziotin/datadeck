@@ -126,7 +126,6 @@ class MainGUI(base.DataDeckFrame):
     # </menu>
 
     # <library>
-
     def OnLibraryListItemSelected( self, event ):
         self.EnableLibraryButtons(True)
 
@@ -138,8 +137,18 @@ class MainGUI(base.DataDeckFrame):
         self.m_library_edit_button.Enable(enable)
         self.m_library_delete_button.Enable(enable)
 
-    def OnButtonDeleteClick( self, event ):
-        package = self.GetSelectedPackage(self.m_library)
+    def OnButtonLibraryInfoClick( self, event ):
+        selected_package = self.m_library.GetSelected()
+        if selected_package:
+            self.m_package.Info(selected_package)
+
+    def OnButtonLibraryEditClick( self, event ):
+        package = self.m_library.GetSelected()
+        if package:
+            print "Edit"
+
+    def OnButtonLibraryDeleteClick( self, event ):
+        package = self.m_library.GetSelected()
         message = "Are you sure you want to delete\nPackage " + package.name + "\ninstalled at " + package.installed_path + "?"
         box = wx.MessageDialog(self, message, "Delete?", wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION)
         overwrite = box.ShowModal()
@@ -153,44 +162,6 @@ class MainGUI(base.DataDeckFrame):
     def RefreshLibrary(self):
         self.m_library.Refresh()
     # </library>
-
-
-    # <creation>
-    def PopulatePackageCreation(self, package):
-        self.name_text.SetValue(package.name)
-        self.url_text.SetValue(package.url)
-        self.license_choice.SetSelection(datadeck.settings.Settings.licenses(package.license))
-        self.author_text.SetValue(package.author)
-        self.author_email_text.SetValue(package.author_email)
-        self.notes_text.SetValue(package.notes)
-        tags = ""
-        for tag in package.tags:
-            tags += tag + " "
-        tags = tags.rstrip()
-        self.tags_text.SetValue(tags)
-        self.destination_dirpicker.SetPath(package.installed_path)
-
-
-    # Save or Create a Package
-    def OnButtonCreateClick( self, event ):
-        package = dpm.package.Package()
-        package.name = self.name_text.GetValue()
-        package.title = package.name
-        package.url = self.url_text.GetValue()
-        package.license = self.m_package.Licenses(self.license_choice.GetSelection())
-        package.author = self.author_text.GetValue()
-        package.author_email = self.author_email_text.GetValue()
-        package.notes = self.notes_text.GetValue()
-        tags = self.tags_text.GetValue()
-        tags = tags.rstrip()
-        package.tags = tags.split(" ")
-        path = self.destination_dirpicker.GetPath()
-        overwrite_check = self.m_download.CheckPackageOverwrite(path, package)
-
-        if overwrite_check:
-            self.m_package.Create(package, path)
-    # </creation>
-
 
     # <search>
     def OnSearchResultsListItemSelected( self, event ):
@@ -240,7 +211,7 @@ class MainGUI(base.DataDeckFrame):
         Retrieve the currently selected package in the results list and launch a DownloadOperation
         for downloading it.
         """
-        selected_package = self.GetSelectedPackage(self.m_search_results)
+        selected_package = self.m_search_results.GetSelected()
         if not selected_package:
             return
         self.m_package.Download(selected_package)
@@ -251,7 +222,7 @@ class MainGUI(base.DataDeckFrame):
         Retrieve the currently selected package in the results list and invoke the Package GUI
         for displaying information about it.
         """
-        selected_package = self.GetSelectedPackage(self.m_search_results)
+        selected_package = self.m_search_results.GetSelected()
         if selected_package:
             self.m_package.Info(selected_package)
 
@@ -265,6 +236,43 @@ class MainGUI(base.DataDeckFrame):
         the two lists will be consistent.
         """
         self.m_search_results.Add(package)
+    # </search>
+
+    # <create>
+    def PopulatePackageCreation(self, package):
+        self.name_text.SetValue(package.name)
+        self.url_text.SetValue(package.url)
+        self.license_choice.SetSelection(datadeck.settings.Settings.licenses(package.license))
+        self.author_text.SetValue(package.author)
+        self.author_email_text.SetValue(package.author_email)
+        self.notes_text.SetValue(package.notes)
+        tags = ""
+        for tag in package.tags:
+            tags += tag + " "
+        tags = tags.rstrip()
+        self.tags_text.SetValue(tags)
+        self.destination_dirpicker.SetPath(package.installed_path)
+
+
+    # Save or Create a Package
+    def OnButtonCreateClick( self, event ):
+        package = dpm.package.Package()
+        package.name = self.name_text.GetValue()
+        package.title = package.name
+        package.url = self.url_text.GetValue()
+        package.license = self.m_package.Licenses(self.license_choice.GetSelection())
+        package.author = self.author_text.GetValue()
+        package.author_email = self.author_email_text.GetValue()
+        package.notes = self.notes_text.GetValue()
+        tags = self.tags_text.GetValue()
+        tags = tags.rstrip()
+        package.tags = tags.split(" ")
+        path = self.destination_dirpicker.GetPath()
+        overwrite_check = self.m_download.CheckPackageOverwrite(path, package)
+
+        if overwrite_check:
+            self.m_package.Create(package, path)
+    # </create>
 
         # <console>
     def OnUpdateConsole(self, event):
@@ -303,14 +311,6 @@ class MainGUI(base.DataDeckFrame):
 
 
     # <misc>
-    def GetSelectedPackage(self, wx_list_ctrl):
-        """
-        Returns the currently selected package, fetched from the internal list.
-        source is the wx.ListCtrl from which the user selected the package
-        """
-        return wx_list_ctrl.GetSelected()
-
-
     def CheckConfig(self):
         #TODO: remove it when dpm 0.10 is officially released
         configuration = dpm.CONFIG
