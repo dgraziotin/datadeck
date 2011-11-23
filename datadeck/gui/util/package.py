@@ -78,6 +78,9 @@ class SearchResults(PackageList):
     """
     def __init__(self, wxlistctrl):
         PackageList.__init__(self, wxlistctrl)
+        self.m_wxlistctrl.SetColumnWidth(0, wx.LIST_AUTOSIZE_USEHEADER)
+        self.m_wxlistctrl.SetColumnWidth(1, wx.LIST_AUTOSIZE_USEHEADER)
+        self.m_wxlistctrl.SetColumnWidth(2, wx.LIST_AUTOSIZE_USEHEADER)
 
     def _AddWxListrCtrl(self, package):
         name = package.metadata['name'] if package.metadata['name'] else "N/A"
@@ -127,15 +130,11 @@ class Library(PackageList):
             self.m_packages.append(package)
             self._AddWxListrCtrl(package)
 
-        self.m_wxlistctrl.SetColumnWidth(0, wx.LIST_AUTOSIZE)
-        self.m_wxlistctrl.SetColumnWidth(1, wx.LIST_AUTOSIZE)
-        self.m_wxlistctrl.SetColumnWidth(2, wx.LIST_AUTOSIZE)
+        self.AutoSize()
 
     def Remove(self, package):
         shutil.rmtree(package.installed_path, ignore_errors=True)
-        self.m_wxlistctrl.SetColumnWidth(0, wx.LIST_AUTOSIZE)
-        self.m_wxlistctrl.SetColumnWidth(1, wx.LIST_AUTOSIZE)
-        self.m_wxlistctrl.SetColumnWidth(2, wx.LIST_AUTOSIZE)
+        self.AutoSize()
 
 
     def _AddWxListrCtrl(self, package):
@@ -150,9 +149,16 @@ class Library(PackageList):
         self.m_wxlistctrl.SetStringItem(index, 1, notes)
         self.m_wxlistctrl.SetStringItem(index, 2, license)
 
-        self.m_wxlistctrl.SetColumnWidth(0, wx.LIST_AUTOSIZE)
-        self.m_wxlistctrl.SetColumnWidth(1, wx.LIST_AUTOSIZE)
-        self.m_wxlistctrl.SetColumnWidth(2, wx.LIST_AUTOSIZE)
+
+    def AutoSize(self):
+        if not self.m_packages:
+            self.m_wxlistctrl.SetColumnWidth(0, wx.LIST_AUTOSIZE_USEHEADER)
+            self.m_wxlistctrl.SetColumnWidth(1, wx.LIST_AUTOSIZE_USEHEADER)
+            self.m_wxlistctrl.SetColumnWidth(2, wx.LIST_AUTOSIZE_USEHEADER)
+        else:
+            self.m_wxlistctrl.SetColumnWidth(0, wx.LIST_AUTOSIZE)
+            self.m_wxlistctrl.SetColumnWidth(1, wx.LIST_AUTOSIZE)
+            self.m_wxlistctrl.SetColumnWidth(2, wx.LIST_AUTOSIZE)
 
 
 class PackageUtil(object):

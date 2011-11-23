@@ -72,8 +72,7 @@ class MainGUI(base.DataDeckFrame):
         # Set up event handler for any worker thread results
         datadeck.operations.OPERATION_MESSAGE_HANDLER(self, self.OnOperationMessageReceived)
 
-        # disable Download and Info buttons
-        self.EnableSearchResultsButtons(False)
+        self.m_ulibrary.AutoSize()
         self.SetSize(wx.Size(600, 650))
         self.Show(True)
 
