@@ -127,8 +127,15 @@ class Library(PackageList):
             self.m_packages.append(package)
             self._AddWxListrCtrl(package)
 
+        self.m_wxlistctrl.SetColumnWidth(0, wx.LIST_AUTOSIZE)
+        self.m_wxlistctrl.SetColumnWidth(1, wx.LIST_AUTOSIZE)
+        self.m_wxlistctrl.SetColumnWidth(2, wx.LIST_AUTOSIZE)
+
     def Remove(self, package):
         shutil.rmtree(package.installed_path, ignore_errors=True)
+        self.m_wxlistctrl.SetColumnWidth(0, wx.LIST_AUTOSIZE)
+        self.m_wxlistctrl.SetColumnWidth(1, wx.LIST_AUTOSIZE)
+        self.m_wxlistctrl.SetColumnWidth(2, wx.LIST_AUTOSIZE)
 
 
     def _AddWxListrCtrl(self, package):

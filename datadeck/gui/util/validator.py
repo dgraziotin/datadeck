@@ -7,13 +7,12 @@ import dpm.lib
 import os
 
 class PackageNonValid(Exception):
-    def __init__(self, value, missing_fields=None):
-        Exception.__init__(value)
-        self.parameter = value
+    def __init__(self, message, missing_fields=None):
+        Exception.__init__(self, message)
         self.missing_fields = missing_fields
 
     def __str__(self):
-        return repr(self.parameter + self.missing_fields)
+        return repr(self.message + self.missing_fields)
 
 
 class PackageValidator(object):

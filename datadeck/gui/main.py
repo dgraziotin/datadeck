@@ -269,7 +269,6 @@ class MainGUI(base.DataDeckFrame):
         path = datadeck.settings.Settings.library_path()
 
         if not self.m_upackage.Validate(package):
-            print "no valid"
             return
 
         overwrite_check = self.m_udownload.CheckPackageOverwrite(path, package)
